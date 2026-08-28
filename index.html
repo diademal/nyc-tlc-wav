@@ -30,6 +30,38 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px;bord
 textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit}
 .en{display:none} body.english .ru{display:none} body.english .en{display:inline} body.english div.en,body.english p.en,body.english section.en{display:block}
 footer{text-align:center;color:#667085;font-size:12px;margin-top:20px}
+
+/* --- one-section navigation --- */
+.card{display:none}
+.card.show{display:block}
+#crumb{display:none;margin-bottom:14px}
+#crumb.show{display:block}
+#backbtn{background:var(--nav);color:#fff;font-size:14px;padding:9px 15px}
+#backbtn:hover{background:#344054}
+#homecard .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px}
+#homecard .menu a{display:block;padding:13px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:#344054;font-weight:700;font-size:14px;background:#fbfcfd}
+#homecard .menu a:hover{background:#eff8ff;border-color:#b2ddff;color:var(--blue)}
+.side a.cur{background:#eff8ff;color:var(--blue)}
+
+/* --- mobile: fit screen width --- */
+html,body{max-width:100%;overflow-x:hidden}
+img{max-width:100%;height:auto}
+a{word-break:break-word;overflow-wrap:anywhere}
+.tw{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tw table{min-width:520px}
+@media(max-width:900px){.side{display:none}}
+@media(max-width:760px){
+  header{padding:16px 14px}
+  h1{font-size:19px;line-height:1.3}.sub{font-size:12.5px}
+  .head{flex-direction:column;align-items:flex-start;gap:12px}
+  main{padding:16px 12px 48px}
+  .card{padding:15px}h2{font-size:18px}h3{font-size:15.5px}
+  #homecard .menu{grid-template-columns:1fr}
+  .side{padding:8px}.side a{padding:11px 10px}
+  table{font-size:13px}th,td{padding:8px}
+  .step{padding:12px}
+  #backbtn{width:100%;text-align:center}
+}
 </style>
 </head>
 <body>
@@ -58,6 +90,11 @@ footer{text-align:center;color:#667085;font-size:12px;margin-top:20px}
 </nav>
 
 <section>
+<div id="crumb"><button id="backbtn"><span class="ru">← Назад</span><span class="en">← Back</span></button></div>
+<div class="card" id="homecard"><h2><span class="ru">Содержание</span><span class="en">Contents</span></h2>
+<p class="desc"><span class="ru">Выберите раздел — откроется только он. Кнопка «Назад» вернёт к предыдущему пункту.</span><span class="en">Pick a section — it opens on its own. The Back button returns to the previous item.</span></p>
+<div class="menu" id="menu"></div></div>
+
 <div class="card" id="progress"><h2><span class="ru">Общий прогресс проекта</span><span class="en">Overall project progress</span></h2>
 <div class="progress"><div class="bar" id="bar"></div></div><p id="pt" class="small"></p>
 <div class="note"><span class="ru"><b>Цель:</b> стать TLC-approved manufacturer / second-stage manufacturer / vehicle modifier и получить approval конкретной WAV conversion. TLC требует не просто компанию — должна быть одобрена конкретная комбинация vehicle + converter + conversion design.</span><span class="en"><b>Goal:</b> become a TLC-approved manufacturer / second-stage manufacturer / vehicle modifier and obtain approval for a specific WAV conversion. TLC approval is tied to the vehicle/converter/conversion configuration.</span></div>
@@ -214,4 +251,48 @@ function load(){let a=JSON.parse(localStorage.getItem('tlc2')||'[]');tasks.forEa
 function toggleLang(){document.body.classList.toggle('english');localStorage.setItem('tlclang',document.body.classList.contains('english')?'en':'ru')}
 tasks.forEach(x=>x.addEventListener('change',save));notes.addEventListener('input',save);
 if(localStorage.getItem('tlclang')==='en')document.body.classList.add('english');load();
+
+
+[].slice.call(document.querySelectorAll('table')).forEach(function(t){
+  if(t.parentNode.className==='tw') return;
+  var w=document.createElement('div'); w.className='tw';
+  t.parentNode.insertBefore(w,t); w.appendChild(t);
+});
+
+/* --- one-section router --- */
+var _cards=[].slice.call(document.querySelectorAll('.card')),
+    _nav=[].slice.call(document.querySelectorAll('.side a')),
+    _crumb=document.getElementById('crumb'),
+    _menu=document.getElementById('menu'),
+    _prev='home';
+_nav.forEach(function(a){ if(a.getAttribute('href')==='#progress') return;
+  var c=a.cloneNode(true); _menu.appendChild(c); });
+function showSection(id){
+  if(!id||id==='home'||!document.getElementById(id)) id='home';
+  var cur=location.hash.slice(1)||'home';
+  _cards.forEach(function(c){c.classList.remove('show')});
+  if(id==='home'){
+    document.getElementById('homecard').classList.add('show');
+    document.getElementById('progress').classList.add('show');
+    _crumb.classList.remove('show');
+  } else {
+    document.getElementById(id).classList.add('show');
+    _crumb.classList.add('show');
+  }
+  _nav.forEach(function(a){a.classList.toggle('cur',a.getAttribute('href')==='#'+id)});
+  window.scrollTo(0,0);
+  return id;
+}
+function route(){
+  var id=location.hash.slice(1)||'home';
+  var shown=showSection(id);
+  if(shown!==_prevShown){ _prev=_prevShown||'home'; _prevShown=shown; }
+}
+var _prevShown=null;
+document.getElementById('backbtn').addEventListener('click',function(){
+  location.hash='#'+(_prev&&_prev!==_prevShown?_prev:'home');
+});
+window.addEventListener('hashchange',route);
+route();
+
 </script></body></html>

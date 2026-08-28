@@ -73,6 +73,11 @@ header .wrap.head{padding-right:150px}
   header .wrap.head{padding-right:128px}
 }
 @media print{#topbtns{display:none}}
+
+/* --- counters in menu --- */
+.cnt{float:right;margin-left:10px;background:#eaecf0;color:#475467;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;line-height:19px;font-variant-numeric:tabular-nums}
+.cnt.part{background:#fef0c7;color:#b54708}
+.cnt.done{background:#d1fadf;color:#067647}
 </style>
 </head>
 <body>
@@ -306,5 +311,26 @@ document.getElementById('backbtn').addEventListener('click',function(){
 });
 window.addEventListener('hashchange',route);
 route();
+
+
+/* --- checked counters in menu --- */
+function updateBadges(){
+  [].slice.call(document.querySelectorAll('.side a, #menu a')).forEach(function(a){
+    var h=a.getAttribute('href')||'';
+    if(h.charAt(0)!=='#') return;
+    var sec=document.getElementById(h.slice(1));
+    var old=a.querySelector('.cnt'); if(old) old.remove();
+    if(!sec) return;
+    var t=[].slice.call(sec.querySelectorAll('.task'));
+    if(!t.length) return;
+    var d=t.filter(function(x){return x.checked}).length;
+    var b=document.createElement('span');
+    b.className='cnt'+(d===t.length?' done':(d>0?' part':''));
+    b.textContent=d+' / '+t.length;
+    a.appendChild(b);
+  });
+}
+tasks.forEach(function(x){x.addEventListener('change',updateBadges)});
+updateBadges();
 
 </script></body></html>

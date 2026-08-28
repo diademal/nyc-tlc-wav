@@ -34,10 +34,10 @@ footer{text-align:center;color:#667085;font-size:12px;margin-top:20px}
 /* --- one-section navigation --- */
 .card{display:none}
 .card.show{display:block}
-#crumb{display:none;margin-bottom:12px;text-align:left}
+#crumb{display:none;margin-bottom:12px;text-align:left;position:sticky;top:100px;z-index:40}
 #crumb.show{display:block}
-#backbtn{background:var(--nav);color:#fff;font-size:13px;padding:6px 12px;border-radius:7px;font-weight:700}
-#backbtn:hover{background:#344054}
+#backbtn{background:#fff;color:#101828;border:1px solid rgba(16,24,40,.25);box-shadow:0 2px 10px rgba(16,24,40,.2);font-size:13px;padding:6px 12px;border-radius:7px;font-weight:700}
+#backbtn:hover{background:#f2f4f7}
 #homecard .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px}
 #homecard .menu a{display:block;padding:13px 14px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:#344054;font-weight:700;font-size:14px;background:#fbfcfd}
 #homecard .menu a:hover{background:#eff8ff;border-color:#b2ddff;color:var(--blue)}
@@ -49,7 +49,14 @@ img{max-width:100%;height:auto}
 a{word-break:break-word;overflow-wrap:anywhere}
 .tw{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tw table{min-width:520px}
-@media(max-width:900px){.side{display:none}}
+#topbar{display:none}
+@media(max-width:900px){
+  .side{display:none}
+  #topbar{display:block;position:fixed;top:0;left:0;right:0;height:48px;background:var(--nav);z-index:55;box-shadow:0 1px 6px rgba(16,24,40,.25)}
+  #crumb.show{position:fixed;top:8px;left:10px;margin:0;z-index:61}
+  #topbtns{top:8px;right:10px}
+  header{padding-top:60px}
+}
 @media(max-width:760px){
   header{padding:16px 14px}
   h1{font-size:19px;line-height:1.3}.sub{font-size:12.5px}
@@ -68,12 +75,14 @@ a{word-break:break-word;overflow-wrap:anywhere}
 #topbtns button{box-shadow:0 2px 10px rgba(16,24,40,.3);border:1px solid rgba(16,24,40,.25)}
 header .wrap.head{padding-right:150px}
 @media(max-width:760px){
-  #topbtns{top:9px;right:9px;gap:6px}
+  #topbtns{top:8px;right:10px;gap:6px}
   #topbtns button{padding:8px 10px;font-size:13px;border-radius:8px}
   header .wrap.head{padding-right:128px}
 }
 @media print{#topbtns{display:none}}
 
+#codes td:first-child{white-space:nowrap}
+#codes h3{margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
 /* --- counters in menu --- */
 .cnt{float:right;margin-left:10px;background:#eaecf0;color:#475467;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;line-height:19px;font-variant-numeric:tabular-nums}
 .cnt.part{background:#fef0c7;color:#b54708}
@@ -81,6 +90,7 @@ header .wrap.head{padding-right:150px}
 </style>
 </head>
 <body>
+<div id="topbar"></div>
 <div id="topbtns"><button class="lang" onclick="toggleLang()">RU / EN</button><button class="print" onclick="print()">PDF</button></div>
 <header><div class="wrap head"><div>
 <h1><span class="ru">NYC TLC WAV — программа одобрения компании и conversion</span><span class="en">NYC TLC WAV — Company & Conversion Approval Program</span></h1>
@@ -103,6 +113,7 @@ header .wrap.head{padding-right:150px}
 <a href="#tlcreview"><span class="ru">9. TLC review</span><span class="en">9. TLC review</span></a>
 <a href="#approval"><span class="ru">10. Финальное approval</span><span class="en">10. Final approval</span></a>
 <a href="#after"><span class="ru">11. После approval</span><span class="en">11. After approval</span></a>
+<a href="#codes"><span class="ru">Расшифровка кодов</span><span class="en">Codes explained</span></a>
 <a href="#library"><span class="ru">Документы и ссылки</span><span class="en">Documents & links</span></a>
 </nav>
 
@@ -237,6 +248,120 @@ header .wrap.head{padding-right:150px}
 <div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Добавить VIN в electronic list для TLC</div><div class="title en">Add VIN to electronic list for TLC</div><div class="desc ru">Rubin Varghese отдельно потребовал regular list of vehicles modified to TLC in electronic format.</div><div class="desc en">Rubin Varghese specifically requested a regular electronic list of vehicles modified for TLC.</div></div></div></div>
 </div>
 
+<div class="card" id="codes"><h2><span class="ru">Расшифровка всех кодов и стандартов</span><span class="en">All codes & standards explained</span></h2>
+<p class="desc ru">Здесь разобран каждый код, который встречается в этом документе и в требованиях TLC: что это такое, что именно он требует от нас и зачем он нужен в нашем проекте. Ссылки ведут на официальные тексты.</p>
+<p class="desc en">Every code cited in this roadmap and in the TLC requirements: what it is, what it demands from us, and why it matters for this project. Links point to the official texts.</p>
+
+<div class="note"><span class="ru"><b>Три важные поправки к формулировкам TLC и к ранним версиям этого документа:</b> (1) технический спец для жёлтого такси — это <b>§67-05.2</b>, а не §67-05 (§67-05 говорит только о том, какая модель под какой медальон); (2) стандарта <b>FMVSS 216 больше нет</b> — действует <b>216a</b>; (3) для электромобилей рядом с 305 действует <b>305a</b>. TLC в своём списке пишет «216» и «305» по старой памяти — в отчёте лаборатории должны стоять актуальные номера.</span><span class="en"><b>Three corrections to TLC's wording and to earlier drafts:</b> (1) the yellow-cab technical spec is <b>§67-05.2</b>, not §67-05 (§67-05 only matches models to medallion classes); (2) <b>FMVSS 216 no longer exists</b> — <b>216a</b> is operative; (3) for EVs, <b>305a</b> now sits alongside 305. TLC's list still says "216"/"305"; the lab report should carry the current numbers.</span></div>
+
+<h3><span class="ru">1. 49 CFR — федеральные правила безопасности автомобилей</span><span class="en">1. 49 CFR — federal motor vehicle safety regulations</span></h3>
+<p class="desc ru">«49 CFR» = Title 49 Code of Federal Regulations, том федеральных правил по транспорту. «Part» — раздел внутри него. Это то, что регулирует нас как переделывающую компанию на федеральном уровне; TLC поверх этого добавляет свои городские требования.</p>
+<p class="desc en">"49 CFR" = Title 49 of the Code of Federal Regulations — federal transportation rules; "Part" is a section within it. These govern us federally as a modifier; TLC adds city requirements on top.</p>
+<table>
+<tr><th><span class="ru">Код</span><span class="en">Code</span></th><th><span class="ru">Что это</span><span class="en">What it is</span></th><th><span class="ru">Что требует от нас</span><span class="en">What it requires from us</span></th><th>Link</th></tr>
+
+<tr><td><b>49 CFR Part 38</b></td>
+<td><span class="ru">ADA Accessibility Specifications for Transportation Vehicles — технические размеры доступности для транспортных средств.</span><span class="en">ADA Accessibility Specifications for Transportation Vehicles — the dimensional accessibility rules.</span></td>
+<td><span class="ru">Пандус/лифт (уклон, ширина, грузоподъёмность, поручни, нескользящее покрытие), проём и высота двери, место для кресла-коляски, система крепления коляски и ремни для пассажира. Это тот документ, по которому мы делаем ADA dimensional compliance sheet.</span><span class="en">Ramp/lift (slope, width, load, handrails, slip resistance), door opening and height, wheelchair space, securement and occupant restraint. This is what our ADA dimensional compliance sheet is built against.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-A/part-38">eCFR Part 38</a></td></tr>
+
+<tr><td><b>49 CFR Part 565</b></td>
+<td><span class="ru">VIN Requirements — правила формирования идентификационного номера.</span><span class="en">VIN Requirements — vehicle identification number rules.</span></td>
+<td><span class="ru">Если мы меняем тип/класс машины или выпускаем её как производитель второй ступени, VIN и связанные таблички должны быть оформлены по правилам. Для обычной переделки готовой машины (alterer) VIN остаётся заводским.</span><span class="en">If we change the vehicle type or produce it as a second-stage manufacturer, VIN and related plates must follow these rules. For a plain alteration of a completed vehicle the OEM VIN stays.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-565">eCFR Part 565</a></td></tr>
+
+<tr><td><b>49 CFR Part 566</b></td>
+<td><span class="ru">Manufacturer Identification — регистрация компании как производителя в NHTSA. Отсюда «NHTSA MID» (Manufacturer/Modifier Identification).</span><span class="en">Manufacturer Identification — registering the company with NHTSA. This is the "NHTSA MID".</span></td>
+<td><span class="ru">Подать в NHTSA название, адрес, штат регистрации и описание того, что мы производим/переделываем, включая диапазоны GVWR. Срок — <b>не позднее 30 дней</b> после первого выпуска, и обновление в течение 30 дней при изменениях. Подача через портал vPIC.</span><span class="en">File name, address, state of incorporation and a description of what we build/modify, including GVWR ranges. Deadline: <b>within 30 days</b> of first manufacture, updates within 30 days of changes. Filed through the vPIC portal.</span></td>
+<td><a target="_blank" href="https://vpic.nhtsa.dot.gov/">vPIC</a> · <a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-566">Part 566</a></td></tr>
+
+<tr><td><b>49 CFR Part 567</b></td>
+<td><span class="ru">Certification — правила сертификационных табличек. Ключевой для нас пункт — <b>§567.7 Alterer</b>.</span><span class="en">Certification — the certification-label rules. Our key provision is <b>§567.7, alterers</b>.</span></td>
+<td><span class="ru">Если мы переделываем уже сертифицированную, но <b>ещё не проданную первому владельцу</b> машину — мы «alterer». Обязаны: оставить заводскую табличку на месте; добавить свою (не перекрывая заводскую) с текстом «This vehicle was altered by … and as altered it conforms to all applicable FMVSS, Bumper and Theft Prevention Standards …»; указать новые GVWR/GAWR, если они изменились. Юридическая ответственность за соответствие переходит на нас.</span><span class="en">If we alter a certified vehicle <b>before its first retail sale</b>, we are an "alterer": leave the OEM label in place, add our own label (not obscuring it) with the prescribed "This vehicle was altered by …" wording, and state new GVWR/GAWR if changed. Legal responsibility for compliance shifts to us.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-567/section-567.7">§567.7</a></td></tr>
+
+<tr><td><b>49 CFR Part 568</b></td>
+<td><span class="ru">Vehicles Manufactured in Two or More Stages — производство в две и более ступени.</span><span class="en">Vehicles Manufactured in Two or More Stages.</span></td>
+<td><span class="ru">Применяется, только если мы начинаем с <b>неукомплектованной</b> машины (cutaway/шасси). Тогда действует цепочка: Incomplete Vehicle Document (типы 1/2/3 по каждому стандарту) → мы как final-stage manufacturer доводим машину до соответствия и сертифицируем её. Для переделки готового минивэна этот Part не применяется.</span><span class="en">Applies only if we start from an <b>incomplete</b> vehicle (cutaway/chassis): the Incomplete Vehicle Document chain (Type 1/2/3 statements) and final-stage certification. It does not apply to converting a finished minivan.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-568">Part 568</a></td></tr>
+
+<tr><td><b>49 CFR Part 571</b></td>
+<td><span class="ru">Federal Motor Vehicle Safety Standards (FMVSS) — собственно сами стандарты безопасности. Каждый номер (126, 208, 210…) — это § 571.xxx.</span><span class="en">Federal Motor Vehicle Safety Standards — the standards themselves; each number (126, 208, 210…) is § 571.xxx.</span></td>
+<td><span class="ru">Наша конверсия не должна нарушить ни один применимый стандарт. Лаборатория делает FMVSS compliance matrix и проводит crash/static/component-испытания именно по этим номерам — список в блоке 2 ниже.</span><span class="en">Our conversion must not defeat any applicable standard. The lab builds an FMVSS compliance matrix and runs crash/static/component tests against these numbers — see block 2 below.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571/subpart-B">Part 571 Subpart B</a></td></tr>
+
+<tr><td><b>49 CFR Part 595</b></td>
+<td><span class="ru">Make Inoperative Exemptions — исключение из запрета «выводить из строя» штатные системы безопасности при переделке для людей с инвалидностью. Subpart C = §595.6–595.8.</span><span class="en">Make Inoperative Exemptions — the exemption allowing safety systems to be affected when modifying for people with disabilities. Subpart C = §595.6–595.8.</span></td>
+<td><span class="ru">Действует <b>только после первой розничной продажи</b> машины. Чтобы им пользоваться, надо зарегистрироваться в NHTSA как <b>registered modifier</b> (§595.6) — не позднее 30 дней после первой такой переделки. Требуется: наклейка рядом с сертификационной табличкой с точным текстом «This vehicle has been modified in accordance with 49 CFR 595.6 …»; документ владельцу с перечнем затронутых стандартов и с указанием потери грузоподъёмности свыше 100 кг (220 lb); хранение записей <b>не менее 5 лет</b>. Важно: исключение закрывает не всё — <b>126, 206, 210, 301, 305 им не покрываются</b> и должны выполняться.</span><span class="en">Applies <b>only after first retail sale</b>. To use it, register with NHTSA as a <b>registered modifier</b> (§595.6) within 30 days of the first such modification. Required: a label next to the certification label with the exact "This vehicle has been modified in accordance with 49 CFR 595.6 …" wording; a document to the owner listing affected standards and any load-capacity loss over 100 kg (220 lb); records kept <b>at least 5 years</b>. Note: the exemption does <b>not</b> cover 126, 206, 210, 301, 305 — those must still be met.</span></td>
+<td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-595/subpart-C">Part 595 Subpart C</a></td></tr>
+</table>
+
+<div class="ok ru"><b>Практический вывод по статусу:</b> переделка новой, ещё не проданной машины → мы <b>alterer</b> (Part 567.7). Переделка уже проданной/used машины → работает <b>Part 595</b> и нужна регистрация registered modifier. Начало с шасси/cutaway → <b>final-stage manufacturer</b> (Part 568). В обоих первых случаях регистрация в NHTSA по Part 566 (MID) — базовый шаг.</div>
+<div class="ok en"><b>Status in practice:</b> altering a new, unsold vehicle → we are an <b>alterer</b> (Part 567.7). Modifying an already-sold/used vehicle → <b>Part 595</b> and registered-modifier registration. Starting from a chassis/cutaway → <b>final-stage manufacturer</b> (Part 568). In either of the first two cases, NHTSA Part 566 (MID) registration is the base step.</div>
+
+<h3><span class="ru">2. FMVSS — какие стандарты и что каждый проверяет</span><span class="en">2. FMVSS — what each standard tests</span></h3>
+<p class="desc ru">Это список из требований TLC. Он не исчерпывающий — лаборатория строит матрицу под нашу конкретную конверсию и добавляет «и другие применимые».</p>
+<p class="desc en">This is TLC's list. It is not exhaustive — the lab builds a matrix specific to our conversion and adds "other applicable standards".</p>
+<table>
+<tr><th>#</th><th><span class="ru">Официальное название</span><span class="en">Official title</span></th><th><span class="ru">Что это значит для нашей переделки</span><span class="en">What it means for our conversion</span></th></tr>
+<tr><td><b>126</b></td><td>Electronic stability control systems for light vehicles</td><td><span class="ru">Система курсовой устойчивости. Опускание пола, новая масса и центр тяжести меняют поведение ESC — калибровку нельзя нарушать. Part 595 этот стандарт <b>не</b> прощает.</span><span class="en">ESC. Floor lowering changes mass and centre of gravity; ESC calibration must not be compromised. Part 595 does <b>not</b> exempt it.</span></td></tr>
+<tr><td><b>135</b></td><td>Light vehicle brake systems</td><td><span class="ru">Тормоза: эффективность при новой снаряжённой массе и распределении нагрузки, целостность магистралей при вырезе пола.</span><span class="en">Braking performance at the new curb weight and load distribution; brake-line integrity through the floor cut.</span></td></tr>
+<tr><td><b>206</b></td><td>Door locks and door retention components</td><td><span class="ru">Замки и удержание дверей. Прямо назван в правилах TLC: доработка замка задней двери должна соответствовать FMVSS и быть подтверждена инженером. Part 595 не покрывает.</span><span class="en">Door locks/retention. TLC calls this out: rear-door lock modifications must comply and be engineer-certified. Not covered by Part 595.</span></td></tr>
+<tr><td><b>207</b></td><td>Seating systems</td><td><span class="ru">Прочность сидений и их креплений — критично там, где мы переносим или снимаем сиденья ради места для коляски.</span><span class="en">Seat and seat-anchorage strength — critical where we relocate or remove seats for the wheelchair space.</span></td></tr>
+<tr><td><b>208</b></td><td>Occupant crash protection</td><td><span class="ru">Защита при ударе: подушки, ремни, краш-тест. Основной стандарт, ради которого делается frontal crash test конверсии.</span><span class="en">Crash protection: airbags, belts, crash test. The core reason for a frontal crash test of the conversion.</span></td></tr>
+<tr><td><b>210</b></td><td>Seat belt assembly anchorages</td><td><span class="ru">Точки крепления ремней — включая ремни пассажира в коляске, если они закреплены в кузове. Part 595 не покрывает.</span><span class="en">Belt anchorages — including occupant restraints for the wheelchair position when anchored to the body. Not covered by Part 595.</span></td></tr>
+<tr><td><b>214</b></td><td>Side impact protection</td><td><span class="ru">Боковой удар. Вырез порогов и пола при lowered floor напрямую влияет на боковую защиту.</span><span class="en">Side impact. Cutting rockers and floor for a lowered floor directly affects side protection.</span></td></tr>
+<tr><td><b>216a</b></td><td>Roof crush resistance; Upgraded standard</td><td><span class="ru">Прочность крыши. Актуален, если поднимаем крышу (raised roof). Старый номер «216» отменён.</span><span class="en">Roof crush. Relevant if we raise the roof. The old "216" has been removed.</span></td></tr>
+<tr><td><b>225</b></td><td>Child restraint anchorage systems</td><td><span class="ru">Точки LATCH/ISOFIX для детских кресел — если мы трогаем сиденья, к которым они привязаны.</span><span class="en">LATCH anchorages — if we touch the seats they belong to.</span></td></tr>
+<tr><td><b>301</b></td><td>Fuel system integrity</td><td><span class="ru">Топливная система при ударе. Самый частый узел конверсии: бак переносят или заменяют ради опущенного пола. Part 595 не покрывает — испытание обязательно.</span><span class="en">Fuel system in a crash. The most commonly touched system: the tank is usually relocated or replaced for the lowered floor. Not covered by Part 595 — testing required.</span></td></tr>
+<tr><td><b>305 / 305a</b></td><td>Electric-powered vehicles: electrolyte spillage and electrical shock protection / Electric powertrain integrity</td><td><span class="ru">Для гибридов и электромобилей (Sienna Hybrid — как раз этот случай): высоковольтная батарея и проводка под полом. Резать пол рядом с ними нельзя без подтверждения безопасности.</span><span class="en">For hybrids and EVs (the Sienna Hybrid case): the HV battery and wiring under the floor. Cutting near them requires proven safety.</span></td></tr>
+</table>
+
+<h3><span class="ru">3. Роли и статусы производителя</span><span class="en">3. Manufacturer roles and statuses</span></h3>
+<table>
+<tr><th><span class="ru">Термин</span><span class="en">Term</span></th><th><span class="ru">Расшифровка</span><span class="en">Meaning</span></th></tr>
+<tr><td><b>Alterer</b></td><td><span class="ru">Тот, кто изменяет уже сертифицированную, но ещё не проданную машину (кроме легкосъёмных деталей). Ставит свою табличку по §567.7 и берёт на себя ответственность за соответствие FMVSS.</span><span class="en">One who modifies a certified but not yet retailed vehicle (beyond readily attachable components); applies the §567.7 label and assumes FMVSS responsibility.</span></td></tr>
+<tr><td><b>Second-stage / final-stage manufacturer</b></td><td><span class="ru">Производитель второй/финальной ступени: получает неукомплектованную машину с Incomplete Vehicle Document и завершает её, сертифицируя целиком. Именно этим термином TLC называет заявителя в своих требованиях.</span><span class="en">Receives an incomplete vehicle with its Incomplete Vehicle Document and completes and certifies it. This is the term TLC uses for the applicant.</span></td></tr>
+<tr><td><b>Registered modifier</b></td><td><span class="ru">Зарегистрированный в NHTSA переделыватель по §595.6 — статус, дающий право пользоваться исключением при переделке уже проданных машин под нужды людей с инвалидностью.</span><span class="en">A modifier registered with NHTSA under §595.6, entitled to the make-inoperative exemption when modifying already-sold vehicles for people with disabilities.</span></td></tr>
+<tr><td><b>NHTSA MID</b></td><td><span class="ru">Manufacturer/Modifier Identification — регистрационная запись компании в NHTSA (Part 566, портал vPIC). Без неё нас формально не существует как производителя.</span><span class="en">Manufacturer/Modifier Identification — the company's NHTSA registration record (Part 566, vPIC portal).</span></td></tr>
+<tr><td><b>IVD</b></td><td><span class="ru">Incomplete Vehicle Document — паспорт неукомплектованной машины: по каждому стандарту заявление типа 1 (соответствует), 2 (соответствует при условиях) или 3 (определить нельзя).</span><span class="en">Incomplete Vehicle Document — per-standard Type 1 / 2 / 3 conformity statements for an incomplete vehicle.</span></td></tr>
+<tr><td><b>GVWR / GAWR</b></td><td><span class="ru">Gross Vehicle / Axle Weight Rating — полная разрешённая масса машины и нагрузка на ось. Меняются после конверсии, должны быть указаны на новой табличке.</span><span class="en">Gross Vehicle / Axle Weight Rating — change after conversion and must appear on the new label.</span></td></tr>
+</table>
+
+<h3><span class="ru">4. Выбросы: CARB и Нью-Йорк</span><span class="en">4. Emissions: CARB and New York</span></h3>
+<table>
+<tr><th><span class="ru">Код</span><span class="en">Code</span></th><th><span class="ru">Что это и когда нужен</span><span class="en">What it is and when it applies</span></th><th>Link</th></tr>
+<tr><td><b>CARB</b></td><td><span class="ru">California Air Resources Board — калифорнийский орган по выбросам. Его нормы жёстче федеральных.</span><span class="en">California Air Resources Board — stricter than federal emissions rules.</span></td><td><a target="_blank" href="https://ww2.arb.ca.gov/manufacturers-aftermarket-parts">CARB</a></td></tr>
+<tr><td><b>CARB Executive Order (EO)</b></td><td><span class="ru">Разрешение CARB (по Vehicle Code §27156 / 13 CCR §2222) на деталь или доработку, которая затрагивает систему выбросов: топливный бак, выпуск, испарительная система, впуск, ЭБУ. <b>Триггер — именно вмешательство в систему выбросов.</b> Если конверсия переносит или меняет бак либо выпуск (а lowered floor обычно это и делает), EO нужен. Если силовой агрегат, топливная, испарительная и выпускная системы не тронуты — юридически EO не требуется, машина остаётся под заводской сертификацией. При этом TLC в своём списке требует EO формулировкой «для модифицированной машины» — то есть либо EO, либо инженерное объяснение, почему он не нужен.</span><span class="en">CARB approval (Vehicle Code §27156 / 13 CCR §2222) for a part or modification that touches an emissions-related system: fuel tank, exhaust, evaporative system, intake, ECU. <b>The trigger is touching emissions hardware.</b> A lowered-floor conversion that relocates the tank or exhaust needs one; a conversion leaving powertrain, fuel, evap and exhaust untouched does not, and stays under the OEM certification. TLC's list nonetheless asks for an EO "for the modified vehicle" — so we supply either the EO or an engineering explanation of why none is required.</span></td><td><a target="_blank" href="https://ww2.arb.ca.gov/manufacturers-aftermarket-parts">Aftermarket parts</a></td></tr>
+<tr><td><b>6 NYCRR Part 218</b></td><td><span class="ru">Нью-йоркское правило по выбросам. NY — «Section 177 state»: штат принял калифорнийские стандарты. Поэтому машина, продаваемая/регистрируемая в NY, должна быть сертифицирована по калифорнийским нормам, а Subpart 218-7 распространяет на детали требования 13 CCR §2222. Это и есть причина, по которой TLC вообще спрашивает про CARB.</span><span class="en">New York's emissions rule. NY is a Section 177 state adopting California standards, so vehicles sold/registered here must meet CA certification, and Subpart 218-7 extends 13 CCR §2222 to aftermarket parts. This is why TLC asks about CARB at all.</span></td><td><a target="_blank" href="https://www.law.cornell.edu/regulations/new-york/6-NYCRR-218-7.2">6 NYCRR 218-7.2</a></td></tr>
+<tr><td><b>EPA / DOT</b></td><td><span class="ru">EPA — федеральный орган по выбросам (сертификация двигателя), DOT — Министерство транспорта, в структуре которого работает NHTSA и издаётся 49 CFR.</span><span class="en">EPA — federal emissions authority; DOT — the department NHTSA sits in and under which 49 CFR is issued.</span></td><td>—</td></tr>
+</table>
+
+<h3><span class="ru">5. Правила NYC TLC</span><span class="en">5. NYC TLC rules</span></h3>
+<table>
+<tr><th><span class="ru">Код</span><span class="en">Code</span></th><th><span class="ru">Что это</span><span class="en">What it is</span></th><th>Link</th></tr>
+<tr><td><b>§67-04</b></td><td><span class="ru">Original Verification of Taxicab Candidate — процедура первичной проверки модели как кандидата в такси. С этого начинается путь модели в список.</span><span class="en">Original Verification of Taxicab Candidate — the first-time model verification procedure.</span></td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/pdf/rule_book_current_chapter_67.pdf">Chapter 67</a></td></tr>
+<tr><td><b>§67-05</b></td><td><span class="ru">Taxicab Model Choice — какие модели допустимы под какой тип медальона (Unrestricted / Alternative Fuel / Accessible). <b>Технических требований к WAV здесь нет</b>, они в §67-05.2.</span><span class="en">Taxicab Model Choice — which models may be used with which medallion class. <b>No WAV technical spec here</b>; that is §67-05.2.</span></td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/pdf/rule_book_current_chapter_67.pdf">Chapter 67</a></td></tr>
+<tr><td><b>§67-05.2</b></td><td><span class="ru">Specifications for Accessible Taxicab Candidates — <b>главный технический спец для жёлтого такси</b>: соответствие 49 CFR Part 38; не автобус/минибас изначально на 8+ мест; минимум одно стандартное кресло-коляска; до 5 пассажиров; шасси до 290 л.с. со штатной подвеской и рулевым; бампер менять нельзя, кроме усиленного и краш-испытанного заднего под пандус; доработка замков задней двери — по FMVSS и с сертификацией инженера с опытом от 3 лет в автопроме, <b>отдельно на каждую машину</b>; клиренс от 5 дюймов; длина пассажирского отсека от 56 дюймов (38, если место коляски спереди справа); L51 ≥ 34,6″, L34 ≥ 40″, сумма ≥ 74,6″; узел опущенного пола из нержавеющей стали; крепление коляски по стандарту QStraint QRT; сигнал заднего хода и требования по электрике. Пункт (e): <b>конверсии на б/у машинах требуют отдельного одобрения Комиссии</b>, документального подтверждения, публикации в списке на сайте TLC и прохождения инспекции.</span><span class="en">Specifications for Accessible Taxicab Candidates — <b>the core yellow-cab WAV spec</b>: 49 CFR Part 38 compliance; not a bus/minibus originally designed for 8+; at least one standard wheelchair; up to 5 passengers; chassis ≤290 hp with OEM suspension and steering; no bumper modification except a reinforced, crash-tested rear bumper for a ramp; rear-door lock modifications per FMVSS, certified by an engineer with 3+ years of automotive manufacturing experience, <b>submitted per vehicle</b>; ≥5″ ground clearance; passenger compartment ≥56″ (38″ if the wheelchair position is front-right); L51 ≥34.6″, L34 ≥40″, combined ≥74.6″; stainless-steel lowered-floor assembly; QStraint QRT securement; backup alarm and electrical requirements. Paragraph (e): <b>used-vehicle conversions need Commission approval</b>, documented compliance, listing on the TLC site, and passing inspection.</span></td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/pdf/rule_book_current_chapter_67.pdf">Chapter 67</a></td></tr>
+<tr><td><b>§59C-04</b></td><td><span class="ru">Specifications for Accessible For-Hire Vehicles — тот же по сути спец, но для FHV (ливери, блэк-кар, HVFHS: Uber/Lyft), принят 12 июня 2024. Именно на него ссылается страница TLC с требованиями к производителю.</span><span class="en">Specifications for Accessible For-Hire Vehicles — essentially the same spec for FHVs (livery, black car, HVFHS), adopted 12 Jun 2024. This is the section TLC's manufacturer-requirements page points to.</span></td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/pdf/rule_book_current_chapter_59.pdf">Chapter 59</a></td></tr>
+<tr><td><b>Approved Vehicle List</b></td><td><span class="ru">Список моделей, одобренных TLC. Живёт на странице Yellow Cab Hack-Up в виде графической таблицы; страницы по FHV ссылаются на неё же. С 20 июля 2024 FHV-WAV должны браться из этого списка. Одобряется <b>комбинация</b> «машина + конвертер + конструкция конверсии», а не название компании.</span><span class="en">TLC's list of approved models, published as a chart on the Yellow Cab Hack-Up page; FHV pages link to the same chart. Since 20 Jul 2024, FHV WAVs must come from it. What gets approved is the <b>combination</b> of vehicle + converter + conversion design, not a company name.</span></td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/businesses/yellow_cab_hackup.page">Hack-Up page</a></td></tr>
+<tr><td><b>TLC Inspections</b></td><td><span class="ru">Подразделение, которое рассматривает пакет документов по модели и проводит физическую инспекцию (Woodside Inspection Facility). Канал связи — <b>inspections@tlc.nyc.gov</b>. Отдельной публичной формы заявки у TLC нет: страница Accessible Vehicle Requirements и есть весь описанный процесс.</span><span class="en">The division that reviews the model package and performs the physical inspection (Woodside). Contact: <b>inspections@tlc.nyc.gov</b>. TLC publishes no separate application form — the Accessible Vehicle Requirements page is the whole documented process.</span></td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">Requirements</a></td></tr>
+</table>
+
+<h3><span class="ru">6. Сокращения</span><span class="en">6. Abbreviations</span></h3>
+<table>
+<tr><th><span class="ru">Сокращение</span><span class="en">Abbreviation</span></th><th><span class="ru">Расшифровка</span><span class="en">Meaning</span></th></tr>
+<tr><td><b>ADA</b></td><td><span class="ru">Americans with Disabilities Act — закон 1990 года о правах людей с инвалидностью. Технические требования к транспорту из него живут в 49 CFR Part 37 (услуги) и Part 38 (сами машины).</span><span class="en">Americans with Disabilities Act (1990). Its vehicle requirements live in 49 CFR Part 37 (services) and Part 38 (vehicles).</span></td></tr>
+<tr><td><b>WAV</b></td><td><span class="ru">Wheelchair Accessible Vehicle — машина, доступная для кресла-коляски.</span><span class="en">Wheelchair Accessible Vehicle.</span></td></tr>
+<tr><td><b>FHV / HVFHS</b></td><td><span class="ru">For-Hire Vehicle — наёмная машина не-такси (ливери, блэк-кар). HVFHS — High-Volume For-Hire Service, то есть Uber/Lyft.</span><span class="en">For-Hire Vehicle; HVFHS = High-Volume For-Hire Service (Uber/Lyft).</span></td></tr>
+<tr><td><b>Hack-Up</b></td><td><span class="ru">Процедура подготовки и оформления машины как жёлтого такси под медальон, с инспекцией TLC.</span><span class="en">Preparing and certifying a vehicle as a medallion yellow cab, with TLC inspection.</span></td></tr>
+<tr><td><b>Medallion</b></td><td><span class="ru">Медальон — лицензия на жёлтое такси. Бывает Unrestricted, Alternative Fuel и Accessible; от типа зависит, какую модель можно ставить.</span><span class="en">The yellow-cab licence: Unrestricted, Alternative Fuel or Accessible — the class determines which models may be used.</span></td></tr>
+<tr><td><b>Securement / QRT</b></td><td><span class="ru">Система крепления коляски в салоне. QStraint QRT — стандарт креплений, на который прямо ссылаются правила TLC.</span><span class="en">Wheelchair securement system; QStraint QRT is the standard TLC's rules name explicitly.</span></td></tr>
+<tr><td><b>Lowered floor</b></td><td><span class="ru">Опущенный пол — основная конструкция конверсии минивэна: пол вырезается и заменяется узлом из нержавеющей стали, чтобы получить высоту для въезда коляски.</span><span class="en">The core minivan conversion: the floor is cut out and replaced with a stainless assembly to gain entry height.</span></td></tr>
+<tr><td><b>Crash test / static test</b></td><td><span class="ru">Динамическое испытание с ударом и статическое нагружение узлов (крепления, пандус, бампер). И то, и другое входит в отчёт лаборатории.</span><span class="en">Dynamic impact testing and static load testing of assemblies (anchorages, ramp, bumper); both go into the lab report.</span></td></tr>
+</table>
+</div>
+
 <div class="card" id="library"><h2><span class="ru">Официальные документы и ссылки</span><span class="en">Official documents & links</span></h2>
 <table>
 <tr><th>Document</th><th>Purpose</th><th>Open</th></tr>
@@ -298,6 +423,7 @@ function showSection(id){
   }
   _nav.forEach(function(a){a.classList.toggle('cur',a.getAttribute('href')==='#'+id)});
   window.scrollTo(0,0);
+  setTimeout(function(){window.scrollTo(0,0)},0);
   return id;
 }
 function route(){

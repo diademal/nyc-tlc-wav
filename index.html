@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NYC TLC WAV Modifier Approval Roadmap — RU / EN</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#17202a;--muted:#667085;--line:#dde2e8;--nav:#101828;--blue:#175cd3;--green:#067647;--amber:#b54708}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+header{background:var(--nav);color:white;padding:25px 20px;position:sticky;top:0;z-index:5}
+.wrap{max-width:1250px;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:18px}
+h1{font-size:25px;margin:0 0 5px}.sub{color:#d0d5dd;font-size:14px}
+button,.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.lang{background:white;color:#111827}.print{background:#344054;color:white}
+main{padding:22px 18px 60px}.layout{display:grid;grid-template-columns:280px 1fr;gap:20px}
+@media(max-width:900px){header{position:static}.layout{grid-template-columns:1fr}.side{position:static!important}}
+.side{background:white;border:1px solid var(--line);border-radius:13px;padding:12px;height:max-content;position:sticky;top:105px}
+.side a{display:block;padding:9px 10px;color:#344054;text-decoration:none;font-weight:700;border-radius:8px;font-size:14px}
+.side a:hover{background:#f2f4f7}
+.card{background:white;border:1px solid var(--line);border-radius:13px;padding:20px;margin-bottom:17px}
+h2{margin:0 0 12px;font-size:21px}h3{font-size:17px;margin:20px 0 8px}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef4ff;color:#3538cd;font-size:12px;font-weight:700}
+.note{border-left:4px solid #f79009;background:#fffaeb;padding:12px;border-radius:8px;margin:10px 0;line-height:1.45}
+.ok{border-left:4px solid #12b76a;background:#ecfdf3;padding:12px;border-radius:8px;margin:10px 0;line-height:1.45}
+.step{border:1px solid var(--line);border-radius:11px;padding:14px;margin:10px 0}
+.stephead{display:flex;gap:10px}.step input{width:20px;height:20px}.title{font-weight:800}.desc{color:var(--muted);font-size:14px;line-height:1.5;margin-top:4px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.official{background:#eff8ff;color:#175cd3;border:1px solid #b2ddff}.doc{background:#ecfdf3;color:#067647;border:1px solid #abefc6}.gray{background:#f2f4f7;color:#344054;border:1px solid #d0d5dd}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f9fafb}
+.progress{height:18px;background:#eaecf0;border-radius:20px;overflow:hidden}.bar{height:100%;width:0;background:#12b76a}.small{font-size:13px;color:var(--muted)}
+.phase{font-weight:800;color:#175cd3;margin-bottom:5px}
+textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit}
+.en{display:none} body.english .ru{display:none} body.english .en{display:inline} body.english div.en,body.english p.en,body.english section.en{display:block}
+footer{text-align:center;color:#667085;font-size:12px;margin-top:20px}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><div>
+<h1><span class="ru">NYC TLC WAV — программа одобрения компании и conversion</span><span class="en">NYC TLC WAV — Company & Conversion Approval Program</span></h1>
+<div class="sub"><span class="ru">От исследования существующих converters до включения собственной wheelchair conversion в TLC Approved Vehicle List</span><span class="en">From researching existing converters to adding your own wheelchair conversion to the TLC Approved Vehicle List</span></div>
+</div><div><button class="lang" onclick="toggleLang()">RU / EN</button> <button class="print" onclick="print()">PDF</button></div></div></header>
+
+<main class="wrap"><div class="layout">
+<nav class="side">
+<a href="#progress"><span class="ru">Прогресс</span><span class="en">Progress</span></a>
+<a href="#market"><span class="ru">0. Кто уже одобрен</span><span class="en">0. Existing converters</span></a>
+<a href="#officiallist"><span class="ru">Официальный список TLC</span><span class="en">Official TLC list</span></a>
+<a href="#tlc"><span class="ru">1. Что требует TLC</span><span class="en">1. TLC requirements</span></a>
+<a href="#design"><span class="ru">2. Engineering / CAD</span><span class="en">2. Engineering / CAD</span></a>
+<a href="#prototype"><span class="ru">3. Prototype</span><span class="en">3. Prototype</span></a>
+<a href="#ada"><span class="ru">4. ADA</span><span class="en">4. ADA</span></a>
+<a href="#fmvss"><span class="ru">5. FMVSS / Crash</span><span class="en">5. FMVSS / Crash</span></a>
+<a href="#carb"><span class="ru">6. CARB / Emissions</span><span class="en">6. CARB / Emissions</span></a>
+<a href="#nhtsa"><span class="ru">7. NHTSA статус</span><span class="en">7. NHTSA status</span></a>
+<a href="#companydocs"><span class="ru">8. Документы компании</span><span class="en">8. Company documents</span></a>
+<a href="#tlcreview"><span class="ru">9. TLC review</span><span class="en">9. TLC review</span></a>
+<a href="#approval"><span class="ru">10. Финальное approval</span><span class="en">10. Final approval</span></a>
+<a href="#after"><span class="ru">11. После approval</span><span class="en">11. After approval</span></a>
+<a href="#library"><span class="ru">Документы и ссылки</span><span class="en">Documents & links</span></a>
+</nav>
+
+<section>
+<div class="card" id="progress"><h2><span class="ru">Общий прогресс проекта</span><span class="en">Overall project progress</span></h2>
+<div class="progress"><div class="bar" id="bar"></div></div><p id="pt" class="small"></p>
+<div class="note"><span class="ru"><b>Цель:</b> стать TLC-approved manufacturer / second-stage manufacturer / vehicle modifier и получить approval конкретной WAV conversion. TLC требует не просто компанию — должна быть одобрена конкретная комбинация vehicle + converter + conversion design.</span><span class="en"><b>Goal:</b> become a TLC-approved manufacturer / second-stage manufacturer / vehicle modifier and obtain approval for a specific WAV conversion. TLC approval is tied to the vehicle/converter/conversion configuration.</span></div>
+</div>
+
+<div class="card" id="market"><h2>0. <span class="ru">Начало: кто уже работает в TLC WAV</span><span class="en">Start: existing TLC WAV converters</span></h2>
+<p class="desc ru">Это раздел, с которого мы начинали исследование. TLC прямо подтверждает AMT как converter с действующим approval Toyota Sienna Hybrid WAV; TLC также публично обсуждает BraunAbility и программу Sienna, converted by BraunAbility. VMI встречается на рынке TLC Sienna, но точную комбинацию model-year/converter всегда надо сверять с текущим TLC list.</p>
+<p class="desc en">This is where our research started. TLC materials directly confirm AMT's current Toyota Sienna Hybrid WAV approval and publicly discuss BraunAbility-converted Siennas. VMI appears in the NYC TLC market, but the exact model-year/converter combination should always be verified against the current TLC list.</p>
+<table><tr><th>Converter</th><th>Status / evidence</th><th>Vehicle</th><th>Links</th></tr>
+<tr><td><b>Advance Mobility Technologies (AMT)</b></td><td><span class="ru">TLC transcript: AMT заявляет о present TLC approval</span><span class="en">TLC transcript: AMT states it has present TLC approval</span></td><td>Toyota Sienna Hybrid WAV</td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/About/commission_meeting_transcript/transcript_09_03_25.pdf">TLC transcript</a></td></tr>
+<tr><td><b>BraunAbility</b></td><td><span class="ru">TLC публично описывает программу Toyota Sienna, converted by BraunAbility</span><span class="en">TLC publicly describes Toyota Siennas converted by BraunAbility</span></td><td>Toyota Sienna</td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/About/commission_meeting_transcript/transcript_04_30_25.pdf">TLC transcript</a></td></tr>
+<tr><td><b>VMI / Vantage Mobility</b></td><td><span class="ru">Известный commercial WAV converter; точный TLC model/year проверять перед использованием</span><span class="en">Established commercial WAV converter; verify exact TLC model/year before use</span></td><td>Toyota Sienna / other WAV</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">Current TLC list</a></td></tr>
+<tr><td><b>FR Conversions / Freedom Motors</b></td><td><span class="ru">Рыночные WAV converters; не считать конкретную модель TLC-approved без проверки текущего списка</span><span class="en">Market WAV converters; do not treat a specific model as TLC-approved without checking the current list</span></td><td>Various</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">Verify with TLC</a></td></tr>
+</table>
+<div class="ok ru"><b>Правило TLC для used WAV:</b> make, model, year и converter должны быть approved. Поэтому одного названия converter недостаточно.</div>
+<div class="ok en"><b>TLC rule for used WAVs:</b> make, model, year and converter must be approved. A converter name alone is not enough.</div>
+</div>
+
+
+<div class="card" id="officiallist">
+<h2><span class="ru">Официальная страница TLC — Approved Vehicle List</span><span class="en">Official TLC Page — Approved Vehicle List</span></h2>
+
+<p class="desc ru">Это главная страница TLC для FHV Wheelchair Accessible Vehicles. TLC прямо пишет, что с 20 июля 2024 года для FHV можно использовать только wheelchair accessible vehicles из approved list, размещённого на этой странице. Здесь нужно проверять точные <b>Make / Model / Model Year / Converter</b>.</p>
+<p class="desc en">This is TLC's main page for FHV Wheelchair Accessible Vehicles. TLC states that effective July 20, 2024, only wheelchair accessible vehicles appearing on the approved list on this page may be used for FHV service. Verify the exact <b>Make / Model / Model Year / Converter</b> here.</p>
+
+<div class="actions">
+<a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">OPEN TLC APPROVED VEHICLE LIST</a>
+</div>
+
+<div class="ok ru"><b>Для нашей задачи это основной список.</b> Когда наша компания и Toyota Sienna conversion будут одобрены, именно здесь должна появиться соответствующая комбинация vehicle + converter.</div>
+<div class="ok en"><b>This is the primary list for our project.</b> Once our company and Toyota Sienna conversion are approved, the applicable vehicle + converter combination should appear in TLC's approved vehicle information.</div>
+
+<h3><span class="ru">Yellow Taxi / Medallion — отдельная страница</span><span class="en">Yellow Taxi / Medallion — separate page</span></h3>
+<p class="desc ru">Для Yellow Cab TLC ведёт Approved Vehicle List на странице Yellow Cab Hack-Up. TLC отдельно указывает: для подержанного WAV должны быть одобрены <b>make, model, year и converter</b>.</p>
+<p class="desc en">For Yellow Cabs, TLC maintains the Approved Vehicle List on the Yellow Cab Hack-Up page. TLC specifically states that for a used WAV the <b>make, model, year and converter</b> must be approved.</p>
+<div class="actions">
+<a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/businesses/yellow_cab_hackup.page">OPEN YELLOW CAB APPROVED LIST</a>
+</div>
+
+<h3><span class="ru">Что проверять в списке</span><span class="en">What to verify in the list</span></h3>
+<table>
+<tr><th>Field</th><th><span class="ru">Что означает</span><span class="en">Meaning</span></th></tr>
+<tr><td>Make</td><td>Toyota / Chrysler / Ford / etc.</td></tr>
+<tr><td>Model</td><td>Sienna / Pacifica / etc.</td></tr>
+<tr><td>Model Year</td><td><span class="ru">Какие годы автомобиля разрешены</span><span class="en">Approved vehicle model years</span></td></tr>
+<tr><td>Converter</td><td><span class="ru">Компания, выполнившая одобренную WAV conversion</span><span class="en">Company responsible for the approved WAV conversion</span></td></tr>
+<tr><td>Conversion / Entry</td><td><span class="ru">Rear-entry / side-entry и конкретная одобренная конфигурация, если TLC её указывает</span><span class="en">Rear-entry / side-entry and approved configuration where specified</span></td></tr>
+</table>
+
+<div class="note ru">Не путать этот список с TLC Approved Accessible Vehicle <b>Dispatchers</b> (Uber/Lyft). Нам нужен именно <b>Approved Vehicle List / converter</b>, а не список диспетчеров.</div>
+<div class="note en">Do not confuse this with TLC's Approved Accessible Vehicle <b>Dispatchers</b> (Uber/Lyft). Our project concerns the <b>Approved Vehicle List / converter</b>.</div>
+</div>
+
+<div class="card" id="tlc"><h2>1. <span class="ru">Получить требования TLC до постройки машины</span><span class="en">Confirm TLC requirements before building</span></h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Открыть официальную Submission of Accessible Vehicle for Approval</div><div class="title en">Open official Submission of Accessible Vehicle for Approval</div><div class="desc ru">TLC требует: ADA, crash testing + detailed/summary FMVSS report, CARB, sales/support/service channels.</div><div class="desc en">TLC requires ADA compliance, crash testing with detailed/summary FMVSS reports, CARB, and sales/support/service channels.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">TLC Accessible Vehicle Requirements</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">TLC Rule §59C-04 — FHV</div><div class="desc ru">Основная спецификация Accessible For-Hire Vehicle.</div><div class="desc en">Core Accessible For-Hire Vehicle specification.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/about/tlc-rules.page">TLC Rules</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">TLC Rule §67-05.2 — Medallion</div><div class="desc ru">Требования Accessible Taxicab / yellow cab.</div><div class="desc en">Accessible Taxicab / yellow cab requirements.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/about/tlc-rules.page">TLC Rules</a><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/businesses/yellow_cab_hackup.page">Yellow Cab Hack-Up</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Назначить предварительную встречу с TLC Safety & Emissions</div><div class="title en">Schedule preliminary TLC Safety & Emissions review</div><div class="desc">inspections@tlc.nyc.gov · Rubin Varghese · 24-55 BQE West, Woodside, NY 11377</div></div></div><div class="actions"><a class="btn doc" href="mailto:inspections@tlc.nyc.gov?subject=WAV%20Modifier%20Approval%20-%20Preliminary%20Review">Email TLC</a><a class="btn doc" href="mailto:rubin.varghese@tlc.nyc.gov?subject=WAV%20Modifier%20Approval%20-%20Preliminary%20Review">Email Rubin</a></div></div>
+</div>
+
+<div class="card" id="design"><h2>2. Engineering / CAD</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Создать полный CAD package</div><div class="title en">Create complete CAD package</div><div class="desc ru">General arrangement; OEM cut lines; lowered floor; reinforcements; 32" ramp; hinges; gas struts; mounting; wheelchair anchors; seat/seat-belt anchors; underbody; exhaust; hybrid/fuel components; electrical; BOM.</div><div class="desc en">General arrangement; OEM cut lines; lowered floor; reinforcements; 32" ramp; hinges; gas struts; mounting; wheelchair anchors; seat/seat-belt anchors; underbody; exhaust; hybrid/fuel components; electrical; BOM.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Engineering calculations</div><div class="title en">Engineering calculations</div><div class="desc ru">Материалы, толщины, load paths, weld specification, fasteners/torque, ramp load, anchorage loads, vehicle weight/GAWR/GVWR.</div><div class="desc en">Materials, thicknesses, load paths, weld specs, fasteners/torque, ramp load, anchorage loads, vehicle weight/GAWR/GVWR.</div></div></div></div>
+<div class="note ru">Не копировать AMT 1:1. AMT можно использовать как benchmark/образец измерений; собственная конструкция должна иметь собственный engineering/test package.</div>
+<div class="note en">Do not copy AMT 1:1. AMT can be used as a benchmark/reference; your design needs its own engineering and test package.</div>
+</div>
+
+<div class="card" id="prototype"><h2>3. Prototype vehicle</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Зафиксировать exact vehicle configuration</div><div class="title en">Freeze exact vehicle configuration</div><div class="desc">Make · Model · Model Year · Trim · drivetrain · VIN range/limitations.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Построить один prototype строго по CAD</div><div class="title en">Build one prototype exactly to CAD</div><div class="desc ru">Lowered floor, structural reinforcement, rear ramp, seating, WTORS, electrical/exhaust changes.</div><div class="desc en">Lowered floor, structural reinforcement, rear ramp, seating, WTORS, electrical/exhaust changes.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Создать build record</div><div class="title en">Create build record</div><div class="desc ru">Фото до/во время/после; part numbers; material certificates; weld records; torque records; serial numbers.</div><div class="desc en">Before/during/after photos; part numbers; material certs; weld records; torque records; serial numbers.</div></div></div></div>
+</div>
+
+<div class="card" id="ada"><h2>4. ADA — 49 CFR Part 38</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Создать ADA dimensional compliance sheet</div><div class="title en">Create ADA dimensional compliance sheet</div><div class="desc ru">Ramp/entry geometry, clear width, wheelchair space, securement, maneuvering/clearances и другие применимые размеры.</div><div class="desc en">Ramp/entry geometry, clear width, wheelchair space, securement, maneuvering/clearances and other applicable dimensions.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-A/part-38">49 CFR Part 38</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Подготовить WAV Evaluation / inspection checklist</div><div class="title en">Prepare WAV evaluation / inspection checklist</div><div class="desc ru">Использовать для pre-inspection каждой машины.</div><div class="desc en">Use it for pre-inspection of every converted vehicle.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/about/accessibility-vehicle-criteria.page">TLC Accessibility Vehicle Criteria</a></div></div>
+</div>
+
+<div class="card" id="fmvss"><h2>5. FMVSS / Crash Testing</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Выбрать independent automotive compliance/test laboratory</div><div class="title en">Select independent automotive compliance/test laboratory</div><div class="desc ru">Перед испытаниями лаборатория должна сделать test matrix именно для нашей conversion.</div><div class="desc en">Before testing, the lab should create a test matrix specific to our conversion.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">FMVSS Compliance Matrix</div><div class="desc">126 · 135 · 206 · 207 · 208 · 210 · 214 · 216 · 225 · 301 · 305 · <span class="ru">и другие применимые</span><span class="en">and other applicable standards</span>.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571">49 CFR Part 571 — FMVSS</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Провести required crash/static/component tests</div><div class="title en">Perform required crash/static/component tests</div><div class="desc ru">Получить полный signed test report + summary report, фотографии, instrumentation/data и заключение по applicable FMVSS.</div><div class="desc en">Obtain signed detailed report + summary, photos, instrumentation/data and conclusions for applicable FMVSS.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Engineer certification для tested design</div><div class="title en">Engineer certification for tested design</div><div class="desc ru">Текущие TLC rules содержат требования к engineer certification для определенных rear-entry modifications; согласовать форму с TLC.</div><div class="desc en">Current TLC rules contain engineer-certification requirements for certain rear-entry modifications; confirm exact format with TLC.</div></div></div></div>
+</div>
+
+<div class="card" id="carb"><h2>6. CARB / Emissions / Exhaust</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Определить все изменения emissions/exhaust</div><div class="title en">Document all emissions/exhaust changes</div><div class="desc ru">Сделать OEM schematic и modified schematic. TLC требует CARB testing + Executive Order; без CARB TLC просит подробное engineering explanation и предупреждает о задержке review.</div><div class="desc en">Create OEM and modified schematics. TLC requests CARB testing + Executive Order; without CARB, detailed engineering explanation is required and review may be delayed.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://ww2.arb.ca.gov/">CARB</a></div></div>
+</div>
+
+<div class="card" id="nhtsa"><h2>7. NHTSA / Federal manufacturer-modifier status</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Определить юридический статус компании</div><div class="title en">Determine company federal status</div><div class="desc ru">Second-stage manufacturer / alterer / modifier зависит от того, когда и как происходит conversion.</div><div class="desc en">Second-stage manufacturer / alterer / modifier depends on when and how conversion occurs.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-567">49 CFR Part 567</a><a class="btn official" target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-595">49 CFR Part 595</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">NHTSA registration / Modifier Identification</div><div class="title en">NHTSA registration / Modifier Identification</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://vpic.nhtsa.dot.gov/mid/">NHTSA MID</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Создать certification / door-jamb label</div><div class="title en">Create certification / door-jamb label</div><div class="desc ru">TLC отдельно запросил sample FMVSS door jamb sticker.</div><div class="desc en">TLC specifically requested a sample FMVSS door-jamb sticker.</div></div></div></div>
+</div>
+
+<div class="card" id="companydocs"><h2>8. <span class="ru">Пакет документов компании</span><span class="en">Company document package</span></h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Master Conversion Specification</div><div class="desc ru">Controlled document: model/year applicability, drawings, BOM, materials, installation steps, inspection criteria.</div><div class="desc en">Controlled document: model/year applicability, drawings, BOM, materials, installation steps, inspection criteria.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Certification Letter Template</div><div class="desc ru">Отдельное оригинальное письмо для каждой переделанной машины; TLC vehicle inspection требует original modifier letter о соответствии ADA.</div><div class="desc en">Separate original letter for every converted vehicle; TLC inspection requires an original modifier letter stating ADA compliance.</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://home4.nyc.gov/site/tlc/vehicles/vehicle-inspections.page">TLC Vehicle Inspections</a></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Used Vehicle Conversion Policy</div><div class="desc ru">Model years, mileage, condition, accident/structural damage exclusions, corrosion limits, inspection before conversion.</div><div class="desc en">Model years, mileage, condition, accident/structural damage exclusions, corrosion limits, pre-conversion inspection.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Warranty Policy</div><div class="desc ru">Conversion warranty + процедура взаимодействия с OEM warranty.</div><div class="desc en">Conversion warranty + procedure for interaction with OEM warranty.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Repair & Parts Facilities List</div><div class="desc ru">Адрес, телефон, часы, какие parts/service доступны.</div><div class="desc en">Address, phone, hours, available parts/service.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Sales / Support / Service Channels</div><div class="desc ru">TLC прямо требует potential sales, support and services channels/outlets.</div><div class="desc en">TLC explicitly requires potential sales, support and service channels/outlets.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title">Vehicle Production / Conversion Log</div><div class="desc">VIN · year · model · conversion serial · date · technician · QC · certification letter number.</div></div></div></div>
+</div>
+
+<div class="card" id="tlcreview"><h2>9. TLC Safety & Emissions Review</h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Отправить pre-review package</div><div class="title en">Submit pre-review package</div><div class="desc ru">Cover letter + company profile + CAD summary + ADA matrix + FMVSS matrix/test plan + emissions plan + prototype information.</div><div class="desc en">Cover letter + company profile + CAD summary + ADA matrix + FMVSS matrix/test plan + emissions plan + prototype information.</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Представить prototype для S&E inspection</div><div class="title en">Present prototype for S&E inspection</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Передать hard-copy test package</div><div class="title en">Submit hard-copy test package</div><div class="desc">Crash/FM VSS detailed report · summary · engineer certifications · CARB/emissions · sample label · ADA documentation.</div></div></div></div>
+</div>
+
+<div class="card" id="approval"><h2>10. <span class="ru">Финальное approval</span><span class="en">Final approval</span></h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Закрыть все TLC comments / deficiencies</div><div class="title en">Close all TLC comments / deficiencies</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Получить approval converter + конкретной vehicle conversion</div><div class="title en">Obtain converter + specific vehicle conversion approval</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Проверить появление в TLC Approved Vehicle List</div><div class="title en">Verify listing in TLC Approved Vehicle List</div></div></div><div class="actions"><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">FHV Approved List</a><a class="btn official" target="_blank" href="https://www.nyc.gov/site/tlc/businesses/yellow_cab_hackup.page">Yellow Cab List</a></div></div>
+</div>
+
+<div class="card" id="after"><h2>11. <span class="ru">После approval — каждая машина</span><span class="en">After approval — every vehicle</span></h2>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Конвертировать только по tested/approved design</div><div class="title en">Convert only to tested/approved design</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">QC inspection + build record</div><div class="title en">QC inspection + build record</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Установить required certification label</div><div class="title en">Apply required certification label</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Выдать оригинальный Certification Letter владельцу</div><div class="title en">Issue original Certification Letter to owner</div></div></div></div>
+<div class="step"><div class="stephead"><input class="task" type="checkbox"><div><div class="title ru">Добавить VIN в electronic list для TLC</div><div class="title en">Add VIN to electronic list for TLC</div><div class="desc ru">Rubin Varghese отдельно потребовал regular list of vehicles modified to TLC in electronic format.</div><div class="desc en">Rubin Varghese specifically requested a regular electronic list of vehicles modified for TLC.</div></div></div></div>
+</div>
+
+<div class="card" id="library"><h2><span class="ru">Официальные документы и ссылки</span><span class="en">Official documents & links</span></h2>
+<table>
+<tr><th>Document</th><th>Purpose</th><th>Open</th></tr>
+<tr><td>TLC Accessible Vehicle Requirements</td><td>Submission + Approved List</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/vehicles/accessible-vehicle-requirements.page">OPEN</a></td></tr>
+<tr><td>TLC Yellow Cab Hack-Up</td><td>Medallion approved vehicles + WAV submission</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/businesses/yellow_cab_hackup.page">OPEN</a></td></tr>
+<tr><td>TLC Rules</td><td>§59C-04 / §67-05.2</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/about/tlc-rules.page">OPEN</a></td></tr>
+<tr><td>49 CFR Part 38</td><td>ADA vehicle accessibility</td><td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-A/part-38">OPEN</a></td></tr>
+<tr><td>49 CFR Part 571</td><td>FMVSS</td><td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-571">OPEN</a></td></tr>
+<tr><td>49 CFR Part 567</td><td>Certification / alterers</td><td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-567">OPEN</a></td></tr>
+<tr><td>49 CFR Part 595</td><td>Vehicle modifiers</td><td><a target="_blank" href="https://www.ecfr.gov/current/title-49/subtitle-B/chapter-V/part-595">OPEN</a></td></tr>
+<tr><td>NHTSA Modifier Identification</td><td>Federal modifier resources</td><td><a target="_blank" href="https://vpic.nhtsa.dot.gov/mid/">OPEN</a></td></tr>
+<tr><td>CARB</td><td>Emissions certification / Executive Orders</td><td><a target="_blank" href="https://ww2.arb.ca.gov/">OPEN</a></td></tr>
+<tr><td>TLC Vehicle Inspections</td><td>Modifier letter / vehicle inspection</td><td><a target="_blank" href="https://home4.nyc.gov/site/tlc/vehicles/vehicle-inspections.page">OPEN</a></td></tr>
+<tr><td>TLC Accessibility Vehicle Criteria</td><td>Accessible vehicle evaluation information</td><td><a target="_blank" href="https://www.nyc.gov/site/tlc/about/accessibility-vehicle-criteria.page">OPEN</a></td></tr>
+<tr><td>TLC 2025 Rulemaking PDF</td><td>Current converter / rear-entry / certification rule text</td><td><a target="_blank" href="https://www.nyc.gov/assets/dcas/downloads/pdf/cityrecord/cityrecord-09-25-25.pdf">OPEN PDF</a></td></tr>
+<tr><td>TLC AMT Transcript</td><td>AMT discussion of TLC-approved Sienna Hybrid WAV</td><td><a target="_blank" href="https://www.nyc.gov/assets/tlc/downloads/About/commission_meeting_transcript/transcript_09_03_25.pdf">OPEN PDF</a></td></tr>
+</table>
+</div>
+
+<div class="card"><h2><span class="ru">Рабочие заметки</span><span class="en">Project notes</span></h2><textarea id="notes" placeholder="TLC comments, test lab contacts, CAD revisions, document numbers..."></textarea></div>
+<footer><span class="ru">Рабочая программа проекта. Перед физическими испытаниями и сертификацией финальный test plan должен быть подтвержден TLC S&E и квалифицированной automotive compliance laboratory.</span><span class="en">Project working roadmap. Before physical testing and certification, the final test plan should be confirmed with TLC S&E and a qualified automotive compliance laboratory.</span></footer>
+</section></div></main>
+
+<script>
+const tasks=[...document.querySelectorAll('.task')], notes=document.getElementById('notes');
+function update(){let d=tasks.filter(x=>x.checked).length,p=Math.round(d/tasks.length*100);document.getElementById('bar').style.width=p+'%';document.getElementById('pt').textContent=p+'% — '+d+' / '+tasks.length;}
+function save(){localStorage.setItem('tlc2',JSON.stringify(tasks.map(x=>x.checked)));localStorage.setItem('tlcnotes',notes.value);update()}
+function load(){let a=JSON.parse(localStorage.getItem('tlc2')||'[]');tasks.forEach((x,i)=>x.checked=!!a[i]);notes.value=localStorage.getItem('tlcnotes')||'';update()}
+function toggleLang(){document.body.classList.toggle('english');localStorage.setItem('tlclang',document.body.classList.contains('english')?'en':'ru')}
+tasks.forEach(x=>x.addEventListener('change',save));notes.addEventListener('input',save);
+if(localStorage.getItem('tlclang')==='en')document.body.classList.add('english');load();
+</script></body></html>

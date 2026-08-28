@@ -87,6 +87,21 @@ header .wrap.head{padding-right:150px}
 .cnt{float:right;margin-left:10px;background:#eaecf0;color:#475467;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;line-height:19px;font-variant-numeric:tabular-nums}
 .cnt.part{background:#fef0c7;color:#b54708}
 .cnt.done{background:#d1fadf;color:#067647}
+
+/* --- mobile: stack tables so nothing runs off screen --- */
+@media(max-width:760px){
+  .tw{overflow-x:visible}
+  .tw table{min-width:0}
+  table,tbody,tr,td,th{display:block;width:100%}
+  tr:first-child{display:none}
+  table{font-size:14px}
+  tr{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px}
+  td{border:0;padding:5px 0;word-break:normal;overflow-wrap:break-word}
+  td:first-child{font-weight:800;font-size:15px;padding-bottom:2px}
+  #codes td:first-child{white-space:normal}
+  #codes h3{margin-top:20px}
+  .step .actions a,.actions a{max-width:100%}
+}
 </style>
 </head>
 <body>

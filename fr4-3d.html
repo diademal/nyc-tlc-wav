@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FR-4 Frame Bracket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#e9edf0; --panel:#f6f8f9; --ink:#1b2126; --muted:#5b6670; --line:#c9d1d7;
+  --steel:#8f9aa4; --plate:#a9b3bb; --dim:#c2410c; --dim-bg:#fff4ec; --focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+    --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+  --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{position:relative;height:min(68vh,640px);min-height:360px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,var(--panel),var(--bg))}
+#c3d,#labels{position:absolute;inset:0}
+#c3d{width:100%;height:100%;display:block;touch-action:none}
+#labels{pointer-events:none}
+.dim{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
+.hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:4px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.bar button:hover,.bar label:hover{border-color:var(--muted)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.bar input{accent-color:var(--dim);margin:0}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.spec section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.spec h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.spec dt{color:var(--ink)}
+.spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.err{padding:20px;color:var(--ink)}
+header{position:relative}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
+.lang button{font-family:var(--mono);font-size:13px;border:0;background:var(--panel);color:var(--muted);padding:5px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--dim);color:var(--panel)}
+.lang button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media (max-width:520px){.dim{font-size:10.5px;padding:0 4px}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>FR-4 / FL-4 Frame Bracket</h1>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="langEn" aria-pressed="true">EN</button>
+      <button type="button" id="langRu" aria-pressed="false">RU</button>
+    </div>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.1475″</span>
+  </header>
+
+  <div class="viewer" id="viewer">
+    <canvas id="c3d"></canvas>
+    <div id="labels"></div>
+    <div class="hint i18n">Rotate with one finger, zoom with two</div>
+  </div>
+
+  <div class="bar" role="group" aria-label="View">
+    <button id="btnReset" type="button" class="i18n">Reset view</button>
+    <label for="chkDims"><input id="chkDims" type="checkbox" checked> <span class="i18n">Dimensions</span></label>
+    <label for="chkFL"><input id="chkFL" type="checkbox" checked> <span class="i18n">Left side FL-4</span></label>
+    <label for="chkPlates"><input id="chkPlates" type="checkbox" checked> <span class="i18n">Plates</span></label>
+  </div>
+
+  <div class="spec">
+    <section>
+      <h2 class="i18n">Side plates FR-4 (right) / FL-4 (left)</h2>
+      <dl>
+        <dt class="i18n">A–B, horizontal</dt><dd>2″</dd>
+        <dt class="i18n">Post width (B–C to D–E)</dt><dd>1″</dd>
+        <dt class="i18n">C above line E–F</dt><dd>6 ¾″</dd>
+        <dt class="i18n">D above line E–F</dt><dd>6 ¼″</dd>
+        <dt class="i18n">Post top C–D, radius</dt><dd>R 0.625″</dd>
+        <dt class="i18n">Inner fillet at E</dt><dd>R ⅜″</dd>
+        <dt class="i18n">E–F</dt><dd>3 ½″</dd>
+        <dt class="i18n">F–G, square corner</dt><dd>3 ⅛″</dd>
+        <dt class="i18n">G–H</dt><dd>4 ½″</dd>
+        <dt class="i18n">H–A, slanted</dt><dd>4″</dd>
+      </dl>
+    </section>
+    <section>
+      <h2 class="i18n">Side plate holes</h2>
+      <dl>
+        <dt class="i18n">Top hole, post center at D level</dt><dd>Ø0.52″</dd>
+        <dt class="i18n">Middle hole FR-4 (through)</dt><dd>Ø0.52″</dd>
+        <dt class="i18n">Middle hole FL-4</dt><dd>Ø0.34″</dd>
+        <dt class="i18n">Middle hole from edge F–G</dt><dd>4 ¾″</dd>
+        <dt class="i18n">Middle hole above edge G–H</dt><dd>2 ¼″</dd>
+      </dl>
+    </section>
+    <section>
+      <h2 class="i18n">Plates between side plates</h2>
+      <dl>
+        <dt class="i18n">Gap between side plates</dt><dd>3 ⅛″</dd>
+        <dt class="i18n">Front plate (F–G), height</dt><dd>3 ⅛″</dd>
+        <dt class="i18n">Slanted plate (H–A)</dt><dd class="i18n">no holes</dd>
+        <dt class="i18n">Bottom plate (G–H), hole</dt><dd>Ø1.1″</dd>
+        <dt class="i18n">Top plate (E–F), hole</dt><dd>Ø1.1″</dd>
+        <dt class="i18n">Hole center from F–G side</dt><dd>1 ½″</dd>
+        <dt class="i18n">Neck: outer Ø / height</dt><dd>1.5″ / 0.4″</dd>
+        <dt class="i18n">Neck wall</dt><dd>0.2″</dd>
+        <dt class="i18n">Ear plates, both sides (B–C and D–E)</dt><dd class="i18n">to top (C / D)</dd>
+        <dt class="i18n">V-notch: from edges / depth</dt><dd>1 ¼″ / ⅝″</dd>
+      </dl>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+<script>
+(function(){
+  const viewer = document.getElementById('viewer');
+  if (!window.THREE || !THREE.OrbitControls || !THREE.CSS2DRenderer) {
+    viewer.innerHTML = '<div class="err">3D view failed to load. Please refresh the page.</div>';
+    return;
+  }
+  // ---------- geometry (inches) ----------
+  const t = 0.1475, W = 3.125;
+  const Gy = -Math.sqrt(4*4 - 2*2);     // H-A = 4, A-B = 2
+  const Ey = Gy + 3.125;                // F-G
+  const Dy = Ey + 6.25, Cy = Ey + 6.75;
+  const Rf = 0.375, Rarc = 0.625;
+  const arcC = {x: 3 - Rarc, y: Dy};
+  const midHole = {x: 6.5 - 4.75, y: Gy + 2.25};
+  const topHole = {x: 2.5, y: Dy};
+  const plateHoleX = 6.5 - 1.5;
+  const zMid = t + W/2;
+
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  const canvas = document.getElementById('c3d');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true}); }
+  catch (e) {
+    viewer.innerHTML = '<div class="err">3D is not supported in this browser (WebGL is off). Open the link in Safari or Chrome.</div>';
+    return;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const labelRenderer = new THREE.CSS2DRenderer();
+  labelRenderer.domElement.style.position = 'absolute'; labelRenderer.domElement.style.inset = '0';
+  document.getElementById('labels').appendChild(labelRenderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 500);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  const target = new THREE.Vector3(3.2, 1.2, zMid);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 0.75));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(6, 10, -8); scene.add(sun);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-6, -4, 10); scene.add(fill);
+
+  const matSide = new THREE.MeshStandardMaterial({metalness:0.35, roughness:0.55, side:THREE.DoubleSide});
+  const matPlate = new THREE.MeshStandardMaterial({metalness:0.35, roughness:0.6, side:THREE.DoubleSide});
+  const edgeMat = new THREE.LineBasicMaterial({transparent:true, opacity:0.55});
+  const dimMat = new THREE.LineBasicMaterial();
+
+  function addMesh(geo, mat, group){
+    const m = new THREE.Mesh(geo, mat);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), edgeMat));
+    group.add(m); return m;
+  }
+  function circlePath(x, y, r){ const p = new THREE.Path(); p.absarc(x, y, r, 0, Math.PI*2, true); return p; }
+
+  function sideShape(midR){
+    const s = new THREE.Shape();
+    s.moveTo(0, 0); s.lineTo(2, 0); s.lineTo(2, Cy);
+    const aC = Math.atan2(Cy - arcC.y, 2 - arcC.x);
+    s.absarc(arcC.x, arcC.y, Rarc, aC, 0, true);            // C -> D over the top
+    s.lineTo(3, Ey + Rf);
+    s.absarc(3 + Rf, Ey + Rf, Rf, Math.PI, 1.5*Math.PI, false); // inner fillet at E
+    s.lineTo(6.5, Ey); s.lineTo(6.5, Gy); s.lineTo(2, Gy); s.lineTo(0, 0);
+    s.holes.push(circlePath(topHole.x, topHole.y, 0.26));
+    s.holes.push(circlePath(midHole.x, midHole.y, midR));
+    return s;
+  }
+  const ext = d => ({depth:d, bevelEnabled:false, curveSegments:48});
+
+  const grpFR = new THREE.Group(), grpFL = new THREE.Group(), grpPlates = new THREE.Group(), grpDims = new THREE.Group();
+  scene.add(grpFR, grpFL, grpPlates, grpDims);
+
+  addMesh(new THREE.ExtrudeGeometry(sideShape(0.26), ext(t)), matSide, grpFR);
+  const fl = addMesh(new THREE.ExtrudeGeometry(sideShape(0.17), ext(t)), matSide, grpFL);
+  fl.position.z = t + W;
+
+  // front plate (F-G)
+  const front = addMesh(new THREE.BoxGeometry(t, 3.125, W), matPlate, grpPlates);
+  front.position.set(6.5 - t/2, Gy + 3.125/2, zMid);
+
+  // slanted plate (H-A)
+  const k = t / Math.sin(Math.PI/3);
+  const sl = new THREE.Shape([new THREE.Vector2(0,0), new THREE.Vector2(2,Gy), new THREE.Vector2(2+k,Gy), new THREE.Vector2(k,0)]);
+  const slant = addMesh(new THREE.ExtrudeGeometry(sl, ext(W)), matPlate, grpPlates);
+  slant.position.z = t;
+
+  // horizontal plate with hole, lying in XZ; local (u,v,w) -> (u, -w, v) after rotation.x = +90deg
+  function flatPlate(x0, x1, yTop){
+    const s = new THREE.Shape();
+    s.moveTo(x0, t); s.lineTo(x1, t); s.lineTo(x1, t+W); s.lineTo(x0, t+W); s.lineTo(x0, t);
+    s.holes.push(circlePath(plateHoleX, zMid, 0.55));
+    const m = addMesh(new THREE.ExtrudeGeometry(s, ext(t)), matPlate, grpPlates);
+    m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
+  }
+  function neck(yTop){
+    const s = new THREE.Shape(); s.absarc(plateHoleX, zMid, 0.75, 0, Math.PI*2, false);
+    s.holes.push(circlePath(plateHoleX, zMid, 0.55));
+    const m = addMesh(new THREE.ExtrudeGeometry(s, ext(0.4)), matPlate, grpPlates);
+    m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
+  }
+  flatPlate(2 + k, 6.5 - t, Gy + t);   // bottom
+  flatPlate(3, 6.5 - t, Ey);           // top
+  neck(Gy);                            // bottom neck, down
+  neck(Ey + 0.4);                      // top neck, up
+
+  // plate between the ears (D-E side), V-notch on top; shape in (z, y), extruded along x
+  const zl = t, zr = t + W, vEdge = 1.25, vDepth = 0.625;
+  const es = new THREE.Shape();
+  es.moveTo(zl, Ey - t); es.lineTo(zr, Ey - t); es.lineTo(zr, Dy); es.lineTo(zr - vEdge, Dy);
+  es.lineTo(zMid, Dy - vDepth); es.lineTo(zl + vEdge, Dy); es.lineTo(zl, Dy); es.lineTo(zl, Ey - t);
+  const eg = new THREE.ExtrudeGeometry(es, ext(t));
+  eg.applyMatrix4(new THREE.Matrix4().set(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1));
+  const ear = addMesh(eg, matPlate, grpPlates);
+  ear.position.x = 3 - t;
+
+  // second ear plate on the B-C side, from line A-B up to C
+  const es2 = new THREE.Shape();
+  es2.moveTo(zl, 0); es2.lineTo(zr, 0); es2.lineTo(zr, Cy); es2.lineTo(zr - vEdge, Cy);
+  es2.lineTo(zMid, Cy - vDepth); es2.lineTo(zl + vEdge, Cy); es2.lineTo(zl, Cy); es2.lineTo(zl, 0);
+  const eg2 = new THREE.ExtrudeGeometry(es2, ext(t));
+  eg2.applyMatrix4(new THREE.Matrix4().set(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1));
+  const ear2 = addMesh(eg2, matPlate, grpPlates);
+  ear2.position.x = 2;
+
+  // ---------- dimensions ----------
+  const dimEls = [];
+  const V = (x,y,z) => new THREE.Vector3(x, y, z);
+  function label(text, pos, cls){
+    const el = document.createElement('div'); el.className = 'dim' + (cls ? ' ' + cls : ''); el.textContent = text; el.dataset.en = text; dimEls.push(el);
+    const o = new THREE.CSS2DObject(el); o.position.copy(pos); grpDims.add(o);
+  }
+  function line(pts){ grpDims.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), dimMat)); }
+  function dim(p1, p2, off, text){
+    const a = p1.clone().add(off), b = p2.clone().add(off);
+    line([p1, a]); line([p2, b]); line([a, b]);
+    label(text, a.clone().add(b).multiplyScalar(0.5));
+  }
+  const zf = -0.02; // on the outside face of FR-4
+  dim(V(0,0,zf), V(2,0,zf), V(0,0.45,0), '2″');
+  dim(V(2,Dy-1.6,zf), V(3,Dy-1.6,zf), V(0,0,0), '1″');
+  dim(V(2,Ey,zf), V(2,Cy,zf), V(-0.7,0,0), '6 ¾″ from E–F');
+  dim(V(3,Ey,zf), V(3,Dy,zf), V(0.8,0,0), '6 ¼″ from E–F');
+  dim(V(3,Ey,zf), V(6.5,Ey,zf), V(0,0.55,0), '3 ½″');
+  dim(V(6.5,Gy,zf), V(6.5,Ey,zf), V(0.6,0,0), '3 ⅛″');
+  dim(V(2,Gy,zf), V(6.5,Gy,zf), V(0,-0.9,0), '4 ½″');
+  dim(V(0,0,zf), V(2,Gy,zf), V(-0.45,-0.26,0), '4″');
+  dim(V(midHole.x,midHole.y,zf), V(6.5,midHole.y,zf), V(0,0,0), '4 ¾″');
+  dim(V(midHole.x,Gy,zf), V(midHole.x,midHole.y,zf), V(0,0,0), '2 ¼″');
+  label('R 0.625″', V(2.6, Cy+0.35, zf));
+  label('R ⅜″', V(3.55, Ey+0.55, zf));
+  label('Ø0.52″', V(topHole.x+0.55, topHole.y+0.45, zf));
+  label('Ø0.52″ FR · Ø0.34″ FL', V(midHole.x-0.2, midHole.y+0.5, zf));
+  dim(V(6.5,Gy,t), V(6.5,Gy,t+W), V(0.6,-0.3,0), '3 ⅛″ between plates');
+  dim(V(6.5,Gy-0.4,zMid), V(plateHoleX,Gy-0.4,zMid), V(0,-0.35,0), '1 ½″');
+  label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Gy-1.25, zMid));
+  label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Ey+0.85, zMid));
+  label('steel 0.1475″', V(-1.2, -2.4, zf), 'note');
+  dim(V(3,Dy,t+W-1.25), V(3,Dy,t+W), V(0,0.35,0), '1 ¼″');
+  dim(V(3,Dy,t), V(3,Dy,t+1.25), V(0,0.35,0), '1 ¼″');
+  dim(V(3,Dy-0.625,zMid), V(3,Dy,zMid), V(0.5,0,0), 'V ⅝″');
+  dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(0,0.35,0), '1 ¼″');
+  dim(V(2,Cy,t), V(2,Cy,t+1.25), V(0,0.35,0), '1 ¼″');
+  dim(V(2,Cy-0.625,zMid), V(2,Cy,zMid), V(-0.5,0,0), 'V ⅝″');
+  label('A', V(-0.25,0.15,zf),'note'); label('B', V(2.05,0.3,zf),'note'); label('C', V(1.8,Cy+0.1,zf),'note');
+  label('D', V(3.3,Dy,zf),'note'); label('E', V(2.8,Ey-0.2,zf),'note'); label('F', V(6.75,Ey+0.15,zf),'note');
+  label('G', V(6.75,Gy-0.15,zf),'note'); label('H', V(1.8,Gy-0.25,zf),'note');
+
+  // ---------- theme ----------
+  function applyTheme(){
+    matSide.color.set(css('--steel')); matPlate.color.set(css('--plate'));
+    edgeMat.color.set(css('--ink')); dimMat.color.set(css('--dim'));
+  }
+  applyTheme();
+  new MutationObserver(applyTheme).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch(e) {}
+
+  // ---------- view ----------
+  function resetView(){
+    camera.position.set(-6.5, 5.5, -9.5);
+    controls.target.copy(target); controls.update();
+  }
+  function resize(){
+    const w = viewer.clientWidth, h = viewer.clientHeight;
+    renderer.setSize(w, h, false); labelRenderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.fov = w < 520 ? 48 : 35;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(viewer);
+  resize(); resetView();
+
+  document.getElementById('btnReset').addEventListener('click', resetView);
+  document.getElementById('chkDims').addEventListener('change', e => { grpDims.visible = e.target.checked; });
+  document.getElementById('chkFL').addEventListener('change', e => { grpFL.visible = e.target.checked; });
+  document.getElementById('chkPlates').addEventListener('change', e => { grpPlates.visible = e.target.checked; });
+
+
+  // ---------- language ----------
+  const RU = {
+    "Sienna WAV · all dimensions in inches · steel 0.1475″": "Sienna WAV · все размеры в дюймах · металл 0.1475″",
+    "Rotate with one finger, zoom with two": "Крутить — одним пальцем, приближать — двумя",
+    "Reset view": "Сбросить вид", "Dimensions": "Размеры", "Left side FL-4": "Левая FL-4", "Plates": "Пластины",
+    "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
+    "A–B, horizontal": "A–B, горизонталь", "Post width (B–C to D–E)": "Ширина стойки (B–C до D–E)",
+    "C above line E–F": "C над линией E–F", "D above line E–F": "D над линией E–F",
+    "Post top C–D, radius": "Верх стойки C–D, радиус", "Inner fillet at E": "Скругление в E",
+    "F–G, square corner": "F–G, прямой угол", "H–A, slanted": "H–A, скос",
+    "Side plate holes": "Отверстия в боковинах",
+    "Top hole, post center at D level": "Верхнее, по центру стойки на уровне D",
+    "Middle hole FR-4 (through)": "Среднее FR-4 (сквозное)", "Middle hole FL-4": "Среднее FL-4",
+    "Middle hole from edge F–G": "Среднее: от края F–G", "Middle hole above edge G–H": "Среднее: над краем G–H",
+    "Plates between side plates": "Пластины между боковинами", "Gap between side plates": "Расстояние между боковинами",
+    "Front plate (F–G), height": "Передняя (F–G), высота", "Slanted plate (H–A)": "Скошенная (H–A)",
+    "no holes": "без отверстий", "Bottom plate (G–H), hole": "Нижняя (G–H), отверстие",
+    "Top plate (E–F), hole": "Верхняя (E–F), отверстие", "Hole center from F–G side": "Центр отверстий от стороны F–G",
+    "Neck: outer Ø / height": "Горлышко: наружный Ø / высота", "Neck wall": "Стенка горлышка",
+    "Ear plates, both sides (B–C and D–E)": "Пластины ушек с двух сторон (B–C и D–E)", "to top (C / D)": "до верха (C / D)",
+    "V-notch: from edges / depth": "V-вырез: от краёв / глубина",
+    "6 ¾″ from E–F": "6 ¾″ от E–F", "6 ¼″ from E–F": "6 ¼″ от E–F",
+    "3 ⅛″ between plates": "3 ⅛″ между боковинами",
+    "Ø1.1″ · neck Ø1.5″ × 0.4″": "Ø1.1″ · горлышко Ø1.5″ × 0.4″",
+    "steel 0.1475″": "металл 0.1475″"
+  };
+  document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });
+  const btnEn = document.getElementById('langEn'), btnRu = document.getElementById('langRu');
+  function setLang(lang){
+    document.querySelectorAll('.i18n').forEach(el => {
+      const en = el.dataset.en; el.textContent = lang === 'ru' ? (RU[en] || en) : en;
+    });
+    dimEls.forEach(el => { const en = el.dataset.en; el.textContent = lang === 'ru' ? (RU[en] || en) : en; });
+    document.documentElement.lang = lang;
+    btnEn.setAttribute('aria-pressed', String(lang === 'en'));
+    btnRu.setAttribute('aria-pressed', String(lang === 'ru'));
+    try { localStorage.setItem('fr4-lang', lang); } catch(e) {}
+  }
+  btnEn.addEventListener('click', () => setLang('en'));
+  btnRu.addEventListener('click', () => setLang('ru'));
+  let startLang = 'en';
+  try { startLang = localStorage.getItem('fr4-lang') || 'en'; } catch(e) {}
+  setLang(startLang);
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    controls.update();
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+  })();
+})();
+</script>
+
+</body>
+</html>

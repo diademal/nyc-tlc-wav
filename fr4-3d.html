@@ -51,6 +51,10 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balanc
 .spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
 .spec dt{color:var(--ink)}
 .spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.spec .dist{grid-column:1/-1}
+.spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
+.distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.spec .dist dd{white-space:nowrap}
 .err{padding:20px;color:var(--ink)}
 header{position:relative}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
@@ -93,8 +97,8 @@ header{position:relative}
       <dl>
         <dt class="i18n">A–B, horizontal</dt><dd>2″</dd>
         <dt class="i18n">Post width (B–C to D–E)</dt><dd>1″</dd>
-        <dt class="i18n">C above line E–F</dt><dd>6 ¾″</dd>
-        <dt class="i18n">D above line E–F</dt><dd>6 ¼″</dd>
+        <dt class="i18n">C–H (C above bottom G–H)</dt><dd>6 ¾″</dd>
+        <dt class="i18n">D above bottom G–H</dt><dd>6 ¼″</dd>
         <dt class="i18n">Post top C–D, radius</dt><dd>R 0.625″</dd>
         <dt class="i18n">Inner fillet at E</dt><dd>R ⅜″</dd>
         <dt class="i18n">E–F</dt><dd>3 ½″</dd>
@@ -125,9 +129,14 @@ header{position:relative}
         <dt class="i18n">Neck outer Ø</dt><dd>1.5″</dd>
         <dt class="i18n">Neck height: bottom / top</dt><dd>0.4″ / 0.164″</dd>
         <dt class="i18n">Neck wall</dt><dd>0.2″</dd>
-        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">to top (D)</dd>
+        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">up to C height</dd>
         <dt class="i18n">V-notch: from edges / depth</dt><dd>1 ¼″ / ⅝″</dd>
       </dl>
+    </section>
+    <section class="dist">
+      <h2 class="i18n">Distances between points (straight line)</h2>
+      <p class="i18n distnote">Checking list. C–D is measured straight, not along the arc; E is the corner before the fillet.</p>
+      <dl id="distList"></dl>
     </section>
   </div>
 </div>
@@ -146,7 +155,7 @@ header{position:relative}
   const t = 0.1475, W = 3.125;
   const Gy = -Math.sqrt(4*4 - 2*2);     // H-A = 4, A-B = 2
   const Ey = Gy + 3.125;                // F-G
-  const Dy = Ey + 6.25, Cy = Ey + 6.75;
+  const Dy = Gy + 6.25, Cy = Gy + 6.75;   // measured from the bottom G-H (C-H = 6 3/4)
   const Rf = 0.375, Rarc = 0.625;
   const arcC = {x: 3 - Rarc, y: Dy};
   const midHole = {x: 6.5 - 4.75, y: Gy + 2.25};
@@ -172,7 +181,7 @@ header{position:relative}
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 500);
   const controls = new THREE.OrbitControls(camera, canvas);
   controls.enableDamping = true;
-  const target = new THREE.Vector3(3.2, 1.2, zMid);
+  const target = new THREE.Vector3(3.2, 0, zMid);
 
   scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 0.75));
   const sun = new THREE.DirectionalLight(0xffffff, 0.7); sun.position.set(6, 10, -8); scene.add(sun);
@@ -243,8 +252,8 @@ header{position:relative}
   // plate between the ears (D-E side), V-notch on top; shape in (z, y), extruded along x
   const zl = t, zr = t + W, vEdge = 1.25, vDepth = 0.625;
   const es = new THREE.Shape();
-  es.moveTo(zl, Ey - t); es.lineTo(zr, Ey - t); es.lineTo(zr, Dy); es.lineTo(zr - vEdge, Dy);
-  es.lineTo(zMid, Dy - vDepth); es.lineTo(zl + vEdge, Dy); es.lineTo(zl, Dy); es.lineTo(zl, Ey - t);
+  es.moveTo(zl, Ey - t); es.lineTo(zr, Ey - t); es.lineTo(zr, Cy); es.lineTo(zr - vEdge, Cy);
+  es.lineTo(zMid, Cy - vDepth); es.lineTo(zl + vEdge, Cy); es.lineTo(zl, Cy); es.lineTo(zl, Ey - t);
   const eg = new THREE.ExtrudeGeometry(es, ext(t));
   eg.applyMatrix4(new THREE.Matrix4().set(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1));
   const ear = addMesh(eg, matPlate, grpPlates);
@@ -266,9 +275,9 @@ header{position:relative}
   }
   const zf = -0.02; // on the outside face of FR-4
   dim(V(0,0,zf), V(2,0,zf), V(0,0.45,0), '2″');
-  dim(V(2,Dy-1.6,zf), V(3,Dy-1.6,zf), V(0,0,0), '1″');
-  dim(V(2,Ey,zf), V(2,Cy,zf), V(-0.7,0,0), '6 ¾″ from E–F');
-  dim(V(3,Ey,zf), V(3,Dy,zf), V(0.8,0,0), '6 ¼″ from E–F');
+  dim(V(2,Dy-1.2,zf), V(3,Dy-1.2,zf), V(0,0,0), '1″');
+  dim(V(2,Gy,zf), V(2,Cy,zf), V(-0.7,0,0), 'C–H 6 ¾″');
+  dim(V(3,Gy,zf), V(3,Dy,zf), V(0.8,0,0), '6 ¼″ from G–H');
   dim(V(3,Ey,zf), V(6.5,Ey,zf), V(0,0.55,0), '3 ½″');
   dim(V(6.5,Gy,zf), V(6.5,Ey,zf), V(0.6,0,0), '3 ⅛″');
   dim(V(2,Gy,zf), V(6.5,Gy,zf), V(0,-0.9,0), '4 ½″');
@@ -284,12 +293,28 @@ header{position:relative}
   label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Gy-1.25, zMid));
   label('Ø1.1″ · neck Ø1.5″ × 0.164″', V(plateHoleX, Ey+0.7, zMid));
   label('steel 0.1475″', V(-1.2, -2.4, zf), 'note');
-  dim(V(3,Dy,t+W-1.25), V(3,Dy,t+W), V(0,0.35,0), '1 ¼″');
-  dim(V(3,Dy,t), V(3,Dy,t+1.25), V(0,0.35,0), '1 ¼″');
-  dim(V(3,Dy-0.625,zMid), V(3,Dy,zMid), V(0.5,0,0), 'V ⅝″');
+  dim(V(3,Cy,t+W-1.25), V(3,Cy,t+W), V(0,0.35,0), '1 ¼″');
+  dim(V(3,Cy,t), V(3,Cy,t+1.25), V(0,0.35,0), '1 ¼″');
+  dim(V(3,Cy-0.625,zMid), V(3,Cy,zMid), V(0.5,0,0), 'V ⅝″');
   label('A', V(-0.25,0.15,zf),'note'); label('B', V(2.05,0.3,zf),'note'); label('C', V(1.8,Cy+0.1,zf),'note');
   label('D', V(3.3,Dy,zf),'note'); label('E', V(2.8,Ey-0.2,zf),'note'); label('F', V(6.75,Ey+0.15,zf),'note');
   label('G', V(6.75,Gy-0.15,zf),'note'); label('H', V(1.8,Gy-0.25,zf),'note');
+
+  // ---------- distances between points ----------
+  (function(){
+    const P = {A:[0,0], B:[2,0], C:[2,Cy], D:[3,Dy], E:[3,Ey], F:[6.5,Ey], G:[6.5,Gy], H:[2,Gy]};
+    const fr = {0:'',1:'1/16',2:'1/8',3:'3/16',4:'1/4',5:'5/16',6:'3/8',7:'7/16',8:'1/2',9:'9/16',10:'5/8',11:'11/16',12:'3/4',13:'13/16',14:'7/8',15:'15/16'};
+    function frac(v){ const n = Math.round(v*16), w = Math.floor(n/16), r = n%16;
+      const s = (w ? w : (r ? '' : '0')) + (r ? (w ? ' ' : '') + fr[r] : '') + '″';
+      return (Math.abs(n/16 - v) < 0.002 ? '= ' : '≈ ') + s; }
+    const keys = Object.keys(P), dl = document.getElementById('distList');
+    for (let i = 0; i < keys.length; i++) for (let j = i+1; j < keys.length; j++) {
+      const a = P[keys[i]], b = P[keys[j]], d = Math.hypot(a[0]-b[0], a[1]-b[1]);
+      const dt = document.createElement('dt'); dt.textContent = keys[i] + '–' + keys[j];
+      const dd = document.createElement('dd'); dd.textContent = d.toFixed(3) + '″  ' + frac(d);
+      dl.append(dt, dd);
+    }
+  })();
 
   // ---------- theme ----------
   function applyTheme(){
@@ -337,7 +362,9 @@ header{position:relative}
     "Reset view": "Сбросить вид", "Hide dimensions": "Скрыть размеры", "Show dimensions": "Показать размеры", "Left side FL-4": "Левая FL-4", "Plates": "Пластины",
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
     "A–B, horizontal": "A–B, горизонталь", "Post width (B–C to D–E)": "Ширина стойки (B–C до D–E)",
-    "C above line E–F": "C над линией E–F", "D above line E–F": "D над линией E–F",
+    "C–H (C above bottom G–H)": "C–H (C над низом G–H)", "D above bottom G–H": "D над низом G–H",
+    "up to C height": "до высоты C", "Distances between points (straight line)": "Расстояния между точками (по прямой)",
+    "Checking list. C–D is measured straight, not along the arc; E is the corner before the fillet.": "Для проверки. C–D — по прямой, не по дуге; E — угол до скругления.",
     "Post top C–D, radius": "Верх стойки C–D, радиус", "Inner fillet at E": "Скругление в E",
     "F–G, square corner": "F–G, прямой угол", "H–A, slanted": "H–A, скос",
     "Side plate holes": "Отверстия в боковинах",
@@ -351,7 +378,7 @@ header{position:relative}
     "Neck: outer Ø / height": "Горлышко: наружный Ø / высота", "Neck wall": "Стенка горлышка",
     "Ear plates, both sides (B–C and D–E)": "Пластины ушек с двух сторон (B–C и D–E)", "to top (C / D)": "до верха (C / D)",
     "V-notch: from edges / depth": "V-вырез: от краёв / глубина",
-    "6 ¾″ from E–F": "6 ¾″ от E–F", "6 ¼″ from E–F": "6 ¼″ от E–F",
+    "6 ¼″ from G–H": "6 ¼″ от G–H",
     "3 ⅛″ between plates": "3 ⅛″ между боковинами",
     "Ø1.1″ · neck Ø1.5″ × 0.4″": "Ø1.1″ · горлышко Ø1.5″ × 0.4″",
     "Ø1.1″ · neck Ø1.5″ × 0.164″": "Ø1.1″ · горлышко Ø1.5″ × 0.164″",

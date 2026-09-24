@@ -129,8 +129,9 @@ header{position:relative}
         <dt class="i18n">Neck outer Ø</dt><dd>1.5″</dd>
         <dt class="i18n">Neck height: bottom / top</dt><dd>0.4″ / 0.164″</dd>
         <dt class="i18n">Neck wall</dt><dd>0.2″</dd>
-        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">up to C height</dd>
-        <dt class="i18n">V-notch: from edges / depth</dt><dd>1 ¼″ / ⅝″</dd>
+        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">up to D</dd>
+        <dt class="i18n">Ear top cap, curved D → C (inside ears)</dt><dd>R 0.625″</dd>
+        <dt class="i18n">V-notch on cap edge at C: from sides / depth</dt><dd>1 ¼″ / ⅝″</dd>
       </dl>
     </section>
     <section class="dist">
@@ -252,12 +253,33 @@ header{position:relative}
   // plate between the ears (D-E side), V-notch on top; shape in (z, y), extruded along x
   const zl = t, zr = t + W, vEdge = 1.25, vDepth = 0.625;
   const es = new THREE.Shape();
-  es.moveTo(zl, Ey - t); es.lineTo(zr, Ey - t); es.lineTo(zr, Cy); es.lineTo(zr - vEdge, Cy);
-  es.lineTo(zMid, Cy - vDepth); es.lineTo(zl + vEdge, Cy); es.lineTo(zl, Cy); es.lineTo(zl, Ey - t);
+  es.moveTo(zl, Ey - t); es.lineTo(zr, Ey - t); es.lineTo(zr, Dy); es.lineTo(zl, Dy); es.lineTo(zl, Ey - t);
   const eg = new THREE.ExtrudeGeometry(es, ext(t));
   eg.applyMatrix4(new THREE.Matrix4().set(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1));
   const ear = addMesh(eg, matPlate, grpPlates);
   ear.position.x = 3 - t;
+
+  // curved top cap of the ear, fitted inside the ears along the arc D -> C
+  const aCap = Math.atan2(Cy - arcC.y, 2 - arcC.x);
+  // built from thin slices so the V-notch can be cut from the free edge at C
+  // (1 1/4 from each side, 5/8 deep along the arc)
+  const capN = 60, w0 = W/2 - vEdge;
+  for (let i = 0; i < capN; i++) {
+    const th0 = aCap * i / capN, th1 = aCap * (i + 1) / capN, thm = (th0 + th1) / 2;
+    const sFromC = (aCap - thm) * Rarc;
+    const spans = [];
+    if (sFromC < vDepth) {
+      const half = w0 * (1 - sFromC / vDepth);
+      spans.push([t, zMid - half], [zMid + half, t + W]);
+    } else spans.push([t, t + W]);
+    for (const [z0, z1] of spans) {
+      const g = new THREE.BoxGeometry(t, Rarc * (th1 - th0) * 1.04, z1 - z0);
+      const m = new THREE.Mesh(g, matPlate);
+      m.position.set(arcC.x + (Rarc - t/2) * Math.cos(thm), arcC.y + (Rarc - t/2) * Math.sin(thm), (z0 + z1) / 2);
+      m.rotation.z = thm;
+      grpPlates.add(m);
+    }
+  }
 
 
   // ---------- dimensions ----------
@@ -293,9 +315,9 @@ header{position:relative}
   label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Gy-1.25, zMid));
   label('Ø1.1″ · neck Ø1.5″ × 0.164″', V(plateHoleX, Ey+0.7, zMid));
   label('steel 0.1475″', V(-1.2, -2.4, zf), 'note');
-  dim(V(3,Cy,t+W-1.25), V(3,Cy,t+W), V(0,0.35,0), '1 ¼″');
-  dim(V(3,Cy,t), V(3,Cy,t+1.25), V(0,0.35,0), '1 ¼″');
-  dim(V(3,Cy-0.625,zMid), V(3,Cy,zMid), V(0.5,0,0), 'V ⅝″');
+  dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(-0.4,0.2,0), '1 ¼″');
+  dim(V(2,Cy,t), V(2,Cy,t+1.25), V(-0.4,0.2,0), '1 ¼″');
+  label('V ⅝″', V(2.2, Cy + 0.45, zMid));
   label('A', V(-0.25,0.15,zf),'note'); label('B', V(2.05,0.3,zf),'note'); label('C', V(1.8,Cy+0.1,zf),'note');
   label('D', V(3.3,Dy,zf),'note'); label('E', V(2.8,Ey-0.2,zf),'note'); label('F', V(6.75,Ey+0.15,zf),'note');
   label('G', V(6.75,Gy-0.15,zf),'note'); label('H', V(1.8,Gy-0.25,zf),'note');
@@ -363,7 +385,7 @@ header{position:relative}
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
     "A–B, horizontal": "A–B, горизонталь", "Post width (B–C to D–E)": "Ширина стойки (B–C до D–E)",
     "C–H (C above bottom G–H)": "C–H (C над низом G–H)", "D above bottom G–H": "D над низом G–H",
-    "up to C height": "до высоты C", "Distances between points (straight line)": "Расстояния между точками (по прямой)",
+    "up to C height": "до высоты C", "up to D": "до D", "V-notch on cap edge at C: from sides / depth": "V-вырез на краю крышки у C: от краёв / глубина", "Ear top cap, curved D → C (inside ears)": "Крышка уха, по дуге D → C (внутри ушей)", "Distances between points (straight line)": "Расстояния между точками (по прямой)",
     "Checking list. C–D is measured straight, not along the arc; E is the corner before the fillet.": "Для проверки. C–D — по прямой, не по дуге; E — угол до скругления.",
     "Post top C–D, radius": "Верх стойки C–D, радиус", "Inner fillet at E": "Скругление в E",
     "F–G, square corner": "F–G, прямой угол", "H–A, slanted": "H–A, скос",

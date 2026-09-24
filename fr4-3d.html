@@ -122,9 +122,10 @@ header{position:relative}
         <dt class="i18n">Bottom plate (G–H), hole</dt><dd>Ø1.1″</dd>
         <dt class="i18n">Top plate (E–F), hole</dt><dd>Ø1.1″</dd>
         <dt class="i18n">Hole center from F–G side</dt><dd>1 ½″</dd>
-        <dt class="i18n">Neck: outer Ø / height</dt><dd>1.5″ / 0.4″</dd>
+        <dt class="i18n">Neck outer Ø</dt><dd>1.5″</dd>
+        <dt class="i18n">Neck height: bottom / top</dt><dd>0.4″ / 0.164″</dd>
         <dt class="i18n">Neck wall</dt><dd>0.2″</dd>
-        <dt class="i18n">Ear plates, both sides (B–C and D–E)</dt><dd class="i18n">to top (C / D)</dd>
+        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">to top (D)</dd>
         <dt class="i18n">V-notch: from edges / depth</dt><dd>1 ¼″ / ⅝″</dd>
       </dl>
     </section>
@@ -228,16 +229,16 @@ header{position:relative}
     const m = addMesh(new THREE.ExtrudeGeometry(s, ext(t)), matPlate, grpPlates);
     m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
   }
-  function neck(yTop){
+  function neck(yTop, h){
     const s = new THREE.Shape(); s.absarc(plateHoleX, zMid, 0.75, 0, Math.PI*2, false);
     s.holes.push(circlePath(plateHoleX, zMid, 0.55));
-    const m = addMesh(new THREE.ExtrudeGeometry(s, ext(0.4)), matPlate, grpPlates);
+    const m = addMesh(new THREE.ExtrudeGeometry(s, ext(h)), matPlate, grpPlates);
     m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
   }
   flatPlate(2 + k, 6.5 - t, Gy + t);   // bottom
   flatPlate(3, 6.5 - t, Ey);           // top
-  neck(Gy);                            // bottom neck, down
-  neck(Ey + 0.4);                      // top neck, up
+  neck(Gy, 0.4);                       // bottom neck, down, 0.4 high
+  neck(Ey + 0.164, 0.164);             // top neck, up, 0.164 high
 
   // plate between the ears (D-E side), V-notch on top; shape in (z, y), extruded along x
   const zl = t, zr = t + W, vEdge = 1.25, vDepth = 0.625;
@@ -249,14 +250,6 @@ header{position:relative}
   const ear = addMesh(eg, matPlate, grpPlates);
   ear.position.x = 3 - t;
 
-  // second ear plate on the B-C side, from line A-B up to C
-  const es2 = new THREE.Shape();
-  es2.moveTo(zl, 0); es2.lineTo(zr, 0); es2.lineTo(zr, Cy); es2.lineTo(zr - vEdge, Cy);
-  es2.lineTo(zMid, Cy - vDepth); es2.lineTo(zl + vEdge, Cy); es2.lineTo(zl, Cy); es2.lineTo(zl, 0);
-  const eg2 = new THREE.ExtrudeGeometry(es2, ext(t));
-  eg2.applyMatrix4(new THREE.Matrix4().set(0,0,1,0, 0,1,0,0, 1,0,0,0, 0,0,0,1));
-  const ear2 = addMesh(eg2, matPlate, grpPlates);
-  ear2.position.x = 2;
 
   // ---------- dimensions ----------
   const dimEls = [];
@@ -289,14 +282,11 @@ header{position:relative}
   dim(V(6.5,Gy,t), V(6.5,Gy,t+W), V(0.6,-0.3,0), '3 ⅛″ between plates');
   dim(V(6.5,Gy-0.4,zMid), V(plateHoleX,Gy-0.4,zMid), V(0,-0.35,0), '1 ½″');
   label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Gy-1.25, zMid));
-  label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Ey+0.85, zMid));
+  label('Ø1.1″ · neck Ø1.5″ × 0.164″', V(plateHoleX, Ey+0.7, zMid));
   label('steel 0.1475″', V(-1.2, -2.4, zf), 'note');
   dim(V(3,Dy,t+W-1.25), V(3,Dy,t+W), V(0,0.35,0), '1 ¼″');
   dim(V(3,Dy,t), V(3,Dy,t+1.25), V(0,0.35,0), '1 ¼″');
   dim(V(3,Dy-0.625,zMid), V(3,Dy,zMid), V(0.5,0,0), 'V ⅝″');
-  dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(0,0.35,0), '1 ¼″');
-  dim(V(2,Cy,t), V(2,Cy,t+1.25), V(0,0.35,0), '1 ¼″');
-  dim(V(2,Cy-0.625,zMid), V(2,Cy,zMid), V(-0.5,0,0), 'V ⅝″');
   label('A', V(-0.25,0.15,zf),'note'); label('B', V(2.05,0.3,zf),'note'); label('C', V(1.8,Cy+0.1,zf),'note');
   label('D', V(3.3,Dy,zf),'note'); label('E', V(2.8,Ey-0.2,zf),'note'); label('F', V(6.75,Ey+0.15,zf),'note');
   label('G', V(6.75,Gy-0.15,zf),'note'); label('H', V(1.8,Gy-0.25,zf),'note');
@@ -364,6 +354,9 @@ header{position:relative}
     "6 ¾″ from E–F": "6 ¾″ от E–F", "6 ¼″ from E–F": "6 ¼″ от E–F",
     "3 ⅛″ between plates": "3 ⅛″ между боковинами",
     "Ø1.1″ · neck Ø1.5″ × 0.4″": "Ø1.1″ · горлышко Ø1.5″ × 0.4″",
+    "Ø1.1″ · neck Ø1.5″ × 0.164″": "Ø1.1″ · горлышко Ø1.5″ × 0.164″",
+    "Neck height: bottom / top": "Высота горлышка: низ / верх", "Neck outer Ø": "Наружный Ø горлышка",
+    "Ear plate (D–E side only)": "Пластина уха (только сторона D–E)", "to top (D)": "до верха (D)",
     "steel 0.1475″": "металл 0.1475″"
   };
   document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });

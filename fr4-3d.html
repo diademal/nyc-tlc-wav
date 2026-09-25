@@ -55,6 +55,10 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balanc
 .spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
 .distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
 .spec .dist dd{white-space:nowrap}
+.pick{cursor:pointer;border-radius:3px}
+.pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
+.pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600}
 .err{padding:20px;color:var(--ink)}
 header{position:relative}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
@@ -135,8 +139,8 @@ header{position:relative}
       </dl>
     </section>
     <section class="dist">
-      <h2 class="i18n">Distances between points (straight line)</h2>
-      <p class="i18n distnote">Checking list. C–D is measured straight, not along the arc; E is the corner before the fillet.</p>
+      <h2 class="i18n">Side edges: FR-4 (A…H) / FL-4 (A1…H1)</h2>
+      <p class="i18n distnote">Only edges along the side plate, plus heights that cannot be read otherwise. E is the corner before the fillet. Tap a row to see it on the model.</p>
       <dl id="distList"></dl>
     </section>
   </div>
@@ -321,6 +325,34 @@ header{position:relative}
   label('A', V(-0.25,0.15,zf),'note'); label('B', V(2.05,0.3,zf),'note'); label('C', V(1.8,Cy+0.1,zf),'note');
   label('D', V(3.3,Dy,zf),'note'); label('E', V(2.8,Ey-0.2,zf),'note'); label('F', V(6.75,Ey+0.15,zf),'note');
   label('G', V(6.75,Gy-0.15,zf),'note'); label('H', V(1.8,Gy-0.25,zf),'note');
+  // FL-4 side: same points with index 1
+  const zL = 2*t + W + 0.02;
+  [['A1',-0.25,0.15],['B1',2.05,0.3],['C1',1.8,Cy+0.1],['D1',3.3,Dy],['E1',2.8,Ey-0.2],['F1',6.75,Ey+0.15],['G1',6.75,Gy-0.15],['H1',1.8,Gy-0.25]]
+    .forEach(([n,x,y]) => label(n, V(x,y,zL), 'note'));
+
+  // ---------- highlight of a picked distance ----------
+  const hlGroup = new THREE.Group(); scene.add(hlGroup);
+  const hlMat = new THREE.MeshBasicMaterial({color: 0x1a73e8, depthTest: false});
+  let hlLabel = null, hlRows = [];
+  function showDistance(pts2d, text, dt, dd){
+    while (hlGroup.children.length) hlGroup.remove(hlGroup.children[0]);
+    if (hlLabel) { scene.remove(hlLabel); hlLabel.element.remove(); hlLabel = null; }
+    hlRows.forEach(e => e.classList.remove('on')); hlRows = [dt, dd]; hlRows.forEach(e => e.classList.add('on'));
+    const z = -0.06;
+    const v = pts2d.map(p => new THREE.Vector3(p[0], p[1], z));
+    for (let i = 0; i < v.length - 1; i++) {
+      const a = v[i], b = v[i+1], len = a.distanceTo(b);
+      const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, len, 10), hlMat);
+      cyl.position.copy(a.clone().add(b).multiplyScalar(0.5));
+      cyl.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), b.clone().sub(a).normalize());
+      cyl.renderOrder = 10; hlGroup.add(cyl);
+    }
+    [v[0], v[v.length-1]].forEach(p => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), hlMat); s.position.copy(p); s.renderOrder = 10; hlGroup.add(s); });
+    const el = document.createElement('div'); el.className = 'dim hl'; el.textContent = text;
+    hlLabel = new THREE.CSS2DObject(el); hlLabel.position.copy(v[Math.floor(v.length/2)]).add(new THREE.Vector3(0, 0.25, 0));
+    scene.add(hlLabel);
+    viewer.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
 
   // ---------- distances between points ----------
   (function(){
@@ -329,11 +361,27 @@ header{position:relative}
     function frac(v){ const n = Math.round(v*16), w = Math.floor(n/16), r = n%16;
       const s = (w ? w : (r ? '' : '0')) + (r ? (w ? ' ' : '') + fr[r] : '') + '″';
       return (Math.abs(n/16 - v) < 0.002 ? '= ' : '≈ ') + s; }
-    const keys = Object.keys(P), dl = document.getElementById('distList');
-    for (let i = 0; i < keys.length; i++) for (let j = i+1; j < keys.length; j++) {
-      const a = P[keys[i]], b = P[keys[j]], d = Math.hypot(a[0]-b[0], a[1]-b[1]);
-      const dt = document.createElement('dt'); dt.textContent = keys[i] + '–' + keys[j];
+    const dl = document.getElementById('distList');
+    // only edges that lie on the side plate, plus heights that cannot be read otherwise
+    const rows = [['A','B'],['B','C'],['C','D','arc'],['D','E'],['E','F'],['F','G'],['G','H'],['H','A'],
+                  ['C','H','h'],['D','G–H','hD']];
+    for (const r of rows) {
+      let d;
+      if (r[2] === 'hD') d = Dy - Gy;
+      else { const a = P[r[0]], b = P[r[1]]; d = Math.hypot(a[0]-b[0], a[1]-b[1]); }
+      const dt = document.createElement('dt');
+      dt.textContent = r[0] + '–' + r[1] + '  /  ' + r[0] + '1–' + (r[1].length === 1 ? r[1] + '1' : 'G1–H1') + (r[2] === 'arc' ? '  (chord, arc R 0.625)' : r[2] ? '  (height)' : '');
       const dd = document.createElement('dd'); dd.textContent = d.toFixed(3) + '″  ' + frac(d);
+      // tap a row -> show this distance and its points on the model
+      let pts;
+      if (r[2] === 'hD') pts = [[3, Dy], [3, Gy]];
+      else if (r[2] === 'arc') { pts = []; const a0 = Math.atan2(Cy - arcC.y, 2 - arcC.x);
+        for (let k = 0; k <= 24; k++) { const a = a0 * (1 - k / 24); pts.push([arcC.x + Rarc * Math.cos(a), arcC.y + Rarc * Math.sin(a)]); } }
+      else pts = [P[r[0]], P[r[1]]];
+      const txt = dt.textContent.split('  (')[0].split('  /  ')[0] + ' = ' + frac(d).slice(2);
+      [dt, dd].forEach(el => { el.classList.add('pick'); el.tabIndex = 0; el.setAttribute('role', 'button');
+        const go = () => { showDistance(pts, txt, dt, dd); };
+        el.addEventListener('click', go); el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); });
       dl.append(dt, dd);
     }
   })();
@@ -385,8 +433,8 @@ header{position:relative}
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
     "A–B, horizontal": "A–B, горизонталь", "Post width (B–C to D–E)": "Ширина стойки (B–C до D–E)",
     "C–H (C above bottom G–H)": "C–H (C над низом G–H)", "D above bottom G–H": "D над низом G–H",
-    "up to C height": "до высоты C", "up to D": "до D", "V-notch on cap edge at C: from sides / depth": "V-вырез на краю крышки у C: от краёв / глубина", "Ear top cap, curved D → C (inside ears)": "Крышка уха, по дуге D → C (внутри ушей)", "Distances between points (straight line)": "Расстояния между точками (по прямой)",
-    "Checking list. C–D is measured straight, not along the arc; E is the corner before the fillet.": "Для проверки. C–D — по прямой, не по дуге; E — угол до скругления.",
+    "up to C height": "до высоты C", "up to D": "до D", "V-notch on cap edge at C: from sides / depth": "V-вырез на краю крышки у C: от краёв / глубина", "Ear top cap, curved D → C (inside ears)": "Крышка уха, по дуге D → C (внутри ушей)", "Side edges: FR-4 (A…H) / FL-4 (A1…H1)": "Стороны боковин: FR-4 (A…H) / FL-4 (A1…H1)",
+    "Only edges along the side plate, plus heights that cannot be read otherwise. E is the corner before the fillet. Tap a row to see it on the model.": "Только стороны вдоль боковины и высоты, которые иначе не вычислить. E — угол до скругления. Нажмите на строку — покажу на детали.",
     "Post top C–D, radius": "Верх стойки C–D, радиус", "Inner fillet at E": "Скругление в E",
     "F–G, square corner": "F–G, прямой угол", "H–A, slanted": "H–A, скос",
     "Side plate holes": "Отверстия в боковинах",

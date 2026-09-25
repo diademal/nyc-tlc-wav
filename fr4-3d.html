@@ -96,33 +96,6 @@ header{position:relative}
   </div>
 
   <div class="spec">
-    <section>
-      <h2 class="i18n">Side plate holes</h2>
-      <dl>
-        <dt class="i18n">Top hole, post center at D level</dt><dd>Ø0.52″</dd>
-        <dt class="i18n">Middle hole FR-4 (through)</dt><dd>Ø0.52″</dd>
-        <dt class="i18n">Middle hole FL-4</dt><dd>Ø0.34″</dd>
-        <dt class="i18n">Middle hole from edge F–G</dt><dd>4 ¾″</dd>
-        <dt class="i18n">Middle hole above edge G–H</dt><dd>2 ¼″</dd>
-      </dl>
-    </section>
-    <section>
-      <h2 class="i18n">Plates between side plates</h2>
-      <dl>
-        <dt class="i18n">Gap between side plates</dt><dd>3 ⅛″</dd>
-        <dt class="i18n">Front plate (F–G), height</dt><dd>3 ⅛″</dd>
-        <dt class="i18n">Slanted plate (H–A)</dt><dd class="i18n">no holes</dd>
-        <dt class="i18n">Bottom plate (G–H), hole</dt><dd>Ø1.1″</dd>
-        <dt class="i18n">Top plate (E–F), hole</dt><dd>Ø1.1″</dd>
-        <dt class="i18n">Hole center from F–G side</dt><dd>1 ½″</dd>
-        <dt class="i18n">Neck outer Ø</dt><dd>1.5″</dd>
-        <dt class="i18n">Neck height: bottom / top</dt><dd>0.4″ / 0.164″</dd>
-        <dt class="i18n">Neck wall</dt><dd>0.2″</dd>
-        <dt class="i18n">Ear plate (D–E side only)</dt><dd class="i18n">up to D</dd>
-        <dt class="i18n">Ear top cap, curved D → C (inside ears)</dt><dd>R 0.625″</dd>
-        <dt class="i18n">V-notch on cap edge at C: from sides / depth</dt><dd>1 ¼″ / ⅝″</dd>
-      </dl>
-    </section>
     <section class="dist">
       <h2 class="i18n">Side edges: FR-4 (A…H) / FL-4 (A1…H1)</h2>
       <p class="i18n distnote">Tap a row to see it on the model.</p>
@@ -319,14 +292,14 @@ header{position:relative}
 
   // ---------- highlight of a picked distance ----------
   const hlGroup = new THREE.Group(); scene.add(hlGroup);
-  const hlMat = new THREE.MeshBasicMaterial({color: 0x1a73e8, depthTest: false});
+  const hlMat = new THREE.MeshBasicMaterial({color: 0x1a73e8, depthTest: false, depthWrite: false, transparent: true});
   let hlLabel = null, hlRows = [];
   function showDistance(pts2d, text, dt, dd){
     while (hlGroup.children.length) hlGroup.remove(hlGroup.children[0]);
     if (hlLabel) { scene.remove(hlLabel); hlLabel.element.remove(); hlLabel = null; }
     hlRows.forEach(e => e.classList.remove('on')); hlRows = [dt, dd]; hlRows.forEach(e => e.classList.add('on'));
     const z = -0.06;
-    const v = pts2d.map(p => new THREE.Vector3(p[0], p[1], z));
+    const v = pts2d.map(p => new THREE.Vector3(p[0], p[1], p.length > 2 ? p[2] : z));
     for (let i = 0; i < v.length - 1; i++) {
       const a = v[i], b = v[i+1], len = a.distanceTo(b);
       const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, len, 10), hlMat);
@@ -353,6 +326,8 @@ header{position:relative}
     // [label, value text, points to highlight (null = not clickable)]
     const arcPts = []; { const a0 = Math.atan2(Cy - arcC.y, 2 - arcC.x);
       for (let k = 0; k <= 24; k++) { const a = a0 * (1 - k / 24); arcPts.push([arcC.x + Rarc * Math.cos(a), arcC.y + Rarc * Math.sin(a)]); } }
+    const circ = (cx, cy, r, z) => { const o = []; for (let k = 0; k <= 32; k++) { const a = k / 32 * Math.PI * 2; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a), z]); } return o; };
+    const circXZ = (cx, cz, r, y) => { const o = []; for (let k = 0; k <= 32; k++) { const a = k / 32 * Math.PI * 2; o.push([cx + r * Math.cos(a), y, cz + r * Math.sin(a)]); } return o; };
     const edge = (a, b) => [a + '–' + b, frac(Math.hypot(P[a][0]-P[b][0], P[a][1]-P[b][1])), [P[a], P[b]]];
     const rows = [
       edge('A','B'), edge('B','C'),
@@ -362,13 +337,30 @@ header{position:relative}
       ['D to G–H, height', frac(Dy - Gy), [[3, Dy], [3, Gy]]],
       ['Post width B–C to D–E', '1″', [[2, Dy - 1.2], [3, Dy - 1.2]]],
       ['Inner fillet at E', 'R ⅜″', null],
+      ['Top hole, post center at D level', 'Ø0.52″', circ(2.5, Dy, 0.26, -0.06)],
+      ['Middle hole FR-4 (through)', 'Ø0.52″', circ(midHole.x, midHole.y, 0.26, -0.06)],
+      ['Middle hole FL-4', 'Ø0.34″', circ(midHole.x, midHole.y, 0.17, 2*t + W + 0.06)],
+      ['Middle hole from edge F–G', frac(4.75), [[midHole.x, midHole.y], [6.5, midHole.y]]],
+      ['Middle hole above edge G–H', frac(2.25), [[midHole.x, Gy], [midHole.x, midHole.y]]],
+      ['Gap between side plates', frac(W), [[6.5, Gy, t], [6.5, Gy, t + W]]],
+      ['Front plate (F–G), height', frac(3.125), [[6.56, Gy, zMid], [6.56, Ey, zMid]]],
+      ['Slanted plate (H–A)', 'no holes', [[0, 0, zMid], [2, Gy, zMid]], true],
+      ['Bottom plate (G–H), hole', 'Ø1.1″', circXZ(plateHoleX, zMid, 0.55, Gy - 0.06)],
+      ['Top plate (E–F), hole', 'Ø1.1″', circXZ(plateHoleX, zMid, 0.55, Ey + 0.06)],
+      ['Hole center from F–G side', frac(1.5), [[6.5, Gy - 0.06, zMid], [plateHoleX, Gy - 0.06, zMid]]],
+      ['Neck outer Ø', '1.5″', circXZ(plateHoleX, zMid, 0.75, Gy - 0.4)],
+      ['Neck height: bottom / top', '0.4″ / 0.164″', [[plateHoleX + 0.75, Gy, zMid], [plateHoleX + 0.75, Gy - 0.4, zMid]]],
+      ['Neck wall', '0.2″', null],
+      ['Ear plate (D–E side only)', 'up to D', [[3, Ey, zMid], [3, Dy, zMid]], true],
+      ['Ear top cap, curved D → C (inside ears)', 'R 0.625″', arcPts.map(p => [p[0], p[1], zMid])],
+      ['V-notch on cap edge at C: from sides / depth', '1 ¼″ / ⅝″', [[2, Cy, t], [2, Cy, t + 1.25]]],
     ];
-    for (const [label, val, pts] of rows) {
+    for (const [label, val, pts, ddI18n] of rows) {
       const dt = document.createElement('dt'); dt.className = 'i18n'; dt.textContent = label;
-      const dd = document.createElement('dd'); dd.textContent = val;
+      const dd = document.createElement('dd'); dd.textContent = val; if (ddI18n) dd.className = 'i18n';
       if (pts) {
         [dt, dd].forEach(el => { el.classList.add('pick'); el.tabIndex = 0; el.setAttribute('role', 'button');
-          const go = () => { showDistance(pts, label.split(',')[0] + ' = ' + val, dt, dd); };
+          const go = () => { showDistance(pts, (dt.textContent.split(',')[0] + ' = ' + dd.textContent), dt, dd); };
           el.addEventListener('click', go); el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); });
       }
       dl.append(dt, dd);

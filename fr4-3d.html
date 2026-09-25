@@ -58,7 +58,8 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balanc
 .pick{cursor:pointer;border-radius:3px}
 .pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
 .pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
-.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600;font-size:14px;padding:3px 8px;pointer-events:auto;cursor:pointer;z-index:5}
+.nodims .dim:not(.hl){display:none!important}
 .err{padding:20px;color:var(--ink)}
 header{position:relative}
 .lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
@@ -294,7 +295,13 @@ header{position:relative}
   const hlGroup = new THREE.Group(); scene.add(hlGroup);
   const hlMat = new THREE.MeshBasicMaterial({color: 0x1a73e8, depthTest: false, depthWrite: false, transparent: true});
   let hlLabel = null, hlRows = [];
+  function clearDistance(){
+    while (hlGroup.children.length) hlGroup.remove(hlGroup.children[0]);
+    if (hlLabel) { scene.remove(hlLabel); hlLabel.element.remove(); hlLabel = null; }
+    hlRows.forEach(e => e.classList.remove('on')); hlRows = [];
+  }
   function showDistance(pts2d, text, dt, dd){
+    if (hlRows[0] === dt) { clearDistance(); return; }   // tap the same row again = remove the mark
     while (hlGroup.children.length) hlGroup.remove(hlGroup.children[0]);
     if (hlLabel) { scene.remove(hlLabel); hlLabel.element.remove(); hlLabel = null; }
     hlRows.forEach(e => e.classList.remove('on')); hlRows = [dt, dd]; hlRows.forEach(e => e.classList.add('on'));
@@ -308,8 +315,10 @@ header{position:relative}
       cyl.renderOrder = 10; hlGroup.add(cyl);
     }
     [v[0], v[v.length-1]].forEach(p => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), hlMat); s.position.copy(p); s.renderOrder = 10; hlGroup.add(s); });
-    const el = document.createElement('div'); el.className = 'dim hl'; el.textContent = text;
-    hlLabel = new THREE.CSS2DObject(el); hlLabel.position.copy(v[Math.floor(v.length/2)]).add(new THREE.Vector3(0, 0.25, 0));
+    const el = document.createElement('div'); el.className = 'dim hl'; el.textContent = text + '  ✕';
+    el.title = 'Remove mark'; el.addEventListener('click', clearDistance);
+    const mid = v.length === 2 ? v[0].clone().add(v[1]).multiplyScalar(0.5) : v[Math.floor(v.length / 2)].clone();
+    hlLabel = new THREE.CSS2DObject(el); hlLabel.position.copy(mid);
     scene.add(hlLabel);
     viewer.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
@@ -396,10 +405,10 @@ header{position:relative}
   new ResizeObserver(resize).observe(viewer);
   resize(); resetView();
 
-  document.getElementById('btnReset').addEventListener('click', resetView);
+  document.getElementById('btnReset').addEventListener('click', () => { resetView(); clearDistance(); });
   document.getElementById('btnDims').addEventListener('click', e => {
     grpDims.visible = !grpDims.visible;
-    labelsEl.hidden = !grpDims.visible;
+    document.body.classList.toggle('nodims', !grpDims.visible);   // hide dimension labels, keep the picked mark
     e.currentTarget.setAttribute('aria-pressed', String(grpDims.visible));
     document.getElementById('dimsTxt').dataset.en = grpDims.visible ? 'Hide dimensions' : 'Show dimensions';
     setLang(curLang);

@@ -132,12 +132,12 @@ header{position:relative}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
 <script>
 (function(){
   const viewer = document.getElementById('viewer');
-  if (!window.THREE || !THREE.OrbitControls || !THREE.CSS2DRenderer) {
+  if (!window.THREE || !THREE.TrackballControls || !THREE.CSS2DRenderer) {
     viewer.innerHTML = '<div class="err">3D view failed to load. Please refresh the page.</div>';
     return;
   }
@@ -169,8 +169,10 @@ header{position:relative}
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 500);
-  const controls = new THREE.OrbitControls(camera, canvas);
-  controls.enableDamping = true;
+  // free 360° rotation in any direction (no locked "up")
+  const controls = new THREE.TrackballControls(camera, canvas);
+  controls.rotateSpeed = 3.0; controls.zoomSpeed = 1.2; controls.panSpeed = 0.8;
+  controls.staticMoving = false; controls.dynamicDampingFactor = 0.15;
   const target = new THREE.Vector3(3.2, 0, zMid);
 
   scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 0.75));
@@ -386,6 +388,7 @@ header{position:relative}
   const labelsEl = document.getElementById('labels');
   let refDist = 1;
   function resetView(){
+    camera.up.set(0, 1, 0);
     camera.position.set(-6.5, 5.5, -9.5);
     controls.target.copy(target); controls.update();
     refDist = camera.position.distanceTo(controls.target);
@@ -396,6 +399,7 @@ header{position:relative}
     camera.aspect = w / h;
     camera.fov = w < 520 ? 48 : 35;
     camera.updateProjectionMatrix();
+    controls.handleResize();
   }
   new ResizeObserver(resize).observe(viewer);
   resize(); resetView();

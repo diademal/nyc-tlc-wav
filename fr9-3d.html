@@ -1040,8 +1040,8 @@ header{position:relative}
     return;
   }
   // ---------- geometry (inches) ----------
-  // square tube 3 x 3, length 8, wall 0.1475, outer corner R 0.3 (2 x wall)
-  const S = 3, L = 8, t = 0.1475, Ro = 0.295, Ri = Ro - t;
+  // square tube 3 x 3, length 7 3/4, wall 0.1475, outer corner R 0.3 (2 x wall)
+  const S = 3, L = 7.75, t = 0.1475, Ro = 0.295, Ri = Ro - t;
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
   const canvas = document.getElementById('c3d');
@@ -1106,7 +1106,7 @@ header{position:relative}
   const v = k => V(...P[k]);
   dim(v('A'), v('B'), V(0,-0.6,0), '3″');
   dim(v('B'), v('C'), V(0.6,0,0), '3″');
-  dim(v('B'), v('F'), V(0.6,-0.6,0), '8″');
+  dim(v('B'), v('F'), V(0.6,-0.6,0), '7¾″');
   label('wall 0.1475″', V(S/2, S + 0.35, -0.2), 'note');
   label('R 0.3″', V(-0.5, 0.25, -0.3));
   label('A', V(-0.3,-0.3,0),'note'); label('B', V(S+0.3,-0.3,0),'note'); label('C', V(S+0.35,S+0.2,0),'note'); label('D', V(-0.3,S+0.3,0),'note');
@@ -1149,7 +1149,7 @@ header{position:relative}
     const e = (a, b, val) => [a + '–' + b, val, [P[a], P[b]]];
     const rows = [
       e('A','B','3″'), e('B','C','3″'), e('C','D','3″'), e('D','A','3″'),
-      e('A','E','8″'), e('B','F','8″'), e('C','G','8″'), e('D','H','8″'),
+      e('A','E','7¾″'), e('B','F','7¾″'), e('C','G','7¾″'), e('D','H','7¾″'),
       ['Wall thickness', '0.1475″', [[S/2, S, -0.06], [S/2, S - t, -0.06]]],
       ['Outer corner radius', 'R 0.3″', null],
       ['Ends A–B–C–D and E–F–G–H', 'square, open', [P.A, P.B, P.C, P.D, P.A], true],

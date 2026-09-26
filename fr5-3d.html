@@ -1080,12 +1080,12 @@ header{position:relative}
     const h=new THREE.Path(); h.absarc(HOLE[0],HOLE[1],HOLE_R,0,Math.PI*2,false); s.holes.push(h); return s;}
   addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFR);
   const fl=addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFL); fl.position.z=W-T;
-  // plate between the sides along E->F, 3 5/8 from E, V notch at the F end
-  const u=nrm(sub(P.F,P.E)); let n=[u[1],-u[0]]; if((n[0]*(P.C[0]-P.E[0])+n[1]*(P.C[1]-P.E[1]))<0) n=[-n[0],-n[1]];
+  // plate between the sides on edge A->C (IMG_0883), 3 5/8, V notch at the A end, 1 from corner A
+  const u=nrm(sub(P.C,P.A)); let n=[u[1],-u[0]]; if((n[0]*(P.E[0]-P.A[0])+n[1]*(P.E[1]-P.A[1]))<0) n=[-n[0],-n[1]];
   const bs=new THREE.Shape(); const za=NOTCH_OFF, zb=NOTCH_OFF+NOTCH_W;
-  bs.moveTo(0,0); bs.lineTo(BACK_L,0); bs.lineTo(BACK_L,za); bs.lineTo(BACK_L-NOTCH_D,(za+zb)/2); bs.lineTo(BACK_L,zb); bs.lineTo(BACK_L,IW); bs.lineTo(0,IW); bs.lineTo(0,0);
+  bs.moveTo(0,0); bs.lineTo(0,za); bs.lineTo(NOTCH_D,(za+zb)/2); bs.lineTo(0,zb); bs.lineTo(0,IW); bs.lineTo(BACK_L,IW); bs.lineTo(BACK_L,0); bs.lineTo(0,0);
   const bg=new THREE.ExtrudeGeometry(bs,ext(T));
-  bg.applyMatrix4(new THREE.Matrix4().makeBasis(V(u[0],u[1],0),V(0,0,1),V(n[0],n[1],0)).setPosition(P.E[0],P.E[1],T));
+  bg.applyMatrix4(new THREE.Matrix4().makeBasis(V(u[0],u[1],0),V(0,0,1),V(n[0],n[1],0)).setPosition(P.A[0],P.A[1],T));
   addMesh(bg,matPlate,grpPlates);
   // ---------- dimensions ----------
   function dimP(a,b,off,text){const d=nrm(sub(b,a)); const p=[-d[1]*off,d[0]*off]; dim(a,b,p,text);}
@@ -1098,23 +1098,23 @@ header{position:relative}
   const hF2=(()=>{const d=nrm(sub(P.H,P.E)),v=sub(HOLE,P.E),t=v[0]*d[0]+v[1]*d[1];return add(P.E,mul(d,t));})();
   line([V(...HOLE,zf),V(P.C[0],HOLE[1],zf)]); label('1 ½″',V((HOLE[0]+P.C[0])/2,HOLE[1]+0.17,zf));
   line([V(...HOLE,zf),V(...hF2,zf)]); label('1 ½″',V((HOLE[0]+hF2[0])/2-0.28,(HOLE[1]+hF2[1])/2,zf));
-  label('2 ⅜″ between sides',V(-1.3,1.6,zMid)); label('steel 0.146″',V(1.8,6.3,zf),'note');
+  label('2 ⅜″ between sides',V(1.4,5.3,zMid)); label('steel 0.146″',V(1.8,6.3,zf),'note');
   const ptOff={A:[0,0.3],C:[0.3,0.1],H:[0.25,-0.25],E:[-0.2,-0.3],F:[-0.3,0.1],G:[0.2,-0.25]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
   // ---------- table rows ----------
   const arcPts=[]; for(let k=0;k<=16;k++){const a=FH.a1+(FH.a2-FH.a1)*k/16; arcPts.push([FH.cen[0]+R_H*Math.cos(a),FH.cen[1]+R_H*Math.sin(a)]);}
   const ed=(a,b,val)=>[a+'–'+b,val||frac(dist(P[a],P[b])),[P[a],P[b]]];
-  const ROWS=[ed('A','C','3 ⅝″'),ed('C','H','4″'),ed('A','G','2 ¾″'),ed('G','F','1 ⅞″'),['F–E (plate between the sides)','4 ⅜″',[P.F,P.E]],ed('A','E','6 ⅛″'),
+  const ROWS=[ed('A','C','3 ⅝″'),ed('C','H','4″'),ed('A','G','2 ¾″'),ed('G','F','1 ⅞″'),ed('F','E','4 ⅜″'),ed('A','E','6 ⅛″'),
     ['G to edge C–H','3″',[P.G,[P.C[0],P.G[1]]]],['Angle A–G–F','90°',null],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
     ['Hole Ø0.568: from edge C–H','1 ½″',[HOLE,[P.C[0],HOLE[1]]]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
-    ['Plate between the sides: width × length','2 ⅜″ × 3 ⅝″',[P.E,add(P.E,mul(u,BACK_L))]],['V notch at the F end: depth / from side','⅞″ / 1″',null],
+    ['Plate on edge A–C (IMG_0883): width × length','2 ⅜″ × 3 ⅝″',[P.A,P.C]],['V notch at the A end: depth / from corner A','⅞″ / 1″',null],
     ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.146″',null]];
   const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.146″":"Sienna WAV · все размеры в дюймах · металл 0.146″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-5":"Левая FL-5","Back plate":"Пластина между боковинами","Side plates: FR-5 (A…H) / FL-5 (A1…H1)":"Боковины: FR-5 (A…H) / FL-5 (A1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
-    "F–E (plate between the sides)":"F–E (пластина между боковинами)","G to edge C–H":"G до края C–H","Angle A–G–F":"Угол A–G–F","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус",
-    "Hole Ø0.568: from edge C–H":"Отверстие Ø0.568: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate between the sides: width × length":"Пластина между боковинами: ширина × длина",
-    "V notch at the F end: depth / from side":"V-вырез у F: глубина / от края","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6","Metal thickness":"Толщина металла",
+    "G to edge C–H":"G до края C–H","Angle A–G–F":"Угол A–G–F","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус",
+    "Hole Ø0.568: from edge C–H":"Отверстие Ø0.568: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate on edge A–C (IMG_0883): width × length":"Пластина на краю A–C (IMG_0883): ширина × длина",
+    "V notch at the A end: depth / from corner A":"V-вырез у A: глубина / от угла A","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6","Metal thickness":"Толщина металла",
     "2 ⅜″ between sides":"2 ⅜″ между боковинами","steel 0.146″":"металл 0.146″"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});

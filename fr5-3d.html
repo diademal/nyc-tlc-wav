@@ -95,7 +95,7 @@ header{position:relative}
   </div>
   <div class="spec">
     <section class="dist">
-      <h2 class="i18n">Side plates: FR-5 (B…H) / FL-5 (B1…H1)</h2>
+      <h2 class="i18n">Side plates: FR-5 (A…H) / FL-5 (A1…H1)</h2>
       <p class="i18n distnote">Tap a row to see it on the model.</p>
       <dl id="distList"></dl>
     </section>
@@ -1066,20 +1066,22 @@ header{position:relative}
     return {t1,t2,cen,a1:Math.atan2(t1[1]-cen[1],t1[0]-cen[0]),a2:Math.atan2(t2[1]-cen[1],t2[0]-cen[0])};}
   const G16={2:'⅛',4:'¼',6:'⅜',8:'½',10:'⅝',12:'¾',14:'⅞'};
   function frac(v){const n=Math.round(v*16),w=Math.floor(n/16),r=n%16; const f=r?(G16[r]||(r+'/16')):''; return (Math.abs(n/16-v)<0.004?'':'≈ ')+(w?w:(r?'':'0'))+(r?(w?' ':'')+f:'')+'″';}
-  // ---------- FR-5 geometry (inches). Letters as on the cardboard IMG_0884: B, G, F tips/notch; D corner; H rounded corner; E end of back-plate edge ----------
+  // ---------- FR-5 v2 geometry (inches). Letters as on the cardboard IMG_0882: A tip, C corner, H rounded corner, E, F tip, G notch ----------
   const T=0.146, IW=2.375, W=IW+2*T, zMid=W/2;
-  const P={B:[0,2.75],D:[3.012,-0.235],H:[3.127,-4.231],E:[1.007,-3.292],F:[-1.875,0],G:[0,0]};
-  const R_G=0.295; const HOLE=[1.559,-1.896], HOLE_R=0.568/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0;
-  const R_H=(dist(P.E,P.H)-2)*Math.tan(Math.acos((()=>{const u1=nrm(sub(P.D,P.H)),u2=nrm(sub(P.E,P.H));return u1[0]*u2[0]+u1[1]*u2[1];})())/2);
-  const FH=fillet(P.D,P.H,P.E,R_H);
-  const target=new THREE.Vector3(0.7,-0.8,zMid), CAM=[-3,4,-13];
-  function sideShape(){const s=new THREE.Shape(); s.moveTo(...P.B); s.lineTo(...P.D); s.lineTo(...FH.t1);
-    s.absarc(FH.cen[0],FH.cen[1],R_H,FH.a1,FH.a2,true); s.lineTo(...P.E); s.lineTo(...P.F); s.lineTo(-R_G,0); s.absarc(-R_G,R_G,R_G,-Math.PI/2,0,false); s.lineTo(...P.B);
+  const P={A:[0,6.125],C:[2.5479,3.5465],H:[2.5479,-0.4535],E:[0,0],F:[-2.3016,3.7207],G:[-0.4521,3.4124]};
+  const HOLE=[1.0479,1.3371], HOLE_R=0.568/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0, R_G=0.295;
+  const R_H=(dist(P.E,P.H)-2)*Math.tan(Math.acos((()=>{const u1=nrm(sub(P.C,P.H)),u2=nrm(sub(P.E,P.H));return u1[0]*u2[0]+u1[1]*u2[1];})())/2);
+  const FH=fillet(P.C,P.H,P.E,R_H);
+  const uA=nrm(sub(P.A,P.G)), uF=nrm(sub(P.F,P.G)); const gA=add(P.G,mul(uA,R_G)), gF=add(P.G,mul(uF,R_G)); const gC=add(P.G,add(mul(uA,R_G),mul(uF,R_G)));
+  const target=new THREE.Vector3(0.2,2.8,zMid), CAM=[-3,4,-14];
+  function sideShape(){const s=new THREE.Shape(); s.moveTo(...P.A); s.lineTo(...P.C); s.lineTo(...FH.t1);
+    s.absarc(FH.cen[0],FH.cen[1],R_H,FH.a1,FH.a2,true); s.lineTo(...P.E); s.lineTo(...P.F); s.lineTo(...gF);
+    const a1=Math.atan2(gF[1]-gC[1],gF[0]-gC[0]), a2=Math.atan2(gA[1]-gC[1],gA[0]-gC[0]); let dA=a2-a1; while(dA>Math.PI)dA-=2*Math.PI; while(dA<=-Math.PI)dA+=2*Math.PI; s.absarc(gC[0],gC[1],R_G,a1,a2,dA<0); s.lineTo(...P.A);
     const h=new THREE.Path(); h.absarc(HOLE[0],HOLE[1],HOLE_R,0,Math.PI*2,false); s.holes.push(h); return s;}
   addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFR);
   const fl=addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFL); fl.position.z=W-T;
-  // back plate along E->F, 3 5/8 from E, V notch at the far end
-  const u=nrm(sub(P.F,P.E)); let n=[u[1],-u[0]]; if((n[0]*(P.H[0]-P.E[0])+n[1]*(P.H[1]-P.E[1]))<0) n=[-n[0],-n[1]];
+  // plate between the sides along E->F, 3 5/8 from E, V notch at the F end
+  const u=nrm(sub(P.F,P.E)); let n=[u[1],-u[0]]; if((n[0]*(P.C[0]-P.E[0])+n[1]*(P.C[1]-P.E[1]))<0) n=[-n[0],-n[1]];
   const bs=new THREE.Shape(); const za=NOTCH_OFF, zb=NOTCH_OFF+NOTCH_W;
   bs.moveTo(0,0); bs.lineTo(BACK_L,0); bs.lineTo(BACK_L,za); bs.lineTo(BACK_L-NOTCH_D,(za+zb)/2); bs.lineTo(BACK_L,zb); bs.lineTo(BACK_L,IW); bs.lineTo(0,IW); bs.lineTo(0,0);
   const bg=new THREE.ExtrudeGeometry(bs,ext(T));
@@ -1087,32 +1089,33 @@ header{position:relative}
   addMesh(bg,matPlate,grpPlates);
   // ---------- dimensions ----------
   function dimP(a,b,off,text){const d=nrm(sub(b,a)); const p=[-d[1]*off,d[0]*off]; dim(a,b,p,text);}
-  dimP(P.B,P.D,0.35,'4 ¼″'); dimP(P.G,P.B,0.35,'2 ¾″'); dimP(P.F,P.G,0.3,'1 ⅞″'); dimP(P.E,P.F,0.4,'4 ⅜″'); dimP(P.D,P.H,0.4,'4″');
-  dimP(P.E,FH.t2,-0.35,'2″'); label('R ≈ '+R_H.toFixed(2)+'″',V(FH.cen[0]+0.35,FH.cen[1]-0.45,zf));
-  const gFoot=(()=>{const d=nrm(sub(P.H,P.D)),v=sub(P.G,P.D),t=v[0]*d[0]+v[1]*d[1];return add(P.D,mul(d,t));})();
-  line([V(...P.G,zf),V(...gFoot,zf)]); label('3″',V((P.G[0]+gFoot[0])/2,(P.G[1]+gFoot[1])/2+0.15,zf));
-  line([V(...P.B,zf),V(...P.E,zf)]); label('B–E 6 ⅛″',V((P.B[0]+P.E[0])/2-0.55,(P.B[1]+P.E[1])/2+0.3,zf));
-  label('Ø0.568″',V(HOLE[0]+0.55,HOLE[1]+0.15,zf));
-  const hF1=(()=>{const d=nrm(sub(P.H,P.D)),v=sub(HOLE,P.D),t=v[0]*d[0]+v[1]*d[1];return add(P.D,mul(d,t));})();
+  dimP(P.C,P.A,0.35,'3 ⅝″'); dimP(P.A,P.G,0.35,'2 ¾″'); dimP(P.G,P.F,0.3,'1 ⅞″'); dimP(P.F,P.E,0.35,'4 ⅜″'); dimP(P.H,P.C,0.35,'4″');
+  dimP(P.E,FH.t2,0.35,'2″'); label('R ≈ '+R_H.toFixed(2)+'″',V(FH.cen[0]+0.3,FH.cen[1]-0.55,zf));
+  line([V(...P.A,zf),V(...P.E,zf)]); label('A–E 6 ⅛″',V(0.35,1.9,zf));
+  line([V(...P.G,zf),V(P.C[0],P.G[1],zf)]); label('3″',V(1.2,P.G[1]+0.18,zf));
+  label('90°',V(P.G[0]-0.35,P.G[1]+0.35,zf));
+  label('Ø0.568″',V(HOLE[0]-0.2,HOLE[1]+0.5,zf));
   const hF2=(()=>{const d=nrm(sub(P.H,P.E)),v=sub(HOLE,P.E),t=v[0]*d[0]+v[1]*d[1];return add(P.E,mul(d,t));})();
-  line([V(...HOLE,zf),V(...hF1,zf)]); label('1 ½″',V((HOLE[0]+hF1[0])/2,(HOLE[1]+hF1[1])/2+0.15,zf));
-  line([V(...HOLE,zf),V(...hF2,zf)]); label('1 ½″',V((HOLE[0]+hF2[0])/2-0.25,(HOLE[1]+hF2[1])/2,zf));
-  label('2 ⅜″ between sides',V(P.E[0]-0.2,P.E[1]-0.35,zMid)); label('steel 0.146″',V(2.6,1.9,zf),'note');
-  const ptOff={B:[0,0.3],D:[0.3,0.1],H:[0.25,-0.25],E:[-0.2,-0.3],F:[-0.3,0.1],G:[0.25,0.1]};
+  line([V(...HOLE,zf),V(P.C[0],HOLE[1],zf)]); label('1 ½″',V((HOLE[0]+P.C[0])/2,HOLE[1]+0.17,zf));
+  line([V(...HOLE,zf),V(...hF2,zf)]); label('1 ½″',V((HOLE[0]+hF2[0])/2-0.28,(HOLE[1]+hF2[1])/2,zf));
+  label('2 ⅜″ between sides',V(-1.3,1.6,zMid)); label('steel 0.146″',V(1.8,6.3,zf),'note');
+  const ptOff={A:[0,0.3],C:[0.3,0.1],H:[0.25,-0.25],E:[-0.2,-0.3],F:[-0.3,0.1],G:[0.2,-0.25]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
   // ---------- table rows ----------
   const arcPts=[]; for(let k=0;k<=16;k++){const a=FH.a1+(FH.a2-FH.a1)*k/16; arcPts.push([FH.cen[0]+R_H*Math.cos(a),FH.cen[1]+R_H*Math.sin(a)]);}
   const ed=(a,b,val)=>[a+'–'+b,val||frac(dist(P[a],P[b])),[P[a],P[b]]];
-  const ROWS=[ed('B','D','4 ¼″'),ed('B','G','2 ¾″'),ed('G','F','1 ⅞″'),['F–E (back plate edge)','4 ⅜″',[P.F,P.E]],ed('B','E','6 ⅛″'),ed('D','H','4″'),
-    ['G to edge D–H','3″',[P.G,gFoot]],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
-    ['Hole Ø0.568: from edge D–H','1 ½″',[HOLE,hF1]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
-    ['Back plate: width × length','2 ⅜″ × 3 ⅝″',[P.E,add(P.E,mul(u,BACK_L))]],['Back plate: V notch depth / starts from side','⅞″ / 1″',null],['Angle B–G–F','90°',null],['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.146″',null]];
+  const ROWS=[ed('A','C','3 ⅝″'),ed('C','H','4″'),ed('A','G','2 ¾″'),ed('G','F','1 ⅞″'),['F–E (plate between the sides)','4 ⅜″',[P.F,P.E]],ed('A','E','6 ⅛″'),
+    ['G to edge C–H','3″',[P.G,[P.C[0],P.G[1]]]],['Angle A–G–F','90°',null],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
+    ['Hole Ø0.568: from edge C–H','1 ½″',[HOLE,[P.C[0],HOLE[1]]]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
+    ['Plate between the sides: width × length','2 ⅜″ × 3 ⅝″',[P.E,add(P.E,mul(u,BACK_L))]],['V notch at the F end: depth / from side','⅞″ / 1″',null],
+    ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.146″',null]];
   const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.146″":"Sienna WAV · все размеры в дюймах · металл 0.146″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
-    "Left side FL-5":"Левая FL-5","Back plate":"Задняя пластина","Side plates: FR-5 (B…H) / FL-5 (B1…H1)":"Боковины: FR-5 (B…H) / FL-5 (B1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
-    "G to edge D–H":"G до края D–H","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус","Hole Ø0.568: from edge D–H":"Отверстие Ø0.568: от края D–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H",
-    "Back plate: width × length":"Задняя пластина: ширина × длина","Back plate: V notch depth / starts from side":"Задняя пластина: V-вырез глубина / от края","Metal thickness":"Толщина металла","Angle B–G–F":"Угол B–G–F","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6",
-    "F–E (back plate edge)":"F–E (край задней пластины)","2 ⅜″ between sides":"2 ⅜″ между боковинами","steel 0.146″":"металл 0.146″"};
+    "Left side FL-5":"Левая FL-5","Back plate":"Пластина между боковинами","Side plates: FR-5 (A…H) / FL-5 (A1…H1)":"Боковины: FR-5 (A…H) / FL-5 (A1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
+    "F–E (plate between the sides)":"F–E (пластина между боковинами)","G to edge C–H":"G до края C–H","Angle A–G–F":"Угол A–G–F","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус",
+    "Hole Ø0.568: from edge C–H":"Отверстие Ø0.568: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate between the sides: width × length":"Пластина между боковинами: ширина × длина",
+    "V notch at the F end: depth / from side":"V-вырез у F: глубина / от края","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6","Metal thickness":"Толщина металла",
+    "2 ⅜″ between sides":"2 ⅜″ между боковинами","steel 0.146″":"металл 0.146″"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];

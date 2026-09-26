@@ -1036,7 +1036,7 @@ header{position:relative}
   if(!window.THREE||!THREE.TrackballControls||!THREE.CSS2DRenderer){viewer.innerHTML='<div class="err">3D view failed to load. Please refresh the page.</div>';return;}
   // ---------- geometry (inches): x along part, y up (A at 0,0), z across width ----------
   const T=0.1, W=2.875, L=11.125, zMid=W/2;
-  const cdrop=1-0.375, cx=2+0.5+7+0.5+2, ex=cx-2;   // H-G 2 + K-L 1/2 + L-M 7 + M-F 1/2 + E-D 2 = 12
+  const cx=2+0.5+7+0.5+2, cdrop=Math.sqrt(1-(cx-L)*(cx-L)), ex=cx-2;   // H-D 12, B-C 1   // H-G 2 + K-L 1/2 + L-M 7 + M-F 1/2 + E-D 2 = 12
   const P={A:[0,0],B:[L,0],C:[cx,-cdrop],D:[cx,-1],E:[ex,-1],F:[ex,-1.875],G:[2,-1],H:[0,-1],K:[2,-1.875],L:[2.5,-1.875],M:[ex-0.5,-1.875]};
   const AP=[(P.L[0]+P.M[0])/2,-0.625];
   function circ3(a,b,c){const d=2*(a[0]*(b[1]-c[1])+b[0]*(c[1]-a[1])+c[0]*(a[1]-b[1]));
@@ -1078,7 +1078,7 @@ header{position:relative}
     label(text,V((oa[0]+ob[0])/2,(oa[1]+ob[1])/2,zf));}
   dim(P.A,P.B,[0,0.45],'11 ⅛″'); dim(P.A,P.H,[-0.45,0],'1″'); dim(P.H,P.G,[0,-0.35],'2″'); dim(P.G,P.K,[-0.35,0],'⅞″');
   dim(P.K,P.L,[0,-0.35],'½″'); dim(P.M,P.F,[0,-0.35],'½″'); dim(P.E,P.F,[0.35,0],'⅞″'); dim(P.E,P.D,[0,-0.3],'2″');
-  dim(P.C,P.D,[0.35,0],'⅜″'); label('1″',V((P.B[0]+P.C[0])/2+0.3,(P.B[1]+P.C[1])/2+0.2,zf)); dim([AP[0],0],AP,[0,0],'⅝″');
+  dim(P.C,P.D,[0.35,0],'≈½″'); label('1″',V((P.B[0]+P.C[0])/2+0.3,(P.B[1]+P.C[1])/2+0.2,zf)); dim([AP[0],0],AP,[0,0],'⅝″');
   label('arc L–M · R ≈ '+ARC.r.toFixed(2)+'″',V(AP[0],-1.35,zf)); label('2 ⅞″ wide',V(L+0.2,0.25,zMid)); label('steel 0.1″',V(-0.5,-2.6,zf),'note');
   const ptOff={A:[-0.25,0.2],B:[0,0.3],C:[0.3,0.05],D:[0.3,-0.1],E:[-0.25,0.2],F:[0.25,-0.2],G:[0.25,0.15],H:[-0.3,-0.1],K:[-0.25,-0.2],L:[0.1,-0.3],M:[-0.1,-0.3]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
@@ -1099,7 +1099,7 @@ header{position:relative}
     function frac(v){const n=Math.round(v*16),w=Math.floor(n/16),r=n%16; const f=r?(G16[r]||(r+'/16')):''; return (Math.abs(n/16-v)<0.004?'':'≈ ')+(w?w:(r?'':'0'))+(r?(w?' ':'')+f:'')+'″';}
     const arcPts=[]; for(let k=0;k<=24;k++){const a=aM+(aL-aM)*k/24; arcPts.push([ARC.c[0]+ARC.r*Math.cos(a),ARC.c[1]+ARC.r*Math.sin(a)]);}
     const d2=(a,b)=>Math.hypot(P[a][0]-P[b][0],P[a][1]-P[b][1]); const edge=(a,b)=>[a+'–'+b,frac(d2(a,b)),[P[a],P[b]]];
-    const rows=[edge('A','B'),edge('B','C'),edge('C','D'),edge('D','E'),edge('E','F'),edge('F','M'),['M–L, arc','R '+frac(ARC.r).replace('≈ ',''),arcPts],edge('L','K'),['L–M (straight)','7″',[P.L,P.M]],edge('K','G'),edge('G','H'),edge('H','A'),
+    const rows=[edge('A','B'),edge('B','C'),edge('C','D'),edge('D','E'),edge('E','F'),edge('F','M'),['M–L, arc','R '+frac(ARC.r).replace('≈ ',''),arcPts],edge('L','K'),['L–M (straight)','7″',[P.L,P.M]],['H–D (bottom, total)','12″',[P.H,P.D]],edge('K','G'),edge('G','H'),edge('H','A'),
       ['Arc: lowest height of side (5/8 below top)','⅝″',[[AP[0],0],AP]], ['F and K below top','1 ⅞″',[[P.F[0],0],P.F]],
       ['Top plate: width × length','2 ⅞″ × 11 ⅛″',[[0,0,0],[0,0,W]]], ['Metal thickness','0.1″',null]];
     const dl=document.getElementById('distList');
@@ -1121,7 +1121,7 @@ header{position:relative}
   const RU={"FR-8 Frame Channel":"FR-8 Швеллер рамы","Sienna WAV · all dimensions in inches · steel 0.1″":"Sienna WAV · все размеры в дюймах · металл 0.1″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-8":"Левая FL-8","Top plate":"Верхняя пластина","Side plates: FR-8 (A…M) / FL-8 (A1…M1)":"Боковины: FR-8 (A…M) / FL-8 (A1…M1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
-    "M–L, arc":"M–L, дуга","L–M (straight)":"L–M (по прямой)","Arc: lowest height of side (5/8 below top)":"Дуга: самое узкое место (⅝ от верха)","F and K below top":"F и K ниже верха","Top plate: width × length":"Верхняя пластина: ширина × длина","Metal thickness":"Толщина металла",
+    "M–L, arc":"M–L, дуга","L–M (straight)":"L–M (по прямой)","H–D (bottom, total)":"H–D (по низу, всего)","Arc: lowest height of side (5/8 below top)":"Дуга: самое узкое место (⅝ от верха)","F and K below top":"F и K ниже верха","Top plate: width × length":"Верхняя пластина: ширина × длина","Metal thickness":"Толщина металла",
     "2 ⅞″ wide":"ширина 2 ⅞″","steel 0.1″":"металл 0.1″"};
   RU['arc L–M · R ≈ '+ARC.r.toFixed(2)+'″']='дуга L–M · R ≈ '+ARC.r.toFixed(2)+'″';
   document.querySelectorAll('.i18n').forEach(el=>{el.dataset.en=el.textContent;});

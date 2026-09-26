@@ -1069,12 +1069,12 @@ header{position:relative}
   // ---------- FR-5 geometry (inches). Letters as on the cardboard IMG_0884: B, G, F tips/notch; D corner; H rounded corner; E end of back-plate edge ----------
   const T=0.146, IW=2.375, W=IW+2*T, zMid=W/2;
   const P={B:[0,2.75],D:[3.012,-0.235],H:[3.127,-4.231],E:[1.007,-3.292],F:[-1.875,0],G:[0,0]};
-  const HOLE=[1.559,-1.896], HOLE_R=0.568/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0;
+  const R_G=0.295; const HOLE=[1.559,-1.896], HOLE_R=0.568/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0;
   const R_H=(dist(P.E,P.H)-2)*Math.tan(Math.acos((()=>{const u1=nrm(sub(P.D,P.H)),u2=nrm(sub(P.E,P.H));return u1[0]*u2[0]+u1[1]*u2[1];})())/2);
   const FH=fillet(P.D,P.H,P.E,R_H);
   const target=new THREE.Vector3(0.7,-0.8,zMid), CAM=[-3,4,-13];
   function sideShape(){const s=new THREE.Shape(); s.moveTo(...P.B); s.lineTo(...P.D); s.lineTo(...FH.t1);
-    s.absarc(FH.cen[0],FH.cen[1],R_H,FH.a1,FH.a2,true); s.lineTo(...P.E); s.lineTo(...P.F); s.lineTo(...P.G); s.lineTo(...P.B);
+    s.absarc(FH.cen[0],FH.cen[1],R_H,FH.a1,FH.a2,true); s.lineTo(...P.E); s.lineTo(...P.F); s.lineTo(-R_G,0); s.absarc(-R_G,R_G,R_G,-Math.PI/2,0,false); s.lineTo(...P.B);
     const h=new THREE.Path(); h.absarc(HOLE[0],HOLE[1],HOLE_R,0,Math.PI*2,false); s.holes.push(h); return s;}
   addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFR);
   const fl=addMesh(new THREE.ExtrudeGeometry(sideShape(),ext(T)),matSide,grpFL); fl.position.z=W-T;
@@ -1106,12 +1106,12 @@ header{position:relative}
   const ROWS=[ed('B','D','4 ¼″'),ed('B','G','2 ¾″'),ed('G','F','1 ⅞″'),['F–E (back plate edge)','4 ⅜″',[P.F,P.E]],ed('B','E','6 ⅛″'),ed('D','H','4″'),
     ['G to edge D–H','3″',[P.G,gFoot]],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
     ['Hole Ø0.568: from edge D–H','1 ½″',[HOLE,hF1]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
-    ['Back plate: width × length','2 ⅜″ × 3 ⅝″',[P.E,add(P.E,mul(u,BACK_L))]],['Back plate: V notch depth / starts from side','⅞″ / 1″',null],['Angle B–G–F','90°',null],['Metal thickness','0.146″',null]];
+    ['Back plate: width × length','2 ⅜″ × 3 ⅝″',[P.E,add(P.E,mul(u,BACK_L))]],['Back plate: V notch depth / starts from side','⅞″ / 1″',null],['Angle B–G–F','90°',null],['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.146″',null]];
   const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.146″":"Sienna WAV · все размеры в дюймах · металл 0.146″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-5":"Левая FL-5","Back plate":"Задняя пластина","Side plates: FR-5 (B…H) / FL-5 (B1…H1)":"Боковины: FR-5 (B…H) / FL-5 (B1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
     "G to edge D–H":"G до края D–H","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус","Hole Ø0.568: from edge D–H":"Отверстие Ø0.568: от края D–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H",
-    "Back plate: width × length":"Задняя пластина: ширина × длина","Back plate: V notch depth / starts from side":"Задняя пластина: V-вырез глубина / от края","Metal thickness":"Толщина металла","Angle B–G–F":"Угол B–G–F",
+    "Back plate: width × length":"Задняя пластина: ширина × длина","Back plate: V notch depth / starts from side":"Задняя пластина: V-вырез глубина / от края","Metal thickness":"Толщина металла","Angle B–G–F":"Угол B–G–F","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6",
     "F–E (back plate edge)":"F–E (край задней пластины)","2 ⅜″ between sides":"2 ⅜″ между боковинами","steel 0.146″":"металл 0.146″"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});

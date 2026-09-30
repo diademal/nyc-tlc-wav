@@ -32,6 +32,11 @@ button{font:inherit;color:inherit}
 .menu a{display:block;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--ink);text-decoration:none;padding:8px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
 .menu a:hover{border-color:var(--acc)}
 .menu a[aria-current="page"]{background:var(--acc);border-color:var(--acc);color:var(--panel)}
+  .mode{display:inline-flex;margin-left:6px}
+.mode button{font-family:var(--mono);font-size:13px;padding:6px 10px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+.mode button:first-child{border-radius:6px 0 0 6px}.mode button:last-child{border-radius:0 6px 6px 0;border-left:0}
+.mode button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--panel)}
+.mode[hidden]{display:none}
 iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 @media (max-width:520px){.top b{display:none}.pick{flex:1}}
 </style>
@@ -42,6 +47,7 @@ iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
   <button class="step" id="prev" type="button" aria-label="Previous part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="pick" id="pick" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu"><span class="cur" id="cur">FR-1</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="step" id="next" type="button" aria-label="Next part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+  <div class="mode" id="modeBox" role="group" aria-label="View"><button type="button" id="m3d" aria-pressed="true">3D</button><button type="button" id="mflat" aria-pressed="false">Flat</button></div>
   <div class="menu" id="menu" hidden></div>
 </div>
 <iframe id="view" title="Part 3D view"></iframe>
@@ -64,9 +70,10 @@ const PARTS = [
   ['Right side (FR)', 'FR-10', 'fr10-3d.html'],
   ['Front (FF)', 'FF-1', 'ff1-3d.html'],
   ['Front (FF)', 'FF-3', 'ff3-3d.html'],
+  ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20260929-3';   // bump on every upload so browsers load the new pages
+const VER = '20260929-4';   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {
@@ -78,14 +85,15 @@ groups.forEach(g => {
 });
 function openMenu(on){ menu.hidden = !on; pick.setAttribute('aria-expanded', String(on)); if (on) (menu.querySelector('[aria-current]') || menu.querySelector('a')).focus(); }
 pick.addEventListener('click', () => openMenu(menu.hidden));
-menu.addEventListener('click', e => { if (e.target.closest('a')) openMenu(false); });
+menu.addEventListener('click', e => { const a=e.target.closest('a'); if (!a) return; openMenu(false); const nm=a.textContent; const it=PARTS.find(x=>x[1]===nm); if (mode()==='flat' && it && it[2]!=='cost.html') { e.preventDefault(); location.hash = nm + '/flat'; } });
 document.addEventListener('click', e => { if (!menu.hidden && !e.target.closest('.menu') && !e.target.closest('#pick')) openMenu(false); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { openMenu(false); pick.focus(); } });
+function mode(){ return /\/flat$/i.test(decodeURIComponent(location.hash)) ? 'flat' : '3d'; }
 function current(){
-  const want = decodeURIComponent(location.hash.slice(1)).toUpperCase();
+  const want = decodeURIComponent(location.hash.slice(1)).replace(/\/flat$/i,'').toUpperCase();
   return PARTS.findIndex(p => p[1].toUpperCase() === want);
 }
-function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1]; }
+function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1] + (mode()==='flat' && PARTS[i][2]!=='cost.html' ? '/flat' : ''); }
 document.getElementById('prev').addEventListener('click', () => go(-1));
 document.getElementById('next').addEventListener('click', () => go(1));
 function show(){
@@ -93,9 +101,15 @@ function show(){
   const part = PARTS[i];
   cur.textContent = part[1];
   menu.querySelectorAll('a').forEach(a => { if (a.textContent === part[1]) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  if (view.dataset.src !== part[2]) { view.dataset.src = part[2]; view.src = part[2] + '?v=' + VER; }
+  const md = part[2]==='cost.html' ? '3d' : mode();
+  document.getElementById('modeBox').hidden = part[2]==='cost.html';
+  document.getElementById('m3d').setAttribute('aria-pressed', String(md==='3d')); document.getElementById('mflat').setAttribute('aria-pressed', String(md==='flat'));
+  const src = md==='flat' ? 'flat.html?p=' + encodeURIComponent(part[1]) : part[2];
+  if (view.dataset.src !== src) { view.dataset.src = src; view.src = src + (src.includes('?') ? '&' : '?') + 'v=' + VER; }
   document.title = part[1] + ' · Sienna WAV Frame Parts';
 }
+function setMode(m){ let i=current(); if(i<0) i=PARTS.findIndex(x=>x[1]===DEFAULT); location.hash = PARTS[i][1] + (m==='flat'?'/flat':''); }
+document.getElementById('m3d').addEventListener('click',()=>setMode('3d')); document.getElementById('mflat').addEventListener('click',()=>setMode('flat'));
 window.addEventListener('hashchange', show);
 show();
 </script>

@@ -66,6 +66,7 @@ const PARTS = [
   ['Front (FF)', 'FF-3', 'ff3-3d.html'],
 ];
 const DEFAULT = 'FR-1';
+const VER = '20260929-3';   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {
@@ -92,7 +93,7 @@ function show(){
   const part = PARTS[i];
   cur.textContent = part[1];
   menu.querySelectorAll('a').forEach(a => { if (a.textContent === part[1]) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  if (view.dataset.src !== part[2]) { view.dataset.src = part[2]; view.src = part[2]; }
+  if (view.dataset.src !== part[2]) { view.dataset.src = part[2]; view.src = part[2] + '?v=' + VER; }
   document.title = part[1] + ' · Sienna WAV Frame Parts';
 }
 window.addEventListener('hashchange', show);

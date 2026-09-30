@@ -37,12 +37,17 @@ button{font:inherit;color:inherit}
 .mode button:first-child{border-radius:6px 0 0 6px}.mode button:last-child{border-radius:0 6px 6px 0;border-left:0}
 .mode button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--panel)}
 .mode[hidden]{display:none}
+.home{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);text-decoration:none;font-size:14px;font-weight:600}
+.home:hover{border-color:var(--acc);color:var(--acc)}
+.home:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:520px){.home span{display:none}}
 iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 @media (max-width:520px){.top b{display:none}.pick{flex:1}}
 </style>
 </head>
 <body>
 <div class="top">
+  <a class="home" href="./" title="Главное меню / Main page" aria-label="Main page"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7.5 8 2l6 5.5M4 6.5V14h3v-4h2v4h3V6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Главная</span></a>
   <b>Sienna WAV · Frame parts</b>
   <button class="step" id="prev" type="button" aria-label="Previous part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="pick" id="pick" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu"><span class="cur" id="cur">FR-1</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
@@ -74,7 +79,7 @@ const PARTS = [
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20260930-1';   // bump on every upload so browsers load the new pages
+const VER = '20260930-2';   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {

@@ -70,10 +70,11 @@ const PARTS = [
   ['Right side (FR)', 'FR-10', 'fr10-3d.html'],
   ['Front (FF)', 'FF-1', 'ff1-3d.html'],
   ['Front (FF)', 'FF-3', 'ff3-3d.html'],
+  ['Front (FF)', 'FF-4', 'ff4-3d.html'],
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20260929-4';   // bump on every upload so browsers load the new pages
+const VER = '20260930-1';   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {

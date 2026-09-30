@@ -1069,6 +1069,7 @@ const MESH=[{"name":"FF3","label":"Top plate","v":[30.369,2.961,0.0,30.369,2.961
   dimY(7.5,13,4,0.2,'5 ½″'); dimY(6.75,13,8.9,0.2,'6 ¼″');
   line([V(40,6.5,-1.125),V(40,6.5,0)]); label('1 ⅛″',V(40.6,6.5,-0.56));
   label('metal 0.125″',V(30,10.5,0.3),'note'); label('welded all round',V(20,13.6,-0.6),'note');
+  [['A',0,0],['R',39,0],['B',0,1.25],['N',39,1.25],['E',8.83,3],['M',30.17,3],['F',8.9,6.75],['K',30.1,6.75],['C',0,8.11],['H',39,8.11],['D',0,13],['G',39,13]].forEach(([t,x,y])=>label(t,V(x,y,0.35),'pt'));
   // highlight rows
   const hlGroup=new THREE.Group(); root.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];
@@ -1091,13 +1092,13 @@ const MESH=[{"name":"FF3","label":"Top plate","v":[30.369,2.961,0.0,30.369,2.961
   const tg=document.getElementById('partToggles');
   for(const k of Object.keys(groups)){const lab=document.createElement('label'); const id='chk'+k; lab.htmlFor=id; lab.innerHTML='<input id="'+id+'" type="checkbox" checked> <span class="i18n">'+NAMES[k]+'</span>';
     lab.querySelector('input').addEventListener('change',e=>{groups[k].visible=e.target.checked;}); tg.appendChild(lab);}
-  const EXPL={RF:10,FL:10,FF4:-8,FF1_on_FF3:7,FF3:3.5,FF3_Tubes:0,FF3_Walls:-2.5,FF3_Lower:-5}; let exploded=false;
+  const EXPL={RF:10,FL:10,FF4:-8,FF1_on_FF3:-8,FF3:3.5,FF3_Tubes:0,FF3_Walls:-2.5,FF3_Lower:-5}; let exploded=false;
   document.getElementById('btnExplode').addEventListener('click',e=>{exploded=!exploded; for(const k in groups){groups[k].position.z=exploded?(EXPL[k]||0):0;}
     grpDims.visible=!exploded&&!document.body.classList.contains('nodims'); document.body.classList.toggle('expl',exploded); e.currentTarget.setAttribute('aria-pressed',String(exploded)); document.getElementById('explTxt').dataset.en=exploded?'Put together':'Take apart'; setLang(curLang); clearDistance();});
   function applyTheme(){edgeMat.color.set(css('--ink')); dimMat.color.set(css('--dim'));}
   applyTheme(); new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']}); try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch(e){}
   const labelsEl=document.getElementById('labels'); let refDist=1;
-  function resetView(){camera.up.set(0,1,0); const k=viewer.clientWidth<520?2.3:1; camera.position.set(target.x+12*k,target.y+50*k,target.z+75*k); controls.target.copy(target); controls.update(); refDist=camera.position.distanceTo(controls.target);}
+  function resetView(){camera.up.set(0,1,0); const k=viewer.clientWidth<520?2.3:1; camera.position.set(target.x+6*k,target.y+22*k,target.z+32*k); controls.target.copy(target); controls.update(); refDist=camera.position.distanceTo(controls.target);}
   function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?48:35; camera.updateProjectionMatrix(); controls.handleResize();}
   new ResizeObserver(resize).observe(viewer); resize(); resetView();
   document.getElementById('btnReset').addEventListener('click',()=>{resetView();clearDistance();});

@@ -35,6 +35,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
 ol li{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 9px;cursor:pointer;font-size:14px;display:flex;gap:8px}
 ol li .n{font-family:var(--mono);color:var(--muted);min-width:18px}
+ol li:hover{border-color:var(--accent)}
 ol li.on{border-color:var(--accent);background:var(--accent-bg)}
 ol li.on .n{color:var(--accent);font-weight:600}
 .note{font-size:13px;color:var(--muted)}
@@ -906,15 +907,15 @@ function renderSteps(){const st=TX[lang].steps;
   document.getElementById('cap').innerHTML='<b>'+(cur+1)+'/'+SEQ.length+'</b> '+st[cur];
   document.querySelectorAll('#steps li').forEach((li,i)=>li.classList.toggle('on',i===cur));}
 function buildList(){const ol=document.getElementById('steps');ol.innerHTML='';
-  TX[lang].steps.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span>'+s+'</span>';li.onclick=()=>{playing=false;updBtn();T0=START[i]+SEQ[i][0];setT(T0);};ol.appendChild(li);});
+  TX[lang].steps.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span>'+s+'</span>';li.onclick=()=>{playing=false;updBtn();T0=START[i]+SEQ[i][0]-0.001;setT(T0);};ol.appendChild(li);});
   const t=TX[lang];document.getElementById('ttl').textContent=t.ttl;document.getElementById('tag').textContent=t.tag;document.getElementById('note').textContent=t.note;
   document.documentElement.lang=lang;document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en'));document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
   updBtn();cur=-1;setT(T0);}
 let T0=0,playing=false,last=0,recorder=null;
 function updBtn(){document.getElementById('play').textContent=playing?TX[lang].pause:TX[lang].play;document.getElementById('rec').textContent=recorder?TX[lang].recing:TX[lang].rec;}
 document.getElementById('play').onclick=()=>{if(!playing&&T0>=TOTAL-0.01)T0=0;playing=!playing;last=performance.now();updBtn();};
-document.getElementById('prev').onclick=()=>{playing=false;updBtn();let k=cur;if(T0<=START[k]+SEQ[k][0]+0.01&&k>0)k--;T0=k===0?0:START[k]+SEQ[k][0];if(cur===0)T0=0;setT(T0);};
-document.getElementById('next').onclick=()=>{playing=false;updBtn();const k=Math.min(cur+1,SEQ.length-1);T0=START[k]+SEQ[k][0];setT(T0);};
+document.getElementById('prev').onclick=()=>{playing=false;updBtn();const k=Math.max(cur-1,0);T0=k===0?0:START[k]+SEQ[k][0]-0.001;setT(T0);};
+document.getElementById('next').onclick=()=>{playing=false;updBtn();const k=Math.min(cur+1,SEQ.length-1);T0=START[k]+SEQ[k][0]-0.001;setT(T0);};
 document.getElementById('slider').oninput=e=>{playing=false;updBtn();T0=e.target.value/1000*TOTAL;setT(T0);};
 document.getElementById('rec').onclick=()=>{
   if(recorder||!canvas.captureStream||!window.MediaRecorder)return;

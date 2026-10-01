@@ -37,6 +37,8 @@ h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balanc
 #labels{pointer-events:none}
 .dim{font-family:var(--mono);font-size:calc(12px * var(--ds,1));font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
   padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.part{color:#fff;background:#2f3b45;border-color:#2f3b45;font-weight:700;font-size:calc(13px * var(--ds,1))}
+.dim.part.r{background:#3d7a55;border-color:#3d7a55}.dim.part.l{background:#6a5a95;border-color:#6a5a95}.dim.part.f{background:#a0662a;border-color:#a0662a}
 .dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
 .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
 .bar{display:flex;flex-wrap:wrap;gap:8px}
@@ -90,12 +92,12 @@ header{position:relative}
   </div>
   <div class="bar" role="group" aria-label="View">
     <button id="btnReset" type="button" class="i18n">Reset view</button>
-    <button id="btnDims" type="button" aria-pressed="true"><span class="i18n" id="dimsTxt">Hide dimensions</span></button>
+    <button id="btnDims" type="button" aria-pressed="true"><span class="i18n" id="dimsTxt">Hide part numbers</span></button>
     <span id="partToggles" style="display:contents"></span>
   </div>
   <div class="spec">
     <section class="dist">
-      <h2 class="i18n">Joints (right side, FR)</h2>
+      <h2 class="i18n">Joints (left side, FL)</h2>
       <p class="i18n distnote">Tap a row to see it on the model.</p>
       <dl id="distList"></dl>
     </section>
@@ -1064,11 +1066,8 @@ const MESH=[{"name":"FR9","label":"FL-9 tube","v":[0.0,0.0,0.295,0.0,0.0004,0.28
   const D=(parts,f)=>{own=parts; f(); own=[];};
   function dimX(x0,x1,y,z,text){line([V(x0,y,z),V(x1,y,z)]); line([V(x0,y,z-0.25),V(x0,y,z+0.25)]); line([V(x1,y,z-0.25),V(x1,y,z+0.25)]); label(text,V((x0+x1)/2,y,z));}
   const FR10_IN=7.8-3;
-  D(['FR9'],()=>dimX(0,8,-1.2,0,'FL-9 8″')); D(['FR9','FR6'],()=>dimX(-8,0,-1.2,0,'gap 8″')); D(['FR6'],()=>dimX(-22.25,-8,-1.2,0,'FL-6 14 ¼″'));
-  D(['FR8','FR10'],()=>dimX(2.175,FR10_IN,-0.6,4.0,'2 ⅝″')); D(['FR10','FR9'],()=>dimX(7.8,8,3.6,3.0,'0.2″'));
-  D(['FR7'],()=>dimX(-13.25,-10.75,-0.6,7.0,'2 ½″')); D(['FR7','FR5'],()=>dimX(-15.25,-13.25,-0.6,3.4,'2″')); D(['FR5'],()=>dimX(-17.75,-15.25,-0.6,-3.6,'2 ½″')); D(['FR5','FR4'],()=>dimX(-18.875,-17.75,-0.6,3.4,'1 ⅛″')); D(['FR4'],()=>dimX(-21.875,-18.875,-0.6,7.2,'3″'));
-  D(['FR9'],()=>label('FL-9',V(4,1.5,-0.6),'note')); D(['FR6'],()=>label('FL-6',V(-15,1.5,-0.6),'note')); D(['FR10'],()=>label('FL-10',V(6.2,7.4,9.3),'note')); D(['FR8'],()=>label('FL-8',V(-4,1.5,4.6),'note')); D(['FR7'],()=>label('FL-7',V(-12,1.5,7.8),'note')); D(['FR5'],()=>label('FL-5',V(-16.5,6.4,-3.5),'note')); D(['FR4'],()=>label('FL-4',V(-20.4,7.8,7.0),'note'));
-  D(['FR3'],()=>label('FL-3',V(-26,3.8,5.0),'note')); D(['FR2'],()=>label('FL-2',V(-29.3,9,6.2),'note')); D(['FR1'],()=>label('FL-1',V(-34,15,6.2),'note'));
+  D(['FR9'],()=>label('FL-9',V(4,1.5,-0.6),'part l')); D(['FR6'],()=>label('FL-6',V(-15,1.5,-0.6),'part l')); D(['FR10'],()=>label('FL-10',V(6.2,7.4,9.3),'part l')); D(['FR8'],()=>label('FL-8',V(-4,1.5,4.6),'part l')); D(['FR7'],()=>label('FL-7',V(-12,1.5,7.8),'part l')); D(['FR5'],()=>label('FL-5',V(-16.5,6.4,-3.5),'part l')); D(['FR4'],()=>label('FL-4',V(-20.4,7.8,7.0),'part l'));
+  D(['FR3'],()=>label('FL-3',V(-26,3.8,5.0),'part l')); D(['FR2'],()=>label('FL-2',V(-29.3,9,6.2),'part l')); D(['FR1'],()=>label('FL-1',V(-34,15,6.2),'part l'));
   // highlight rows
   const hlGroup=new THREE.Group(); root.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];
@@ -1109,8 +1108,8 @@ const MESH=[{"name":"FR9","label":"FL-9 tube","v":[0.0,0.0,0.295,0.0,0.0004,0.28
   function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?48:35; camera.updateProjectionMatrix(); controls.handleResize();}
   new ResizeObserver(resize).observe(viewer); resize(); resetView();
   document.getElementById('btnReset').addEventListener('click',()=>{resetView();clearDistance();});
-  document.getElementById('btnDims').addEventListener('click',e=>{grpDims.visible=!grpDims.visible; document.body.classList.toggle('nodims',!grpDims.visible); e.currentTarget.setAttribute('aria-pressed',String(grpDims.visible)); document.getElementById('dimsTxt').dataset.en=grpDims.visible?'Hide dimensions':'Show dimensions'; setLang(curLang);});
-  const RU={"FL — left side of the frame (FR mirrored)": "FL — левая сторона рамы (зеркально FR)","FL-10 edge to FL-8":"От края FL-10 до FL-8","FL-8 length":"Длина FL-8","FL-6 start to FL-7":"От начала FL-6 до FL-7","FL-7 to FL-5":"От FL-7 до FL-5","FL-5 to FL-4":"От FL-5 до FL-4","FL-3 welded to the FL-6 end over the full height; far end 1 ½″ up and 2 ½″ out":"FL-3 приварена к торцу FL-6 по всей высоте; дальний край выше на 1 ½″ и в сторону на 2 ½″","FL-2 welded by its edge A1–D1 to the far end of FL-3":"FL-2 приварена ребром A1–D1 к дальнему краю FL-3","FL-1 under FL-2: ear holes on the FL-2 bottom holes (5″ apart)":"FL-1 под FL-2: отверстия ушей под отверстиями дна FL-2 (5″ между ними)","Frame Assembly (right side)":"Сборка рамы (правая сторона)","Sienna WAV · all dimensions in inches · parts built so far":"Sienna WAV · все размеры в дюймах · детали, что уже готовы",
+  document.getElementById('btnDims').addEventListener('click',e=>{grpDims.visible=!grpDims.visible; document.body.classList.toggle('nodims',!grpDims.visible); e.currentTarget.setAttribute('aria-pressed',String(grpDims.visible)); document.getElementById('dimsTxt').dataset.en=grpDims.visible?'Hide part numbers':'Show part numbers'; setLang(curLang);});
+  const RU={"Hide part numbers": "Скрыть номера деталей", "Show part numbers": "Показать номера деталей", "Parts": "Детали","FL — left side of the frame (FR mirrored)": "FL — левая сторона рамы (зеркально FR)","FL-10 edge to FL-8":"От края FL-10 до FL-8","FL-8 length":"Длина FL-8","FL-6 start to FL-7":"От начала FL-6 до FL-7","FL-7 to FL-5":"От FL-7 до FL-5","FL-5 to FL-4":"От FL-5 до FL-4","FL-3 welded to the FL-6 end over the full height; far end 1 ½″ up and 2 ½″ out":"FL-3 приварена к торцу FL-6 по всей высоте; дальний край выше на 1 ½″ и в сторону на 2 ½″","FL-2 welded by its edge A1–D1 to the far end of FL-3":"FL-2 приварена ребром A1–D1 к дальнему краю FL-3","FL-1 under FL-2: ear holes on the FL-2 bottom holes (5″ apart)":"FL-1 под FL-2: отверстия ушей под отверстиями дна FL-2 (5″ между ними)","Frame Assembly (right side)":"Сборка рамы (правая сторона)","Sienna WAV · all dimensions in inches · parts built so far":"Sienna WAV · все размеры в дюймах · детали, что уже готовы",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Joints (left side, FL)":"Соединения (левая сторона, FL)","Tap a row to see it on the model.":"Нажмите на строку — покажу на модели.",
     "FL-10 on FL-9: 0.2″ from the FL-9 end, on the outer side":"FL-10 на FL-9: 0.2″ от торца FL-9, с внешней стороны","FL-6 and FL-9 on one line, gap between them":"FL-6 и FL-9 на одной линии, зазор",

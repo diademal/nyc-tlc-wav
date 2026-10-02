@@ -1,1 +1,1 @@
-Thu Oct  1 15:53:26 UTC 2026
+build 20261002-2 thickness 0.138/0.118/0.197, holes

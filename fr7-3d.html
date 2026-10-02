@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.146″</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.138″</span>
   </header>
   <div class="viewer" id="viewer">
     <canvas id="c3d"></canvas>
@@ -1067,10 +1067,10 @@ header{position:relative}
   const G16={2:'⅛',4:'¼',6:'⅜',8:'½',10:'⅝',12:'¾',14:'⅞'};
   function frac(v){const n=Math.round(v*16),w=Math.floor(n/16),r=n%16; const f=r?(G16[r]||(r+'/16')):''; return (Math.abs(n/16-v)<0.004?'':'≈ ')+(w?w:(r?'':'0'))+(r?(w?' ':'')+f:'')+'″';}
   // ---------- FR-7 geometry (inches). Letters as on the cardboard IMG_0887: A, B, C (round), L, D (round start), F (tab end), G, H ----------
-  const T=0.146, IW=2.5, W=IW+2*T, zMid=W/2;
+  const T=0.1378, IW=2.5-2*0.1378, W=IW+2*T, zMid=W/2;
   const AH=3.5, HG=3, GF=1.5, TAB=0.75, WD=HG+TAB, RB=0.625, RF=0.75;
   const P={A:[0,0],B:[WD-RB,0],C:[WD,RB],L:[WD,AH],D:[WD,AH+GF-RF],F:[HG,AH+GF],G:[HG,AH],H:[0,AH]};
-  const HOLE=[1.125,1.625], HOLE_R=0.5685/2, BACK_L=3.625, NOTCH_D=0.625, NOTCH_W=0.5, BH=[1.25,1.875], BH_R=0.25, BOT_L=3.125;
+  const HOLE=[1.125,1.625], HOLE_R=0.5906/2, BACK_L=3.625, NOTCH_D=0.625, NOTCH_W=0.5, BH=[1.25,1.875], BH_R=0.25, BOT_L=3.125;
   const target=new THREE.Vector3(1.9,2.3,zMid), CAM=[-3,4,-14];
   function sideShape(){const s=new THREE.Shape(); s.moveTo(...P.A); s.lineTo(...P.B); s.absarc(WD-RB,RB,RB,-Math.PI/2,0,false); s.lineTo(...P.D);
     s.absarc(HG,AH+GF-RF,RF,0,Math.PI/2,false); s.lineTo(...P.G); s.lineTo(...P.H); s.lineTo(...P.A);
@@ -1090,22 +1090,22 @@ header{position:relative}
   dim([0,0],[WD,0],[0,-0.7],'3 ¾″'); dim(P.B,[WD,0],[0,-0.35],'⅝″'); dim(P.A,P.B,[0,-0.35],'3 ⅛″');
   line([V(0,HOLE[1],zf),V(...HOLE,zf)]); label('1 ⅛″',V(HOLE[0]/2,HOLE[1]+0.18,zf));
   line([V(HOLE[0],0,zf),V(...HOLE,zf)]); label('1 ⅝″',V(HOLE[0]+0.28,HOLE[1]/2,zf));
-  label('Ø0.5685″',V(HOLE[0]+0.6,HOLE[1]+0.2,zf)); line([V(...P.G,zf),V(...P.A,zf)]); label('G–A 4 ⅝″',V(1.9,2.4,zf));
-  label('2 ½″ between sides',V(1.5,-0.35,zMid)); label('back plate 2 ½″ × 3 ⅝″ · Ø0.5',V(-0.3,3.9,zMid)); label('steel 0.146″',V(2.2,5.1,zf),'note');
+  label('Ø0.591″',V(HOLE[0]+0.6,HOLE[1]+0.2,zf)); line([V(...P.G,zf),V(...P.A,zf)]); label('G–A 4 ⅝″',V(1.9,2.4,zf));
+  label('2.224″ between sides',V(1.5,-0.35,zMid)); label('back plate 2.224″ × 3 ⅝″ · Ø0.5',V(-0.3,3.9,zMid)); label('steel 0.138″',V(2.2,5.1,zf),'note');
   const ptOff={A:[-0.25,-0.2],B:[0,-0.3],C:[0.3,0],L:[0.3,0],D:[0.3,0.1],F:[-0.15,0.3],G:[-0.25,-0.25],H:[-0.3,0.2]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
   // ---------- table rows ----------
   const ed=(a,b,val)=>[a+'–'+b,val||frac(dist(P[a],P[b])),[P[a],P[b]]];
   const ROWS=[ed('A','H','3 ½″'),ed('H','G','3″'),ed('G','F','1 ½″'),ed('G','L','¾″'),['Width (A to outer edge)','3 ¾″',[[0,0],[WD,0]]],ed('A','B','3 ⅛″'),['B to outer edge (radius)','⅝″',[P.B,[WD,0]]],
-    ed('G','A','4 ⅝″'),['Hole Ø0.5685: from edge A–H','1 ⅛″',[[0,HOLE[1]],HOLE]],['Hole: from edge A–B','1 ⅝″',[[HOLE[0],0],HOLE]],
-    ['Bottom plate (along A–B)','2 ½″ × 3 ⅛″',[[0,-T,T],[BOT_L,-T,T]]],['Back plate (along A–H)','2 ½″ × 3 ⅝″',[[-T,-T,T],[-T,BACK_L-T,T]]],
-    ['Back plate hole Ø0.5: from side / from A end','1 ¼″ / 1 ⅞″',null],['Metal thickness','0.146″',null]];
-  const RU={"FR-7 Frame Bracket":"FR-7 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.146″":"Sienna WAV · все размеры в дюймах · металл 0.146″",
+    ed('G','A','4 ⅝″'),['Hole Ø0.591: from edge A–H','1 ⅛″',[[0,HOLE[1]],HOLE]],['Hole: from edge A–B','1 ⅝″',[[HOLE[0],0],HOLE]],
+    ['Bottom plate (along A–B)','2.224″ × 3 ⅛″',[[0,-T,T],[BOT_L,-T,T]]],['Back plate (along A–H)','2.224″ × 3 ⅝″',[[-T,-T,T],[-T,BACK_L-T,T]]],
+    ['Back plate hole Ø0.5: from side / from A end','1 ¼″ / 1 ⅞″',null],['Metal thickness','0.138″',null]];
+  const RU={"FR-7 Frame Bracket":"FR-7 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.138″":"Sienna WAV · все размеры в дюймах · металл 0.138″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-7":"Левая FL-7","Bottom and back plates":"Нижняя и задняя пластины","Side plates: FR-7 (A…L) / FL-7 (A1…L1)":"Боковины: FR-7 (A…L) / FL-7 (A1…L1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
-    "Width (A to outer edge)":"Ширина (от A до внешнего края)","B to outer edge (radius)":"B до внешнего края (радиус)","Hole Ø0.5685: from edge A–H":"Отверстие Ø0.5685: от края A–H","Hole: from edge A–B":"Отверстие: от края A–B",
+    "Width (A to outer edge)":"Ширина (от A до внешнего края)","B to outer edge (radius)":"B до внешнего края (радиус)","Hole Ø0.591: from edge A–H":"Отверстие Ø0.591: от края A–H","Hole: from edge A–B":"Отверстие: от края A–B",
     "Bottom plate (along A–B)":"Нижняя пластина (вдоль A–B)","Back plate (along A–H)":"Задняя пластина (вдоль A–H)","Back plate hole Ø0.5: from side / from A end":"Отв. Ø0.5 в задней: от края / от A","Metal thickness":"Толщина металла",
-    "2 ½″ between sides":"2 ½″ между боковинами","back plate 2 ½″ × 3 ⅝″ · Ø0.5":"задняя 2 ½″ × 3 ⅝″ · Ø0.5","steel 0.146″":"металл 0.146″"};
+    "2.224″ between sides":"2.224″ между боковинами","back plate 2.224″ × 3 ⅝″ · Ø0.5":"задняя 2.224″ × 3 ⅝″ · Ø0.5","steel 0.138″":"металл 0.138″"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];

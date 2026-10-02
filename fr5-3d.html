@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.146″</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.138″</span>
   </header>
   <div class="viewer" id="viewer">
     <canvas id="c3d"></canvas>
@@ -1067,9 +1067,9 @@ header{position:relative}
   const G16={2:'⅛',4:'¼',6:'⅜',8:'½',10:'⅝',12:'¾',14:'⅞'};
   function frac(v){const n=Math.round(v*16),w=Math.floor(n/16),r=n%16; const f=r?(G16[r]||(r+'/16')):''; return (Math.abs(n/16-v)<0.004?'':'≈ ')+(w?w:(r?'':'0'))+(r?(w?' ':'')+f:'')+'″';}
   // ---------- FR-5 v2 geometry (inches). Letters as on the cardboard IMG_0882: A tip, C corner, H rounded corner, E, F tip, G notch ----------
-  const T=0.146, IW=2.375, W=IW+2*T, zMid=W/2;
+  const T=0.1378, IW=2.5-2*0.1378, W=IW+2*T, zMid=W/2;
   const P={A:[0,6.125],C:[2.5479,3.5465],H:[2.5479,-0.4535],E:[0,0],F:[-2.3016,3.7207],G:[-0.4521,3.4124]};
-  const HOLE=[1.0479,1.3371], HOLE_R=0.568/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0, R_G=0.295;
+  const HOLE=[1.0479,1.3371], HOLE_R=0.5906/2, BACK_L=3.625, NOTCH_D=0.875, NOTCH_W=0.45, NOTCH_OFF=1.0, R_G=0.295;
   const R_H=(dist(P.E,P.H)-2)*Math.tan(Math.acos((()=>{const u1=nrm(sub(P.C,P.H)),u2=nrm(sub(P.E,P.H));return u1[0]*u2[0]+u1[1]*u2[1];})())/2);
   const FH=fillet(P.C,P.H,P.E,R_H);
   const uA=nrm(sub(P.A,P.G)), uF=nrm(sub(P.F,P.G)); const gA=add(P.G,mul(uA,R_G)), gF=add(P.G,mul(uF,R_G)); const gC=add(P.G,add(mul(uA,R_G),mul(uF,R_G)));
@@ -1094,11 +1094,11 @@ header{position:relative}
   line([V(...P.A,zf),V(...P.E,zf)]); label('A–E 6 ⅛″',V(0.35,1.9,zf));
   line([V(...P.G,zf),V(P.C[0],P.G[1],zf)]); label('3″',V(1.2,P.G[1]+0.18,zf));
   label('90°',V(P.G[0]-0.35,P.G[1]+0.35,zf));
-  label('Ø0.568″',V(HOLE[0]-0.2,HOLE[1]+0.5,zf));
+  label('Ø0.591″',V(HOLE[0]-0.2,HOLE[1]+0.5,zf));
   const hF2=(()=>{const d=nrm(sub(P.H,P.E)),v=sub(HOLE,P.E),t=v[0]*d[0]+v[1]*d[1];return add(P.E,mul(d,t));})();
   line([V(...HOLE,zf),V(P.C[0],HOLE[1],zf)]); label('1 ½″',V((HOLE[0]+P.C[0])/2,HOLE[1]+0.17,zf));
   line([V(...HOLE,zf),V(...hF2,zf)]); label('1 ½″',V((HOLE[0]+hF2[0])/2-0.28,(HOLE[1]+hF2[1])/2,zf));
-  label('2 ⅜″ between sides',V(1.4,5.3,zMid)); label('steel 0.146″',V(1.8,6.3,zf),'note');
+  label('2.224″ between sides',V(1.4,5.3,zMid)); label('steel 0.138″',V(1.8,6.3,zf),'note');
   const ptOff={A:[0,0.3],C:[0.3,0.1],H:[0.25,-0.25],E:[-0.2,-0.3],F:[-0.3,0.1],G:[0.2,-0.25]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
   // ---------- table rows ----------
@@ -1106,16 +1106,16 @@ header{position:relative}
   const ed=(a,b,val)=>[a+'–'+b,val||frac(dist(P[a],P[b])),[P[a],P[b]]];
   const ROWS=[ed('A','C','3 ⅝″'),ed('C','H','4″'),ed('A','G','2 ¾″'),ed('G','F','1 ⅞″'),ed('F','E','4 ⅜″'),ed('A','E','6 ⅛″'),
     ['G to edge C–H','3″',[P.G,[P.C[0],P.G[1]]]],['Angle A–G–F','90°',null],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
-    ['Hole Ø0.568: from edge C–H','1 ½″',[HOLE,[P.C[0],HOLE[1]]]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
-    ['Plate on edge A–C (IMG_0883): width × length','2 ⅜″ × 3 ⅝″',[P.A,P.C]],['V notch at the A end: depth / from corner A','⅞″ / 1″',null],
-    ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.146″',null]];
-  const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.146″":"Sienna WAV · все размеры в дюймах · металл 0.146″",
+    ['Hole Ø0.591: from edge C–H','1 ½″',[HOLE,[P.C[0],HOLE[1]]]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
+    ['Plate on edge A–C (IMG_0883): width × length','2.224″ × 3 ⅝″',[P.A,P.C]],['V notch at the A end: depth / from corner A','⅞″ / 1″',null],
+    ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','0.138″',null]];
+  const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 0.138″":"Sienna WAV · все размеры в дюймах · металл 0.138″",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-5":"Левая FL-5","Back plate":"Пластина между боковинами","Side plates: FR-5 (A…H) / FL-5 (A1…H1)":"Боковины: FR-5 (A…H) / FL-5 (A1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
     "G to edge C–H":"G до края C–H","Angle A–G–F":"Угол A–G–F","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус",
-    "Hole Ø0.568: from edge C–H":"Отверстие Ø0.568: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate on edge A–C (IMG_0883): width × length":"Пластина на краю A–C (IMG_0883): ширина × длина",
+    "Hole Ø0.591: from edge C–H":"Отверстие Ø0.591: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate on edge A–C (IMG_0883): width × length":"Пластина на краю A–C (IMG_0883): ширина × длина",
     "V notch at the A end: depth / from corner A":"V-вырез у A: глубина / от угла A","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6","Metal thickness":"Толщина металла",
-    "2 ⅜″ between sides":"2 ⅜″ между боковинами","steel 0.146″":"металл 0.146″"};
+    "2.224″ between sides":"2.224″ между боковинами","steel 0.138″":"металл 0.138″"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];

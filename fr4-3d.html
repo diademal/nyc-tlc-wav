@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.1475″</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.138″</span>
   </header>
 
   <div class="viewer" id="viewer">
@@ -116,7 +116,7 @@ header{position:relative}
     return;
   }
   // ---------- geometry (inches) ----------
-  const t = 0.1475, W = 3.125;
+  const t = 0.1378, W = 3 - 2*0.1378;   // outer width 3″ (2026-10-02)
   const Gy = -Math.sqrt(4*4 - 2*2);     // H-A = 4, A-B = 2
   const Ey = Gy + 3.125;                // F-G
   const Dy = Gy + 6.25, Cy = Gy + 6.75;   // measured from the bottom G-H (C-H = 6 3/4)
@@ -173,7 +173,7 @@ header{position:relative}
     s.lineTo(3, Ey + Rf);
     s.absarc(3 + Rf, Ey + Rf, Rf, Math.PI, 1.5*Math.PI, false); // inner fillet at E
     s.lineTo(6.5, Ey); s.lineTo(6.5, Gy); s.lineTo(2, Gy); s.lineTo(0, 0);
-    s.holes.push(circlePath(topHole.x, topHole.y, 0.26));
+    s.holes.push(circlePath(topHole.x, topHole.y, 0.2559));
     s.holes.push(circlePath(midHole.x, midHole.y, midR));
     return s;
   }
@@ -182,7 +182,7 @@ header{position:relative}
   const grpFR = new THREE.Group(), grpFL = new THREE.Group(), grpPlates = new THREE.Group(), grpDims = new THREE.Group();
   scene.add(grpFR, grpFL, grpPlates, grpDims);
 
-  addMesh(new THREE.ExtrudeGeometry(sideShape(0.26), ext(t)), matSide, grpFR);
+  addMesh(new THREE.ExtrudeGeometry(sideShape(0.2559), ext(t)), matSide, grpFR);
   const fl = addMesh(new THREE.ExtrudeGeometry(sideShape(0.17), ext(t)), matSide, grpFL);
   fl.position.z = t + W;
 
@@ -200,20 +200,20 @@ header{position:relative}
   function flatPlate(x0, x1, yTop){
     const s = new THREE.Shape();
     s.moveTo(x0, t); s.lineTo(x1, t); s.lineTo(x1, t+W); s.lineTo(x0, t+W); s.lineTo(x0, t);
-    s.holes.push(circlePath(plateHoleX, zMid, 0.55));
+    s.holes.push(circlePath(plateHoleX, zMid, 0.75));
     const m = addMesh(new THREE.ExtrudeGeometry(s, ext(t)), matPlate, grpPlates);
     m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
   }
   function neck(yTop, h){
     const s = new THREE.Shape(); s.absarc(plateHoleX, zMid, 0.75, 0, Math.PI*2, false);
-    s.holes.push(circlePath(plateHoleX, zMid, 0.55));
+    s.holes.push(circlePath(plateHoleX, zMid, 0.5906));
     const m = addMesh(new THREE.ExtrudeGeometry(s, ext(h)), matPlate, grpPlates);
     m.rotation.x = Math.PI/2; m.position.y = yTop; return m;
   }
   flatPlate(2 + k, 6.5 - t, Gy + t);   // bottom
   flatPlate(3, 6.5 - t, Ey);           // top
-  neck(Gy, 0.4);                       // bottom neck, down, 0.4 high
-  neck(Ey + 0.164, 0.164);             // top neck, up, 0.164 high
+  // one tube OD 1.5″ / ID 1.181″ through the bottom and top plates, welded; 0.4″ below, 0.164″ above (2026-10-02)
+  neck(Ey + 0.164, (Ey + 0.164) - (Gy - 0.4));
 
   // plate between the ears (D-E side), V-notch on top; shape in (z, y), extruded along x
   const zl = t, zr = t + W, vEdge = 1.25, vDepth = 0.625;
@@ -273,13 +273,13 @@ header{position:relative}
   dim(V(midHole.x,Gy,zf), V(midHole.x,midHole.y,zf), V(0,0,0), '2 ¼″');
   label('R 0.625″', V(2.6, Cy+0.35, zf));
   label('R ⅜″', V(3.55, Ey+0.55, zf));
-  label('Ø0.52″', V(topHole.x+0.55, topHole.y+0.45, zf));
-  label('Ø0.52″ FR · Ø0.34″ FL', V(midHole.x-0.2, midHole.y+0.5, zf));
-  dim(V(6.5,Gy,t), V(6.5,Gy,t+W), V(0.6,-0.3,0), '3 ⅛″ between plates');
+  label('Ø0.512″', V(topHole.x+0.55, topHole.y+0.45, zf));
+  label('Ø0.512″ FR · Ø0.34″ FL', V(midHole.x-0.2, midHole.y+0.5, zf));
+  dim(V(6.5,Gy,t), V(6.5,Gy,t+W), V(0.6,-0.3,0), '2.724″ between plates');
   dim(V(6.5,Gy-0.4,zMid), V(plateHoleX,Gy-0.4,zMid), V(0,-0.35,0), '1 ½″');
-  label('Ø1.1″ · neck Ø1.5″ × 0.4″', V(plateHoleX, Gy-1.25, zMid));
-  label('Ø1.1″ · neck Ø1.5″ × 0.164″', V(plateHoleX, Ey+0.7, zMid));
-  label('steel 0.1475″', V(-1.2, -2.4, zf), 'note');
+  label('tube Ø1.5″ / ID 1.181″ · 0.4″ below', V(plateHoleX, Gy-1.25, zMid));
+  label('tube 0.164″ above the top plate', V(plateHoleX, Ey+0.7, zMid));
+  label('steel 0.138″', V(-1.2, -2.4, zf), 'note');
   dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(-0.4,0.2,0), '1 ¼″');
   dim(V(2,Cy,t), V(2,Cy,t+1.25), V(-0.4,0.2,0), '1 ¼″');
   label('V ⅝″', V(2.2, Cy + 0.45, zMid));
@@ -346,20 +346,21 @@ header{position:relative}
       ['D to G–H, height', frac(Dy - Gy), [[3, Dy], [3, Gy]]],
       ['Post width B–C to D–E', '1″', [[2, Dy - 1.2], [3, Dy - 1.2]]],
       ['Inner fillet at E', 'R ⅜″', null],
-      ['Top hole, post center at D level', 'Ø0.52″', circ(2.5, Dy, 0.26, -0.06)],
-      ['Middle hole FR-4 (through)', 'Ø0.52″', circ(midHole.x, midHole.y, 0.26, -0.06)],
+      ['Top hole, post center at D level', 'Ø0.512″', circ(2.5, Dy, 0.2559, -0.06)],
+      ['Middle hole FR-4 (through)', 'Ø0.512″', circ(midHole.x, midHole.y, 0.2559, -0.06)],
       ['Middle hole FL-4', 'Ø0.34″', circ(midHole.x, midHole.y, 0.17, 2*t + W + 0.06)],
       ['Middle hole from edge F–G', frac(4.75), [[midHole.x, midHole.y], [6.5, midHole.y]]],
       ['Middle hole above edge G–H', frac(2.25), [[midHole.x, Gy], [midHole.x, midHole.y]]],
-      ['Gap between side plates', frac(W), [[6.5, Gy, t], [6.5, Gy, t + W]]],
+      ['Gap between side plates', W.toFixed(3) + '″', [[6.5, Gy, t], [6.5, Gy, t + W]]],
       ['Front plate (F–G), height', frac(3.125), [[6.56, Gy, zMid], [6.56, Ey, zMid]]],
       ['Slanted plate (H–A)', 'no holes', [[0, 0, zMid], [2, Gy, zMid]], true],
-      ['Bottom plate (G–H), hole', 'Ø1.1″', circXZ(plateHoleX, zMid, 0.55, Gy - 0.06)],
-      ['Top plate (E–F), hole', 'Ø1.1″', circXZ(plateHoleX, zMid, 0.55, Ey + 0.06)],
+      ['Bottom plate (G–H), hole for the tube', 'Ø1.5″', circXZ(plateHoleX, zMid, 0.75, Gy - 0.06)],
+      ['Top plate (E–F), hole for the tube', 'Ø1.5″', circXZ(plateHoleX, zMid, 0.75, Ey + 0.06)],
       ['Hole center from F–G side', frac(1.5), [[6.5, Gy - 0.06, zMid], [plateHoleX, Gy - 0.06, zMid]]],
-      ['Neck outer Ø', '1.5″', circXZ(plateHoleX, zMid, 0.75, Gy - 0.4)],
-      ['Neck height: bottom / top', '0.4″ / 0.164″', [[plateHoleX + 0.75, Gy, zMid], [plateHoleX + 0.75, Gy - 0.4, zMid]]],
-      ['Neck wall', '0.2″', null],
+      ['Tube through both plates: outer Ø / inner Ø', '1.5″ / 1.181″', circXZ(plateHoleX, zMid, 0.75, Gy - 0.4)],
+      ['Tube length', ((Ey + 0.164) - (Gy - 0.4)).toFixed(3) + '″', [[plateHoleX + 0.75, Gy - 0.4, zMid], [plateHoleX + 0.75, Ey + 0.164, zMid]]],
+      ['Tube sticks out: below / above', '0.4″ / 0.164″', [[plateHoleX + 0.75, Gy, zMid], [plateHoleX + 0.75, Gy - 0.4, zMid]]],
+      ['Tube wall', '0.159″', null],
       ['Ear plate (D–E side only)', 'up to D', [[3, Ey, zMid], [3, Dy, zMid]], true],
       ['Ear top cap, curved D → C (inside ears)', 'R 0.625″', arcPts.map(p => [p[0], p[1], zMid])],
       ['V-notch on cap edge at C: from sides / depth', '1 ¼″ / ⅝″', [[2, Cy, t], [2, Cy, t + 1.25]]],
@@ -419,7 +420,7 @@ header{position:relative}
 
   // ---------- language ----------
   const RU = {
-    "Sienna WAV · all dimensions in inches · steel 0.1475″": "Sienna WAV · все размеры в дюймах · металл 0.1475″",
+    "Sienna WAV · all dimensions in inches · steel 0.138″": "Sienna WAV · все размеры в дюймах · металл 0.138″",
     "Rotate with one finger, zoom with two": "Крутить — одним пальцем, приближать — двумя",
     "Reset view": "Сбросить вид", "Hide dimensions": "Скрыть размеры", "Show dimensions": "Показать размеры", "Left side FL-4": "Левая FL-4", "Plates": "Пластины",
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
@@ -435,18 +436,18 @@ header{position:relative}
     "Middle hole from edge F–G": "Среднее: от края F–G", "Middle hole above edge G–H": "Среднее: над краем G–H",
     "Plates between side plates": "Пластины между боковинами", "Gap between side plates": "Расстояние между боковинами",
     "Front plate (F–G), height": "Передняя (F–G), высота", "Slanted plate (H–A)": "Скошенная (H–A)",
-    "no holes": "без отверстий", "Bottom plate (G–H), hole": "Нижняя (G–H), отверстие",
-    "Top plate (E–F), hole": "Верхняя (E–F), отверстие", "Hole center from F–G side": "Центр отверстий от стороны F–G",
-    "Neck: outer Ø / height": "Горлышко: наружный Ø / высота", "Neck wall": "Стенка горлышка",
+    "no holes": "без отверстий", "Bottom plate (G–H), hole for the tube": "Нижняя (G–H), отверстие под трубу",
+    "Top plate (E–F), hole for the tube": "Верхняя (E–F), отверстие под трубу", "Hole center from F–G side": "Центр отверстий от стороны F–G",
+    "Tube through both plates: outer Ø / inner Ø": "Труба сквозь обе пластины: наружный Ø / внутренний Ø", "Tube wall": "Стенка трубы",
     "Ear plates, both sides (B–C and D–E)": "Пластины ушек с двух сторон (B–C и D–E)", "to top (C / D)": "до верха (C / D)",
     "V-notch: from edges / depth": "V-вырез: от краёв / глубина",
     "6 ¼″ from G–H": "6 ¼″ от G–H",
-    "3 ⅛″ between plates": "3 ⅛″ между боковинами",
-    "Ø1.1″ · neck Ø1.5″ × 0.4″": "Ø1.1″ · горлышко Ø1.5″ × 0.4″",
-    "Ø1.1″ · neck Ø1.5″ × 0.164″": "Ø1.1″ · горлышко Ø1.5″ × 0.164″",
-    "Neck height: bottom / top": "Высота горлышка: низ / верх", "Neck outer Ø": "Наружный Ø горлышка",
+    "2.724″ between plates": "2.724″ между боковинами",
+    "tube Ø1.5″ / ID 1.181″ · 0.4″ below": "труба Ø1.5″ / внутри 1.181″ · снизу 0.4″",
+    "tube 0.164″ above the top plate": "труба выше верхней пластины на 0.164″",
+    "Tube length": "Длина трубы", "Tube sticks out: below / above": "Труба торчит: снизу / сверху",
     "Ear plate (D–E side only)": "Пластина уха (только сторона D–E)", "to top (D)": "до верха (D)",
-    "steel 0.1475″": "металл 0.1475″"
+    "steel 0.138″": "металл 0.138″"
   };
   document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });
   const btnEn = document.getElementById('langEn'), btnRu = document.getElementById('langRu');

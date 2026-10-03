@@ -1121,12 +1121,21 @@ header{position:relative}
     }
   }
   const nAB_ = inward(P.A,P.B).n;
-  plateOnLine(P.A,P.B,nAB_,{at:len(sub(P.B,P.A))/2,d:1.1,od:1.5,h:0.4,out:true});   // A-B hole + neck out
+  const uAB_=nrm(sub(P.B,P.A)), AB_D=dot(sub(HC,P.A),uAB_);                         // tube axis = shelf centre (2026-10-03)
+  plateOnLine(P.A,P.B,nAB_,{at:AB_D,d:1.51});                                          // A-B hole for the tube
   plateOnLine(P.B,P.C,inward(P.B,P.C).n);
   plateOnLine(P.H,P.A,inward(P.H,P.A).n);
   plateOnLine(P.E,P.F,inward(P.E,P.F).n);
   plateOnLine(Q,X,nIn);                                                               // inner plate
-  plateOnLine(P.C,X,nAB,{at:SHELF_LEN/2,d:1.1811,od:1.6,h:0.3937,out:false});              // shelf + bushing (down)
+  plateOnLine(P.C,X,nAB,{at:SHELF_LEN/2,d:1.51});                                     // shelf hole for the tube
+  { // ONE tube OD 1.5 / ID 1.181 through A-B and the shelf (user 2026-10-03)
+    const TL=0.4+dot(sub(P.C,P.A),nAB_)+T+0.3937;
+    const r=new THREE.Shape(); r.absarc(0,0,0.75,0,Math.PI*2,false); r.holes.push(circlePath(0,0,1.1811/2));
+    const tg=new THREE.ExtrudeGeometry(r,ext(TL));
+    const base=add(add(P.A,mul(uAB_,AB_D)),mul(nAB_,-0.4));
+    const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),new THREE.Vector3(nAB_[0],nAB_[1],0));
+    const tm=addMesh(tg,matPlate,grpPlates); tm.quaternion.copy(q); tm.position.set(base[0],base[1],zMid);
+  }
 
   // ---------- dimensions ----------
   const dimEls=[]; const V=(x,y,z)=>new THREE.Vector3(x,y,z);
@@ -1150,10 +1159,10 @@ header{position:relative}
   dim2([0,HOLE_BIG[1]],HOLE_BIG,[0,-0.25],'1 ¼″');
   label('4 ½″ from A',V(-0.9,-2.3,zf));
   const abM=mul(add(P.A,P.B),0.5), abOut=add(abM,mul(nAB_,-0.9));
-  label('Ø1.1″ · neck Ø1.5″ × 0.4″',V(abOut[0]-0.4,abOut[1]+0.3,zMid));
+  label('tube Ø1.5″ · 0.4″ out',V(abOut[0]-0.4,abOut[1]+0.3,zMid));
   label('open — sits on FR-9 corner',V(0.6,-7.3,zMid),'note');
   label('2.724″ between plates',V(P.B[0]+0.5,P.B[1]+0.1,zMid));
-  label('shelf ∥ A–B · bushing Ø1.6″',V(HC[0]-0.2,HC[1]-0.7,zMid));
+  label('shelf ∥ A–B · tube 0.394″ below',V(HC[0]-0.2,HC[1]-0.7,zMid));
   const im=mul(add(S0,X),0.5); label('inner plate ≈∥ D–E · 0.4″ in from E',V(im[0]+0.5,im[1],zMid));
   label('steel 10 ga (0.135″)',V(-1.4,-8.6,zf),'note');
   const ptOff={A:[-0.25,0.15],B:[0.1,0.25],C:[0.3,0],D:[0.3,0],E:[0.3,0],F:[0.1,-0.3],G:[-0.15,0.3],H:[-0.3,-0.15]};
@@ -1192,14 +1201,14 @@ header{position:relative}
       ['Big hole: from A down / from A–H','4 ½″ / 1 ¼″',circ(HOLE_BIG,0.2953,-0.06)], ['Big hole Ø','0.591″',circ(HOLE_BIG,0.2953,-0.06)],
       ['Small hole: from A–B / from A–H','½″ / ⅝″',circ(HOLE_SMALL,0.2953,-0.06)],
       ['Gap between side plates','2.724″',[[P.B[0],P.B[1],T],[P.B[0],P.B[1],T+GAP]]],
-      ['Plate A–B: hole / neck','Ø1.1″ / Ø1.5″ × 0.4″',[[P.A[0],P.A[1],zMid],[P.B[0],P.B[1],zMid]]],
+      ['Plate A–B: hole for the tube','Ø1.5″',[[P.A[0],P.A[1],zMid],[P.B[0],P.B[1],zMid]]],
       ['Plate B–C','solid',[[P.B[0],P.B[1],zMid],[P.C[0],P.C[1],zMid]],true],
       ['Plate A–H','6 ⅝″',[[P.A[0],P.A[1],zMid],[P.H[0],P.H[1],zMid]]],
       ['Plate E–F','closed',[[P.E[0],P.E[1],zMid],[P.F[0],P.F[1],zMid]],true],
       ['Inner plate ∥ D–E, in from E','0.4″',[[P.E[0],P.E[1],zMid],[S0[0],S0[1],zMid]]],
       ['Inner plate length (to shelf)',frac(INNER_LEN),[[S0[0],S0[1],zMid],[X[0],X[1],zMid]]],
       ['Shelf ∥ A–B from C to inner plate','2 ⅜″',[[P.C[0],P.C[1],zMid],[X[0],X[1],zMid]]],
-      ['Shelf bushing: outer Ø / hole / height','1.6″ / 1.181″ / 0.394″',circ(HC,0.8,zMid)],
+      ['Tube through A–B and the shelf: OD / ID / length','1.5″ / 1.181″ / 3.42″',circ(HC,0.75,zMid)],
       ['Open sides (on FR-9)','F–G, G–H',[P.F,P.G,P.H],true] ];
     const dl=document.getElementById('distList');
     for(const [lab,val,pts,ddI18n] of rows){
@@ -1239,14 +1248,14 @@ header{position:relative}
     "Angle at D (D–E to H–D)":"Угол в D (D–E к H–D)","Angle at G (FR-9 corner)":"Угол в G (угол трубы FR-9)",
     "Big hole: from A down / from A–H":"Большое отверстие: от A вниз / от A–H","Big hole Ø":"Большое отверстие Ø",
     "Small hole: from A–B / from A–H":"Малое отверстие: от A–B / от A–H","Gap between side plates":"Расстояние между боковинами",
-    "Plate A–B: hole / neck":"Пластина A–B: отверстие / горлышко","Plate B–C":"Пластина B–C","solid":"сплошная","Plate A–H":"Пластина A–H",
+    "Plate A–B: hole for the tube":"Пластина A–B: отверстие под трубу","Plate B–C":"Пластина B–C","solid":"сплошная","Plate A–H":"Пластина A–H",
     "Plate E–F":"Пластина E–F","closed":"закрыта","Inner plate ∥ D–E, in from E":"Внутр. пластина ∥ D–E, вглубь от E",
     "Inner plate length (to shelf)":"Длина внутр. пластины (до полки)","Shelf ∥ A–B from C to inner plate":"Полка ∥ A–B от C до внутр. пластины",
-    "Shelf bushing: outer Ø / hole / height":"Втулка на полке: наружный Ø / отверстие / высота","Open sides (on FR-9)":"Открытые стороны (на FR-9)",
+    "Tube through A–B and the shelf: OD / ID / length":"Труба сквозь A–B и полку: наружный Ø / внутренний / длина","Open sides (on FR-9)":"Открытые стороны (на FR-9)",
     "F–G, G–H":"F–G, G–H",
-    "C–D 4 ⅜″ arc":"C–D 4 ⅜″ дуга","4 ½″ from A":"4 ½″ от A","Ø1.1″ · neck Ø1.5″ × 0.4″":"Ø1.1″ · горлышко Ø1.5″ × 0.4″",
+    "C–D 4 ⅜″ arc":"C–D 4 ⅜″ дуга","4 ½″ from A":"4 ½″ от A","tube Ø1.5″ · 0.4″ out":"труба Ø1.5″ · торчит 0.4″",
     "open — sits on FR-9 corner":"открыто — садится на угол FR-9","2.724″ between plates":"2.724″ между боковинами",
-    "shelf ∥ A–B · bushing Ø1.6″":"полка ∥ A–B · втулка Ø1.6″","inner plate ≈∥ D–E · 0.4″ in from E":"внутр. пластина ≈∥ D–E · 0.4″ вглубь от E",
+    "shelf ∥ A–B · tube 0.394″ below":"полка ∥ A–B · труба 0.394″ ниже","inner plate ≈∥ D–E · 0.4″ in from E":"внутр. пластина ≈∥ D–E · 0.4″ вглубь от E",
     "steel 10 ga (0.135″)":"металл 10 ga (0.135″)"
   };
   document.querySelectorAll('.i18n').forEach(el=>{ el.dataset.en=el.textContent; });

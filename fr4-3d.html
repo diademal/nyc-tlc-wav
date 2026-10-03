@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 0.138″</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)</span>
   </header>
 
   <div class="viewer" id="viewer">
@@ -116,7 +116,7 @@ header{position:relative}
     return;
   }
   // ---------- geometry (inches) ----------
-  const t = 0.1378, W = 3 - 2*0.1378;   // outer width 3″ (2026-10-02)
+  const t = 0.1345, W = 3 - 2*0.1345;   // outer width 3″ (2026-10-02)
   const Gy = -Math.sqrt(4*4 - 2*2);     // H-A = 4, A-B = 2
   const Ey = Gy + 3.125;                // F-G
   const Dy = Gy + 6.25, Cy = Gy + 6.75;   // measured from the bottom G-H (C-H = 6 3/4)
@@ -279,7 +279,7 @@ header{position:relative}
   dim(V(6.5,Gy-0.4,zMid), V(plateHoleX,Gy-0.4,zMid), V(0,-0.35,0), '1 ½″');
   label('tube Ø1.5″ / ID 1.181″ · 0.4″ below', V(plateHoleX, Gy-1.25, zMid));
   label('tube 0.164″ above the top plate', V(plateHoleX, Ey+0.7, zMid));
-  label('steel 0.138″', V(-1.2, -2.4, zf), 'note');
+  label('steel 10 ga (0.135″)', V(-1.2, -2.4, zf), 'note');
   dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(-0.4,0.2,0), '1 ¼″');
   dim(V(2,Cy,t), V(2,Cy,t+1.25), V(-0.4,0.2,0), '1 ¼″');
   label('V ⅝″', V(2.2, Cy + 0.45, zMid));
@@ -420,7 +420,7 @@ header{position:relative}
 
   // ---------- language ----------
   const RU = {
-    "Sienna WAV · all dimensions in inches · steel 0.138″": "Sienna WAV · все размеры в дюймах · металл 0.138″",
+    "Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)": "Sienna WAV · все размеры в дюймах · металл 10 ga (0.135″)",
     "Rotate with one finger, zoom with two": "Крутить — одним пальцем, приближать — двумя",
     "Reset view": "Сбросить вид", "Hide dimensions": "Скрыть размеры", "Show dimensions": "Показать размеры", "Left side FL-4": "Левая FL-4", "Plates": "Пластины",
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
@@ -447,7 +447,7 @@ header{position:relative}
     "tube 0.164″ above the top plate": "труба выше верхней пластины на 0.164″",
     "Tube length": "Длина трубы", "Tube sticks out: below / above": "Труба торчит: снизу / сверху",
     "Ear plate (D–E side only)": "Пластина уха (только сторона D–E)", "to top (D)": "до верха (D)",
-    "steel 0.138″": "металл 0.138″"
+    "steel 10 ga (0.135″)": "металл 10 ga (0.135″)"
   };
   document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });
   const btnEn = document.getElementById('langEn'), btnRu = document.getElementById('langRu');

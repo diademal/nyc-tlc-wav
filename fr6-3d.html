@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · square tube 3″ × 3″, wall 0.197″</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · square tube 3″ × 3″, wall 3/16″</span>
   </header>
 
   <div class="viewer" id="viewer">
@@ -1040,8 +1040,8 @@ header{position:relative}
     return;
   }
   // ---------- geometry (inches) ----------
-  // square tube 3 x 3, length 14 1/4, wall 0.1969, outer corner R 0.295
-  const S = 3, L = 14.25, t = 0.1969, Ro = 0.295, Ri = Ro - t;
+  // square tube 3 x 3, length 14 1/4, wall 3/16 (0.1875), outer corner R 0.295
+  const S = 3, L = 14.25, t = 0.1875, Ro = 0.295, Ri = Ro - t;
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
   const canvas = document.getElementById('c3d');
@@ -1107,7 +1107,7 @@ header{position:relative}
   dim(v('A'), v('B'), V(0,-0.6,0), '3″');
   dim(v('B'), v('C'), V(0.6,0,0), '3″');
   dim(v('B'), v('F'), V(0.6,-0.6,0), '14 ¼″');
-  label('wall 0.197″', V(S/2, S + 0.35, -0.2), 'note');
+  label('wall 3/16″', V(S/2, S + 0.35, -0.2), 'note');
   label('R 0.3″', V(-0.5, 0.25, -0.3));
   label('A', V(-0.3,-0.3,0),'note'); label('B', V(S+0.3,-0.3,0),'note'); label('C', V(S+0.35,S+0.2,0),'note'); label('D', V(-0.3,S+0.3,0),'note');
   label('E', V(-0.3,-0.3,L),'note'); label('F', V(S+0.3,-0.3,L+0.2),'note'); label('G', V(S+0.3,S+0.3,L),'note'); label('H', V(-0.3,S+0.3,L),'note');
@@ -1150,7 +1150,7 @@ header{position:relative}
     const rows = [
       e('A','B','3″'), e('B','C','3″'), e('C','D','3″'), e('D','A','3″'),
       e('A','E','14 ¼″'), e('B','F','14 ¼″'), e('C','G','14 ¼″'), e('D','H','14 ¼″'),
-      ['Wall thickness', '0.197″', [[S/2, S, -0.06], [S/2, S - t, -0.06]]],
+      ['Wall thickness', '3/16″', [[S/2, S, -0.06], [S/2, S - t, -0.06]]],
       ['Outer corner radius', 'R 0.3″', null],
       ['Ends A–B–C–D and E–F–G–H', 'square, open', [P.A, P.B, P.C, P.D, P.A], true],
       ['Holes', 'none', null, true],
@@ -1203,7 +1203,7 @@ header{position:relative}
 
   // ---------- language ----------
   const RU = {
-    "Sienna WAV · all dimensions in inches · square tube 3″ × 3″, wall 0.197″": "Sienna WAV · все размеры в дюймах · квадратная труба 3″ × 3″, стенка 0.197″",
+    "Sienna WAV · all dimensions in inches · square tube 3″ × 3″, wall 3/16″": "Sienna WAV · все размеры в дюймах · квадратная труба 3″ × 3″, стенка 3/16″",
     "Rotate with one finger, zoom with two": "Крутить — одним пальцем, приближать — двумя",
     "Reset view": "Сбросить вид", "Hide dimensions": "Скрыть размеры", "Show dimensions": "Показать размеры",
     "FR-6 tube: points A…H (left FL-6: A1…H1, same part)": "Труба FR-6: точки A…H (левая FL-6: A1…H1, такая же деталь)",
@@ -1212,7 +1212,7 @@ header{position:relative}
     "Ends A–B–C–D and E–F–G–H": "Торцы A–B–C–D и E–F–G–H", "square, open": "прямо, открыты",
     "Holes": "Отверстия", "none": "нет",
     "Welds: to be confirmed": "Сварка: уточняется",
-    "wall 0.197″": "стенка 0.197″", "FR-6 Frame Tube": "FR-6 Труба рамы"
+    "wall 3/16″": "стенка 3/16″", "FR-6 Frame Tube": "FR-6 Труба рамы"
   };
   document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });
   const btnEn = document.getElementById('langEn'), btnRu = document.getElementById('langRu');

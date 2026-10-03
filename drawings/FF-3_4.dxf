@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.850416667
+2461317.4299768517
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.850416667
+2461317.4299768517
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{29AC0E84-AC51-4BDB-AB93-6B7C8711285B}
+{E2D5CDC1-E53A-4498-AC6E-0A0DD5809015}
   9
 $VERSIONGUID
   2
-{B2C2AB0D-1E75-4247-B70C-97758A12CCAE}
+{E79AF1BE-3686-463D-9DE1-41F31ADA43C2}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2135,23 +2135,23 @@ AcDbPolyline
  70
 1
  10
-5.021
+5.0132
  20
 0.0
  10
-5.021
- 20
-1.125
- 10
-0.0
+5.0132
  20
 1.125
  10
 0.0
  20
+1.125
+ 10
+0.0
+ 20
 0.0
  10
-5.021
+5.0132
  20
 0.0
   0
@@ -2175,7 +2175,7 @@ AcDbText
  40
 0.15
   1
-FF-3 blank 4: Passage wall 1⅛ × 5.02″ (instead of the tube)  HR steel sheet 0.118"  QTY 2 per vehicle
+FF-3 blank 4: Passage wall 1⅛ × 5.01″ (instead of the tube)  HR steel sheet 11 ga (0.120")  QTY 2 per vehicle
 100
 AcDbText
   0
@@ -3181,7 +3181,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:36.482541+00:00
+1.4.4 @ 2026-10-03T14:19:10.192506+00:00
   0
 DICTIONARYVAR
   5
@@ -3193,7 +3193,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:36.484231+00:00
+1.4.4 @ 2026-10-03T14:19:10.193975+00:00
   0
 ENDSEC
   0

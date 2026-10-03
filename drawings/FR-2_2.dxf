@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.8503935183
+2461317.4299537037
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.8503935183
+2461317.4299537037
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{111458F0-3F0A-4104-AEC9-30FBAECEA721}
+{6CB8BAFC-4A97-4D13-A1AF-7326B553AC11}
   9
 $VERSIONGUID
   2
-{80065A12-6D57-49E3-A26F-5CE7D1CD8995}
+{BC761808-4175-499F-BE84-CE6B94BB7D01}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2131,23 +2131,19 @@ CUT
 100
 AcDbPolyline
  90
-6
+5
  70
 1
  10
 0.0
  20
-3.0106
+3.0103
  10
-0.0
+2.981
  20
-3.0106
+3.2397
  10
-2.9744
- 20
-3.2394
- 10
-2.9744
+2.981
  20
 0.0
  10
@@ -2157,7 +2153,7 @@ AcDbPolyline
  10
 0.0
  20
-3.0106
+3.0103
   0
 TEXT
   5
@@ -2179,7 +2175,7 @@ AcDbText
  40
 0.15
   1
-FR-2 blank 2: Leg wall  HR steel sheet 0.138"  QTY 4 per side · FR + FL (mirror) = 8 per vehicle
+FR-2 blank 2: Leg wall  HR steel sheet 10 ga (0.135")  QTY 4 per side · FR + FL (mirror) = 8 per vehicle
 100
 AcDbText
   0
@@ -3185,7 +3181,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:34.723456+00:00
+1.4.4 @ 2026-10-03T14:19:08.693288+00:00
   0
 DICTIONARYVAR
   5
@@ -3197,7 +3193,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:34.725193+00:00
+1.4.4 @ 2026-10-03T14:19:08.694439+00:00
   0
 ENDSEC
   0

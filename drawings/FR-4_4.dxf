@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.8503819443
+2461317.4299421296
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.8503819443
+2461317.4299421296
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{90D53F4B-2601-4042-A347-F7C0F3B75C80}
+{3303D7B4-CF73-438B-91E5-A4EC0A60C16D}
   9
 $VERSIONGUID
   2
-{17B83E0B-04B0-43AF-B266-9D24C2BA9FF2}
+{B6EF2A15-FADC-48EF-B152-90423396F4F8}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2141,11 +2141,11 @@ AcDbPolyline
  10
 0.0
  20
-2.7244
+2.731
  10
 4.0
  20
-2.7244
+2.731
  10
 4.0
  20
@@ -2175,7 +2175,7 @@ AcDbText
  40
 0.15
   1
-FR-4 blank 4: Slanted plate  HR steel sheet 0.138"  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
+FR-4 blank 4: Slanted plate  HR steel sheet 10 ga (0.135")  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
 100
 AcDbText
   0
@@ -3181,7 +3181,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:33.812625+00:00
+1.4.4 @ 2026-10-03T14:19:07.866593+00:00
   0
 DICTIONARYVAR
   5
@@ -3193,7 +3193,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:33.814000+00:00
+1.4.4 @ 2026-10-03T14:19:07.868143+00:00
   0
 ENDSEC
   0

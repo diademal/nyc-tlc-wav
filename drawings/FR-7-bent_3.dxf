@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.8503703703
+2461317.4299421296
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.8503703703
+2461317.4299421296
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{E1D3B8B1-CC94-4F2E-9F11-C7EB324C6046}
+{ED0A8949-B8A8-4FAB-828E-7378E6B8996F}
   9
 $VERSIONGUID
   2
-{2A8C1FC5-00FD-4C88-AA03-45A8C49AB820}
+{963F88B3-C6EE-4FA8-816E-1BB4F56A024E}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2391,7 +2391,7 @@ AcDbText
  40
 0.15
   1
-FR-7 blank 3: Second side plate  HR steel sheet 0.138"  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
+FR-7 blank 3: Second side plate  HR steel sheet 10 ga (0.135")  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
 100
 AcDbText
   0
@@ -3397,7 +3397,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:32.933567+00:00
+1.4.4 @ 2026-10-03T14:19:07.145316+00:00
   0
 DICTIONARYVAR
   5
@@ -3409,7 +3409,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:32.935637+00:00
+1.4.4 @ 2026-10-03T14:19:07.147516+00:00
   0
 ENDSEC
   0

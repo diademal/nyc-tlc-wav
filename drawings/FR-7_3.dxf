@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.8503703703
+2461317.4299305556
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.8503703703
+2461317.4299305556
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{529D46DA-76FD-4D0C-A3E9-C4F752D3E80F}
+{146AC31E-6760-4420-9572-F48380E35346}
   9
 $VERSIONGUID
   2
-{50F95C80-A54B-43FD-8524-A379B29064BF}
+{77621F5B-8C95-4148-BA61-1F3246C15CFA}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2131,31 +2131,27 @@ CUT
 100
 AcDbPolyline
  90
-9
+8
  70
 1
  10
-0.0
+2.231
  20
 3.625
  10
-2.2244
- 20
-3.625
- 10
-2.2244
+2.231
  20
 0.0
  10
-1.3622
+1.3655
  20
 0.0
  10
-1.1122
+1.1155
  20
 0.625
  10
-0.8622
+0.8655
  20
 0.0
  10
@@ -2167,7 +2163,7 @@ AcDbPolyline
  20
 3.625
  10
-0.0
+2.231
  20
 3.625
   0
@@ -2211,7 +2207,7 @@ AcDbText
  40
 0.15
   1
-FR-7 blank 3: Back plate (hole Ø0.5)  HR steel sheet 0.138"  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
+FR-7 blank 3: Back plate (hole Ø0.5)  HR steel sheet 10 ga (0.135")  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
 100
 AcDbText
   0
@@ -3217,7 +3213,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:32.615430+00:00
+1.4.4 @ 2026-10-03T14:19:06.850608+00:00
   0
 DICTIONARYVAR
   5
@@ -3229,7 +3225,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:32.617239+00:00
+1.4.4 @ 2026-10-03T14:19:06.852447+00:00
   0
 ENDSEC
   0

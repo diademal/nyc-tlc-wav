@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461316.850405093
+2461317.4299652777
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461316.850405093
+2461317.4299652777
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{07F1196F-0DC3-4F8A-B299-5418EDD77886}
+{44BD57FE-4D73-4E88-A065-B4DFA19BDEB2}
   9
 $VERSIONGUID
   2
-{8F3B0928-33F9-49C1-A8EE-14FB3C8FA1E6}
+{4C059A5F-AE1E-4C26-8423-C1D3A250C8E6}
   9
 $EXTNAMES
 290
@@ -1323,9 +1323,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1339,9 +1339,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -2139,17 +2139,17 @@ AcDbPolyline
  20
 0.0
  10
-4.0894
+4.0842
  20
 0.0
  10
-4.0894
+4.0842
  20
-6.9137
+6.9142
  10
 0.0
  20
-7.7343
+7.7338
  10
 0.0
  20
@@ -2167,13 +2167,13 @@ BEND
 100
 AcDbLine
  10
-0.5447
+0.5421
  20
 0.0
  30
 0.0
  11
-0.5447
+0.5421
  21
 7.625
  31
@@ -2191,7 +2191,7 @@ TEXT
 100
 AcDbText
  10
-0.5447
+0.5421
  20
 3.8125
  30
@@ -2215,13 +2215,13 @@ BEND
 100
 AcDbLine
  10
-3.5447
+3.5421
  20
 0.0
  30
 0.0
  11
-3.5447
+3.5421
  21
 7.023
  31
@@ -2239,7 +2239,7 @@ TEXT
 100
 AcDbText
  10
-3.5447
+3.5421
  20
 3.5115
  30
@@ -2271,7 +2271,7 @@ AcDbText
  40
 0.15
   1
-FR-3 blank 1: Channel — flat pattern (2 bends 90°)  HR steel sheet 0.118"  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
+FR-3 blank 1: Channel — flat pattern (2 bends 90°)  HR steel sheet 11 ga (0.120")  QTY 1 per side · FR + FL (mirror) = 2 per vehicle
 100
 AcDbText
   0
@@ -3277,7 +3277,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:35.273197+00:00
+1.4.4 @ 2026-10-03T14:19:09.144322+00:00
   0
 DICTIONARYVAR
   5
@@ -3289,7 +3289,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-10-03T00:24:35.274725+00:00
+1.4.4 @ 2026-10-03T14:19:09.145613+00:00
   0
 ENDSEC
   0

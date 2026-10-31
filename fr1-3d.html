@@ -1086,7 +1086,7 @@ const MESH=[{"name":"Plate","label":"Plate","v":[-1.889,-0.161,0.0,-1.889,-0.161
     ['Slant flange on edge N–P (bent 90°)','1″',null],
     ['Ear holes (2)','Ø0.709″',null],
     ['Centre hole','Ø1.024″',null],
-    ['Metal','10 ga (0.135″)',null]];
+    ['Metal','11 ga (0.120″)',null]];
   const dl=document.getElementById('distList');
   for(const [lab,val,pts] of ROWS){const dt=document.createElement('dt'); dt.className='i18n'; dt.textContent=lab; const dd=document.createElement('dd'); dd.textContent=val;
     if(pts){[dt,dd].forEach(el=>{el.classList.add('pick'); el.tabIndex=0; el.setAttribute('role','button'); const go=()=>showDistance(pts,val||lab,dt,dd);
@@ -1120,5 +1120,7 @@ const MESH=[{"name":"Plate","label":"Plate","v":[-1.889,-0.161,0.0,-1.889,-0.161
 })();
 </script>
 
+
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>HR steel A1011 CS</b> · <b>11 ga · t = 0.1196″ (3.04 mm)</b></div>
 </body>
 </html>

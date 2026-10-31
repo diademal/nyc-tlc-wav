@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramp RA · Sienna WAV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#e9edf0;--panel:#f6f8f9;--ink:#1b2126;--muted:#5b6670;--line:#c9d1d7;--acc:#c2410c;--accbg:#fff4ec;--focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12171b;--panel:#1a2126;--ink:#e3e8ec;--muted:#95a1ab;--line:#2c353c;--acc:#ff8a4c;--accbg:#2a1a10;--focus:#6cb4ff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171b;--panel:#1a2126;--ink:#e3e8ec;--muted:#95a1ab;--line:#2c353c;--acc:#ff8a4c;--accbg:#2a1a10;--focus:#6cb4ff;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1150px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;justify-content:space-between}
+h1{font-size:24px;margin:0}
+.lang button{font:600 13px var(--mono);padding:5px 10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--panel)}
+.mat{border:2px solid var(--acc);background:var(--accbg);color:var(--acc);border-radius:8px;padding:10px 14px;font-weight:700;font-size:16px}
+.mat small{display:block;font-weight:600;font-size:13px;opacity:.9}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.row{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+.row h2{margin:0;font-size:20px;font-family:var(--mono)}
+.kv{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.kv b{color:var(--ink)}
+.pv{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:6px;margin-top:10px;background:#fff}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.dl a{font:500 13px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:6px 10px;background:var(--bg)}
+.dl a:hover,.dl a:focus-visible{border-color:var(--acc);outline:none}
+.note{color:var(--muted);font-size:13px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs a{font:500 14px var(--mono);padding:6px 10px;border:1px solid var(--line);border-radius:6px;color:var(--ink);text-decoration:none;background:var(--panel)}
+.tabs a[aria-current="page"]{background:var(--acc);border-color:var(--acc);color:var(--panel)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1 id="ttl">Ramp RA · Sienna WAV</h1><div class="lang"><button id="bru" type="button">RU</button><button id="ben" type="button">EN</button></div></header>
+<div class="mat" id="mat"></div>
+<nav class="tabs" id="tabs" aria-label="Ramp parts"></nav>
+<div id="list"></div>
+<p class="note" id="foot"></p>
+</div>
+<script>
+const RA=[
+ {p:'RA-1',q:1,f:'22.000 × 34.565',b:2,ru:'Плита рампы с ушами (2 борта 2 5/16″, ручка-прорезь)',en:'Ramp plate with ears (2 flanges 2 5/16″, handle slot)'},
+ {p:'RA-2',q:1,f:'23.533 × 34.940',b:3,ru:'Плита рампы: борт ¾″ + 2 уха 2″, все гибы вниз',en:'Ramp plate: flange ¾″ + 2 ears 2″, all bends down'},
+ {p:'RA-3',q:1,f:'19.658 × 45.065',b:3,ru:'Плита: борт 1⅛″ + 2 уха 3½″ вниз',en:'Plate: flange 1⅛″ + 2 ears 3½″ down'},
+ {p:'RA-4',q:1,f:'6.690 × 33.500',b:2,ru:'Швеллер 2¼ / 2¾ / 2⅛, L 33½″',en:'Channel 2¼ / 2¾ / 2⅛, L 33½″'},
+ {p:'RA-5',q:1,f:'9.783 × 33.500',b:1,ru:'Уголок с ушком, борт 2¾″ вверх, L 33½″',en:'Angle with side tab, flange 2¾″ up, L 33½″'},
+ {p:'RA-6',q:1,f:'3.065 × 30.000',b:2,ru:'Швеллер 2½″ с бортами ½″, L 30″',en:'Channel 2½″ with ½″ flanges, L 30″'},
+ {p:'RA-7',q:1,f:'40.631 × 22.556',b:4,ru:'Короб 34 × 18¼″: 2 боковины + передняя стенка с бортиками',en:'Box 34 × 18¼″: 2 side walls + front wall with lips'},
+ {p:'RA-8',q:2,f:'4.625 × 4.065',b:2,ru:'Кронштейн 4⅝ × 2½″, борт 1″ + ушко 1″ (2 шт на машину)',en:'Bracket 4⅝ × 2½″, flange 1″ + tab 1″ (2 per vehicle)'}];
+const TX={ru:{ttl:'Рампа RA · Sienna WAV',mat:'Металл: алюминий 5052-H32, лист <b>t = 0.125″ (1/8″, 3.18 мм)</b> — для всех деталей рампы',sub:'Гибы: внутренний радиус R = t, K = 0.44; все размеры на чертежах — наружные размеры согнутой детали, развертка посчитана.',
+  qty:'шт на машину',flat:'развертка',bends:'гибов',pdf:'Чертёж (PDF)',cut:'DXF для лазера',ref:'DXF справочный (гибы + материал)',zip:'Чертёж + DXF (ZIP)',
+  foot:'Размеры в дюймах. Чертёж и DXF — версия от 2026-10-31. Открытые вопросы по рампе ещё решаются (см. список в проекте).'},
+ en:{ttl:'Ramp RA · Sienna WAV',mat:'Material: aluminum 5052-H32 sheet <b>t = 0.125″ (1/8″, 3.18 mm)</b> — all ramp parts',sub:'Bends: inside radius R = t, K = 0.44; drawing dimensions are outside dimensions of the bent part; the flat pattern is calculated.',
+  qty:'per vehicle',flat:'flat',bends:'bends',pdf:'Drawing (PDF)',cut:'DXF for laser',ref:'Reference DXF (bends + material)',zip:'Drawing + DXF (ZIP)',
+  foot:'Inches. Drawings and DXF dated 2026-10-31. Some ramp details are still open (see the project list).'}};
+let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+const want=(new URLSearchParams(location.search).get('p')||'').toUpperCase();
+function render(){
+  const t=TX[lang]; document.getElementById('ttl').textContent=t.ttl; document.documentElement.lang=lang;
+  document.getElementById('mat').innerHTML=t.mat+'<small>'+t.sub+'</small>';
+  document.getElementById('bru').setAttribute('aria-pressed',String(lang==='ru')); document.getElementById('ben').setAttribute('aria-pressed',String(lang==='en'));
+  const show=RA.filter(r=>!want||r.p===want);
+  document.getElementById('tabs').innerHTML=RA.map(r=>`<a href="?p=${r.p}" ${r.p===want?'aria-current="page"':''}>${r.p}</a>`).join('')+`<a href="?" ${!want?'aria-current="page"':''}>${lang==='ru'?'все':'all'}</a>`;
+  document.getElementById('list').innerHTML=show.map(r=>{const m='drawings/MFG/'+r.p; return `<section class="card" id="${r.p}">
+   <div class="row"><h2>${r.p}</h2><span>${r[lang]}</span></div>
+   <div class="row kv"><span>${t.qty}: <b>${r.q}</b></span><span>${t.flat}: <b>${r.f}″</b></span><span>${t.bends}: <b>${r.b}</b></span><span style="color:var(--acc)"><b>Al 5052-H32 · t 0.125″</b></span></div>
+   <a href="${m}_drawing.pdf" target="_blank" rel="noopener"><img class="pv" src="${m}_preview.webp" alt="${r.p} drawing" loading="lazy" width="1530" height="990"></a>
+   <div class="dl"><a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="${m}_files.zip" download>${t.zip}</a></div></section>`;}).join('<div style="height:12px"></div>');
+  document.getElementById('foot').textContent=t.foot;
+}
+document.getElementById('bru').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};render();};
+document.getElementById('ben').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};render();};
+render();
+</script>
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+</body>
+</html>

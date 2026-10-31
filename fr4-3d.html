@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 11 ga (0.120″)</span>
   </header>
 
   <div class="viewer" id="viewer">
@@ -279,7 +279,7 @@ header{position:relative}
   dim(V(6.5,Gy-0.4,zMid), V(plateHoleX,Gy-0.4,zMid), V(0,-0.35,0), '1 ½″');
   label('tube Ø1.5″ / ID 1.181″ · 0.4″ below', V(plateHoleX, Gy-1.25, zMid));
   label('tube 0.164″ above the top plate', V(plateHoleX, Ey+0.7, zMid));
-  label('steel 10 ga (0.135″)', V(-1.2, -2.4, zf), 'note');
+  label('steel 11 ga (0.120″)', V(-1.2, -2.4, zf), 'note');
   dim(V(2,Cy,t+W-1.25), V(2,Cy,t+W), V(-0.4,0.2,0), '1 ¼″');
   dim(V(2,Cy,t), V(2,Cy,t+1.25), V(-0.4,0.2,0), '1 ¼″');
   label('V ⅝″', V(2.2, Cy + 0.45, zMid));
@@ -420,7 +420,7 @@ header{position:relative}
 
   // ---------- language ----------
   const RU = {
-    "Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)": "Sienna WAV · все размеры в дюймах · металл 10 ga (0.135″)",
+    "Sienna WAV · all dimensions in inches · steel 11 ga (0.120″)": "Sienna WAV · все размеры в дюймах · металл 11 ga (0.120″)",
     "Rotate with one finger, zoom with two": "Крутить — одним пальцем, приближать — двумя",
     "Reset view": "Сбросить вид", "Hide dimensions": "Скрыть размеры", "Show dimensions": "Показать размеры", "Left side FL-4": "Левая FL-4", "Plates": "Пластины",
     "Side plates FR-4 (right) / FL-4 (left)": "Боковины FR-4 (правая) / FL-4 (левая)",
@@ -447,7 +447,7 @@ header{position:relative}
     "tube 0.164″ above the top plate": "труба выше верхней пластины на 0.164″",
     "Tube length": "Длина трубы", "Tube sticks out: below / above": "Труба торчит: снизу / сверху",
     "Ear plate (D–E side only)": "Пластина уха (только сторона D–E)", "to top (D)": "до верха (D)",
-    "steel 10 ga (0.135″)": "металл 10 ga (0.135″)"
+    "steel 11 ga (0.120″)": "металл 11 ga (0.120″)"
   };
   document.querySelectorAll('.i18n').forEach(el => { el.dataset.en = el.textContent; });
   const btnEn = document.getElementById('langEn'), btnRu = document.getElementById('langRu');
@@ -480,5 +480,7 @@ header{position:relative}
 })();
 </script>
 
+
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>HR steel A1011 CS</b> · <b>11 ga · t = 0.1196″ (3.04 mm)</b></div>
 </body>
 </html>

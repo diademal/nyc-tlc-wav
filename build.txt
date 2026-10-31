@@ -1,1 +1,1 @@
-build 20261002-2 thickness 0.138/0.118/0.197, holes
+build 2026-10-31T18:10:48Z v30: 11 ga flats rev B, ramp RA, material labels

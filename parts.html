@@ -48,7 +48,7 @@ iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 <body>
 <div class="top">
   <a class="home" href="./" title="Main page" aria-label="Main page"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 7.5 8 2l6 5.5M4 6.5V14h3v-4h2v4h3V6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Home</span></a>
-  <b>Sienna WAV · Frame parts</b>
+  <b>Sienna WAV · Frame + ramp parts</b>
   <button class="step" id="prev" type="button" aria-label="Previous part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="pick" id="pick" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu"><span class="cur" id="cur">FR-1</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="step" id="next" type="button" aria-label="Next part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
@@ -78,10 +78,20 @@ const PARTS = [
   ['Front (FF)', 'FF3-1', 'ff3-1-3d.html'],
   ['Front (FF)', 'FF3-2', 'ff3-2-3d.html'],
   ['Front (FF)', 'FF-4', 'ff4-3d.html'],
+  ['Ramp (RA)', 'RA', 'ra.html'],
+  ['Ramp (RA)', 'RA-1', 'ra.html?p=RA-1'],
+  ['Ramp (RA)', 'RA-2', 'ra.html?p=RA-2'],
+  ['Ramp (RA)', 'RA-3', 'ra.html?p=RA-3'],
+  ['Ramp (RA)', 'RA-4', 'ra.html?p=RA-4'],
+  ['Ramp (RA)', 'RA-5', 'ra.html?p=RA-5'],
+  ['Ramp (RA)', 'RA-6', 'ra.html?p=RA-6'],
+  ['Ramp (RA)', 'RA-7', 'ra.html?p=RA-7'],
+  ['Ramp (RA)', 'RA-8', 'ra.html?p=RA-8'],
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20261004-1';   // bump on every upload so browsers load the new pages
+const VER = '20261031-1';
+const NOFLAT = f => /^(cost|ra)\.html/.test(f);   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {
@@ -93,7 +103,7 @@ groups.forEach(g => {
 });
 function openMenu(on){ menu.hidden = !on; pick.setAttribute('aria-expanded', String(on)); if (on) (menu.querySelector('[aria-current]') || menu.querySelector('a')).focus(); }
 pick.addEventListener('click', () => openMenu(menu.hidden));
-menu.addEventListener('click', e => { const a=e.target.closest('a'); if (!a) return; openMenu(false); const nm=a.textContent; const it=PARTS.find(x=>x[1]===nm); if (mode()==='flat' && it && it[2]!=='cost.html') { e.preventDefault(); location.hash = nm + '/flat'; } });
+menu.addEventListener('click', e => { const a=e.target.closest('a'); if (!a) return; openMenu(false); const nm=a.textContent; const it=PARTS.find(x=>x[1]===nm); if (mode()==='flat' && it && !NOFLAT(it[2])) { e.preventDefault(); location.hash = nm + '/flat'; } });
 document.addEventListener('click', e => { if (!menu.hidden && !e.target.closest('.menu') && !e.target.closest('#pick')) openMenu(false); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { openMenu(false); pick.focus(); } });
 function mode(){ return /\/flat$/i.test(decodeURIComponent(location.hash)) ? 'flat' : '3d'; }
@@ -101,7 +111,7 @@ function current(){
   const want = decodeURIComponent(location.hash.slice(1)).replace(/\/flat$/i,'').toUpperCase();
   return PARTS.findIndex(p => p[1].toUpperCase() === want);
 }
-function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1] + (mode()==='flat' && PARTS[i][2]!=='cost.html' ? '/flat' : ''); }
+function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1] + (mode()==='flat' && !NOFLAT(PARTS[i][2]) ? '/flat' : ''); }
 document.getElementById('prev').addEventListener('click', () => go(-1));
 document.getElementById('next').addEventListener('click', () => go(1));
 function show(){
@@ -109,8 +119,8 @@ function show(){
   const part = PARTS[i];
   cur.textContent = part[1];
   menu.querySelectorAll('a').forEach(a => { if (a.textContent === part[1]) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  const md = part[2]==='cost.html' ? '3d' : mode();
-  document.getElementById('modeBox').hidden = part[2]==='cost.html';
+  const md = NOFLAT(part[2]) ? '3d' : mode();
+  document.getElementById('modeBox').hidden = NOFLAT(part[2]);
   document.getElementById('m3d').setAttribute('aria-pressed', String(md==='3d')); document.getElementById('mflat').setAttribute('aria-pressed', String(md==='flat'));
   const src = md==='flat' ? 'flat.html?p=' + encodeURIComponent(part[1]) : part[2];
   if (view.dataset.src !== src) { view.dataset.src = src; view.src = src + (src.includes('?') ? '&' : '?') + 'v=' + VER; }

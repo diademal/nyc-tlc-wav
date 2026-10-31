@@ -80,7 +80,7 @@ header{position:relative}
       <button type="button" id="langEn" aria-pressed="true">EN</button>
       <button type="button" id="langRu" aria-pressed="false">RU</button>
     </div>
-    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)</span>
+    <span class="tag i18n">Sienna WAV · all dimensions in inches · steel 11 ga (0.120″)</span>
   </header>
   <div class="viewer" id="viewer">
     <canvas id="c3d"></canvas>
@@ -1098,7 +1098,7 @@ header{position:relative}
   const hF2=(()=>{const d=nrm(sub(P.H,P.E)),v=sub(HOLE,P.E),t=v[0]*d[0]+v[1]*d[1];return add(P.E,mul(d,t));})();
   line([V(...HOLE,zf),V(P.C[0],HOLE[1],zf)]); label('1 ½″',V((HOLE[0]+P.C[0])/2,HOLE[1]+0.17,zf));
   line([V(...HOLE,zf),V(...hF2,zf)]); label('1 ½″',V((HOLE[0]+hF2[0])/2-0.28,(HOLE[1]+hF2[1])/2,zf));
-  label('2.224″ between sides',V(1.4,5.3,zMid)); label('steel 10 ga (0.135″)',V(1.8,6.3,zf),'note');
+  label('2.224″ between sides',V(1.4,5.3,zMid)); label('steel 11 ga (0.120″)',V(1.8,6.3,zf),'note');
   const ptOff={A:[0,0.3],C:[0.3,0.1],H:[0.25,-0.25],E:[-0.2,-0.3],F:[-0.3,0.1],G:[0.2,-0.25]};
   Object.keys(P).forEach(k=>{const p=[P[k][0]+ptOff[k][0],P[k][1]+ptOff[k][1]]; label(k,V(p[0],p[1],zf),'note'); label(k+'1',V(p[0],p[1],W+0.03),'note');});
   // ---------- table rows ----------
@@ -1108,14 +1108,14 @@ header{position:relative}
     ['G to edge C–H','3″',[P.G,[P.C[0],P.G[1]]]],['Angle A–G–F','90°',null],['E to start of radius (bottom)','2″',[P.E,FH.t2]],['Corner H, radius','R '+frac(R_H).replace('≈ ',''),arcPts],
     ['Hole Ø0.591: from edge C–H','1 ½″',[HOLE,[P.C[0],HOLE[1]]]],['Hole: from bottom edge E–H','1 ½″',[HOLE,hF2]],
     ['Plate on edge A–C (IMG_0883): width × length','2.224″ × 3 ⅝″',[P.A,P.C]],['V notch at the A end: depth / from corner A','⅞″ / 1″',null],
-    ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','10 ga (0.135″)',null]];
-  const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 10 ga (0.135″)":"Sienna WAV · все размеры в дюймах · металл 10 ga (0.135″)",
+    ['Notch G rounded to the FR-6 tube corner','R 0.295″',null],['Metal thickness','11 ga (0.120″)',null]];
+  const RU={"FR-5 Frame Bracket":"FR-5 Кронштейн рамы","Sienna WAV · all dimensions in inches · steel 11 ga (0.120″)":"Sienna WAV · все размеры в дюймах · металл 11 ga (0.120″)",
     "Rotate with one finger, zoom with two":"Крутить — одним пальцем, приближать — двумя","Reset view":"Сбросить вид","Hide dimensions":"Скрыть размеры","Show dimensions":"Показать размеры",
     "Left side FL-5":"Левая FL-5","Back plate":"Пластина между боковинами","Side plates: FR-5 (A…H) / FL-5 (A1…H1)":"Боковины: FR-5 (A…H) / FL-5 (A1…H1)","Tap a row to see it on the model.":"Нажмите на строку — покажу на детали.",
     "G to edge C–H":"G до края C–H","Angle A–G–F":"Угол A–G–F","E to start of radius (bottom)":"E до начала радиуса (низ)","Corner H, radius":"Угол H, радиус",
     "Hole Ø0.591: from edge C–H":"Отверстие Ø0.591: от края C–H","Hole: from bottom edge E–H":"Отверстие: от нижнего края E–H","Plate on edge A–C (IMG_0883): width × length":"Пластина на краю A–C (IMG_0883): ширина × длина",
     "V notch at the A end: depth / from corner A":"V-вырез у A: глубина / от угла A","Notch G rounded to the FR-6 tube corner":"Вырез G скруглён по углу трубы FR-6","Metal thickness":"Толщина металла",
-    "2.224″ between sides":"2.224″ между боковинами","steel 10 ga (0.135″)":"металл 10 ga (0.135″)"};
+    "2.224″ between sides":"2.224″ между боковинами","steel 11 ga (0.120″)":"металл 11 ga (0.120″)"};
   // ---------- highlight (shared) ----------
   const hlGroup=new THREE.Group(); scene.add(hlGroup); const hlMat=new THREE.MeshBasicMaterial({color:0x1a73e8,depthTest:false,depthWrite:false,transparent:true});
   let hlLabel=null,hlRows=[];
@@ -1153,5 +1153,7 @@ header{position:relative}
 })();
 </script>
 
+
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>HR steel A1011 CS</b> · <b>11 ga · t = 0.1196″ (3.04 mm)</b></div>
 </body>
 </html>

@@ -1,1 +1,1 @@
-build 2026-10-31T18:29:35Z v31: ramp RA-1..RA-8 3D pages
+build 2026-10-31T18:35:33Z v32: ramp 3D overview + 3D/Flat toggle like frame

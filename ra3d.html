@@ -86,7 +86,7 @@ header{position:relative}
   <div class="matbox" id="mat"></div>
   <div class="viewer" id="viewer"><canvas id="c3d"></canvas><div id="labels"></div><div class="hint" id="hint"></div></div>
   <div class="bar" role="group" aria-label="View">
-    <span class="mode"><button type="button" id="m3d" aria-pressed="true"></button><button type="button" id="mfl" aria-pressed="false"></button></span>
+    <span class="mode" hidden><button type="button" id="m3d" aria-pressed="true"></button><button type="button" id="mfl" aria-pressed="false"></button></span>
     <button id="btnReset" type="button"></button>
     <button id="btnDims" type="button" aria-pressed="true"></button>
   </div>
@@ -106,8 +106,9 @@ const TX={ru:{tag:'Рампа Sienna WAV · размеры в дюймах · г
   hint:'Drag to rotate, wheel / pinch to zoom',m3d:'3D finished',mfl:'Flat pattern',reset:'Reset view',dimsOn:'Hide dimensions',dimsOff:'Show dimensions',
   spec:'Part',files:'Drawing and files',qty:'Qty per vehicle',flat:'Flat',bends:'Bends',material:'Material',pdf:'Drawing (PDF)',cut:'DXF for laser',ref:'Reference DXF',all:'All ramp parts'}};
 let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
-const P=((new URLSearchParams(location.search).get('p'))||'RA-1').toUpperCase();
-let D=null, mode='3d', dimsOn=true;
+const P=((new URLSearchParams(location.search).get('p'))||'ALL').toUpperCase(); const ALL=P==='ALL'||P==='RA';
+let D=null, mode='3d', dimsOn=true; const DS={};
+const BL={'RA-1':['① 90°','② 90°'],'RA-2':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-3':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-4':['① 90° ↓','② 90° ↓'],'RA-5':['① 90° ↑'],'RA-6':['① 90°','② 90°'],'RA-8':['① 90°','② 90°']};
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
@@ -124,7 +125,19 @@ function clear(g){while(g.children.length){const c=g.children.pop(); if(c.elemen
 function meshFrom(V,F){const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(V.flat(),3)); g.setIndex(F.flat()); g.computeVertexNormals(); return new THREE.Mesh(g,matAl);}
 function lineFrom(pts,mat){const g=new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2]||0))); const l=new THREE.Line(g,mat); if(mat.isLineDashedMaterial) l.computeLineDistances(); return l;}
 let box=new THREE.Box3();
+function buildAll(){
+  clear(grp); clear(dimG); let x=0;
+  Object.keys(INFO).forEach(k=>{const d=DS[k]; if(!d) return; const g=new THREE.Group();
+    const m=meshFrom(d.V,d.F); g.add(m); d.E.forEach(e=>g.add(lineFrom(e,edgeMat)));
+    const b=new THREE.Box3().setFromObject(g); g.position.set(x-b.min.x,-b.min.y,-b.min.z); grp.add(g);
+    const w=b.max.x-b.min.x, h=b.max.y-b.min.y, hz=b.max.z-b.min.z;
+    label(k+(INFO[k].q>1?' ×'+INFO[k].q:''),'pt',new THREE.Vector3(x+w/2,-2.5,hz+0.5),dimG); x+=w+6;});
+  box=new THREE.Box3().setFromObject(grp); dimG.visible=dimsOn; labelsEl.hidden=!dimsOn;
+  const c=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y);
+  camera.position.set(c.x,c.y-r*0.9,c.z+r*0.6); controls.target.copy(c); controls.update();
+}
 function build(){
+  if(ALL) return buildAll();
   clear(grp); clear(dimG);
   if(mode==='3d'){
     grp.add(meshFrom(D.V,D.F)); D.E.forEach(e=>grp.add(lineFrom(e,edgeMat)));
@@ -138,7 +151,7 @@ function build(){
   } else {
     grp.add(meshFrom(D.fV,D.fF)); D.fE.forEach(e=>grp.add(lineFrom(e,edgeMat)));
     const zt=Math.max(...D.fV.map(v=>v[2]))+0.01;
-    D.bl.forEach(b=>grp.add(lineFrom([[b[0][0],b[0][1],zt],[b[1][0],b[1][1],zt]],bendMat)));
+    D.bl.forEach((b,i)=>{grp.add(lineFrom([[b[0][0],b[0][1],zt],[b[1][0],b[1][1],zt]],bendMat)); label((BL[P]||[])[i]||((i+1)+' · 90°'),'dim',new THREE.Vector3((b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2,zt),dimG);});
     const xs=D.fV.map(v=>v[0]), ys=D.fV.map(v=>v[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
     const g=0.06*Math.max(x1-x0,y1-y0);
     [[[x0,y0-g,zt],[x1,y0-g,zt],(x1-x0).toFixed(3)],[[x1+g,y0,zt],[x1+g,y1,zt],(y1-y0).toFixed(3)]].forEach(([a,b,t])=>{dimG.add(lineFrom([a,b],dimMat));
@@ -154,22 +167,25 @@ function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.set
 new ResizeObserver(resize).observe(viewer); resize();
 (function loop(){requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
 function texts(){const t=TX[lang], i=INFO[P]||{q:1,ru:'',en:''}; document.documentElement.lang=lang;
-  document.getElementById('ttl').textContent=P+' · '+i[lang]; document.getElementById('tag').textContent=t.tag; document.getElementById('mat').textContent=t.mat;
+  document.getElementById('ttl').textContent=ALL?(lang==='ru'?'Рампа — все детали (раскладка, не сборка)':'Ramp — all parts (layout, not assembled)'):P+' · '+i[lang]; document.getElementById('tag').textContent=t.tag; document.getElementById('mat').textContent=t.mat;
   document.getElementById('hint').textContent=t.hint; document.getElementById('m3d').textContent=t.m3d; document.getElementById('mfl').textContent=t.mfl;
   document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnDims').textContent=dimsOn?t.dimsOn:t.dimsOff;
   document.getElementById('hSpec').textContent=t.spec; document.getElementById('hFiles').textContent=t.files;
   document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
-  if(D){const xs=D.fV.map(v=>v[0]), ys=D.fV.map(v=>v[1]);
+  if(D&&!ALL){const xs=D.fV.map(v=>v[0]), ys=D.fV.map(v=>v[1]);
     document.getElementById('specList').innerHTML=`<dt>${t.material}</dt><dd>Al 5052-H32 · 0.125″</dd><dt>${t.qty}</dt><dd>${i.q}</dd><dt>${t.flat}</dt><dd>${(Math.max(...xs)-Math.min(...xs)).toFixed(3)} × ${(Math.max(...ys)-Math.min(...ys)).toFixed(3)}″</dd><dt>${t.bends}</dt><dd>${D.bl.length}</dd>`;}
-  const m='drawings/MFG/'+P; document.getElementById('links').innerHTML=`<a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="ra.html">${t.all}</a>`;}
+  const m='drawings/MFG/'+P; if(ALL){document.getElementById('specList').innerHTML=Object.keys(INFO).map(k=>`<dt>${k} · ${INFO[k][lang]}</dt><dd>× ${INFO[k].q}</dd>`).join(''); document.getElementById('links').innerHTML=`<a href="ra.html">${t.all}</a><a href="drawings/MFG/ALL_drawings.pdf" target="_blank" rel="noopener">PDF</a>`; return;}
+  document.getElementById('links').innerHTML=`<a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="ra.html">${t.all}</a>`;}
 document.getElementById('langEn').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
 document.getElementById('langRu').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
 document.getElementById('m3d').onclick=()=>{mode='3d';document.getElementById('m3d').setAttribute('aria-pressed','true');document.getElementById('mfl').setAttribute('aria-pressed','false');build();};
 document.getElementById('mfl').onclick=()=>{mode='flat';document.getElementById('m3d').setAttribute('aria-pressed','false');document.getElementById('mfl').setAttribute('aria-pressed','true');build();};
 document.getElementById('btnReset').onclick=resetView;
 document.getElementById('btnDims').onclick=()=>{dimsOn=!dimsOn; dimG.visible=dimsOn; labelsEl.hidden=!dimsOn; texts();};
+if(new URLSearchParams(location.search).get('mode')==='flat') mode='flat';
 texts();
-fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j; texts(); build();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+if(ALL){Promise.all(Object.keys(INFO).map(k=>fetch('drawings/MFG/'+k+'_3d.json').then(r=>r.json()).then(j=>{DS[k]=j;}))).then(()=>{texts(); build();});}
+else fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j; texts(); build();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
 </body>

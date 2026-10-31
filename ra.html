@@ -53,10 +53,10 @@ const RA=[
  {p:'RA-7',q:1,f:'40.631 × 22.556',b:4,ru:'Короб 34 × 18¼″: 2 боковины + передняя стенка с бортиками',en:'Box 34 × 18¼″: 2 side walls + front wall with lips'},
  {p:'RA-8',q:2,f:'4.625 × 4.065',b:2,ru:'Кронштейн 4⅝ × 2½″, борт 1″ + ушко 1″ (2 шт на машину)',en:'Bracket 4⅝ × 2½″, flange 1″ + tab 1″ (2 per vehicle)'}];
 const TX={ru:{ttl:'Рампа RA · Sienna WAV',mat:'Металл: алюминий 5052-H32, лист <b>t = 0.125″ (1/8″, 3.18 мм)</b> — для всех деталей рампы',sub:'Гибы: внутренний радиус R = t, K = 0.44; все размеры на чертежах — наружные размеры согнутой детали, развертка посчитана.',
-  qty:'шт на машину',flat:'развертка',bends:'гибов',pdf:'Чертёж (PDF)',cut:'DXF для лазера',ref:'DXF справочный (гибы + материал)',zip:'Чертёж + DXF (ZIP)',
+  qty:'шт на машину',flat:'развертка',bends:'гибов',pdf:'Чертёж (PDF)',v3d:'3D деталь',cut:'DXF для лазера',ref:'DXF справочный (гибы + материал)',zip:'Чертёж + DXF (ZIP)',
   foot:'Размеры в дюймах. Чертёж и DXF — версия от 2026-10-31. Открытые вопросы по рампе ещё решаются (см. список в проекте).'},
  en:{ttl:'Ramp RA · Sienna WAV',mat:'Material: aluminum 5052-H32 sheet <b>t = 0.125″ (1/8″, 3.18 mm)</b> — all ramp parts',sub:'Bends: inside radius R = t, K = 0.44; drawing dimensions are outside dimensions of the bent part; the flat pattern is calculated.',
-  qty:'per vehicle',flat:'flat',bends:'bends',pdf:'Drawing (PDF)',cut:'DXF for laser',ref:'Reference DXF (bends + material)',zip:'Drawing + DXF (ZIP)',
+  qty:'per vehicle',flat:'flat',bends:'bends',pdf:'Drawing (PDF)',v3d:'3D part',cut:'DXF for laser',ref:'Reference DXF (bends + material)',zip:'Drawing + DXF (ZIP)',
   foot:'Inches. Drawings and DXF dated 2026-10-31. Some ramp details are still open (see the project list).'}};
 let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
 const want=(new URLSearchParams(location.search).get('p')||'').toUpperCase();
@@ -70,7 +70,7 @@ function render(){
    <div class="row"><h2>${r.p}</h2><span>${r[lang]}</span></div>
    <div class="row kv"><span>${t.qty}: <b>${r.q}</b></span><span>${t.flat}: <b>${r.f}″</b></span><span>${t.bends}: <b>${r.b}</b></span><span style="color:var(--acc)"><b>Al 5052-H32 · t 0.125″</b></span></div>
    <a href="${m}_drawing.pdf" target="_blank" rel="noopener"><img class="pv" src="${m}_preview.webp" alt="${r.p} drawing" loading="lazy" width="1530" height="990"></a>
-   <div class="dl"><a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="${m}_files.zip" download>${t.zip}</a></div></section>`;}).join('<div style="height:12px"></div>');
+   <div class="dl"><a href="ra3d.html?p=${r.p}">${t.v3d}</a><a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="${m}_files.zip" download>${t.zip}</a></div></section>`;}).join('<div style="height:12px"></div>');
   document.getElementById('foot').textContent=t.foot;
 }
 document.getElementById('bru').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};render();};

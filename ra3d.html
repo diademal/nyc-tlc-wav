@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramp part 3D · Sienna WAV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#e9edf0; --panel:#f6f8f9; --ink:#1b2126; --muted:#5b6670; --line:#c9d1d7;
+  --steel:#8f9aa4; --plate:#a9b3bb; --dim:#c2410c; --dim-bg:#fff4ec; --focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+    --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+  --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{position:relative;height:min(68vh,640px);min-height:360px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,var(--panel),var(--bg))}
+#c3d,#labels{position:absolute;inset:0}
+#c3d{width:100%;height:100%;display:block;touch-action:none}
+#labels{pointer-events:none}
+.dim{font-family:var(--mono);font-size:calc(12px * var(--ds,1));font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
+.hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:4px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.bar button:hover,.bar label:hover{border-color:var(--muted)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.bar input{accent-color:var(--dim);margin:0}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.spec section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.spec h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.spec dt{color:var(--ink)}
+.spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.spec .dist{grid-column:1/-1}
+.spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
+.distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.spec .dist dd{white-space:nowrap}
+.pick{cursor:pointer;border-radius:3px}
+.pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
+.pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600;font-size:14px;padding:3px 8px;pointer-events:auto;cursor:pointer;z-index:5}
+.nodims .dim:not(.hl){display:none!important}
+.err{padding:20px;color:var(--ink)}
+header{position:relative}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
+.lang button{font-family:var(--mono);font-size:13px;border:0;background:var(--panel);color:var(--muted);padding:5px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--dim);color:var(--panel)}
+.lang button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media (max-width:520px){.dim{font-size:calc(10.5px * var(--ds,1));padding:0 4px}}
+#btnDims[aria-pressed="false"]{border-color:var(--dim);color:var(--dim)}
+</style>
+<style>
+.lang button,.mode button{font-family:var(--mono);font-size:13px;padding:5px 10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"],.mode button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:var(--panel)}
+.matbox{border:2px solid var(--dim);background:var(--dim-bg);color:var(--dim);border-radius:6px;padding:8px 12px;font-weight:700}
+.pt{font-family:var(--mono);font-size:15px;font-weight:700;color:#c62828;text-shadow:0 0 3px var(--panel),0 0 3px var(--panel)}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+.links a:hover{border-color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="ttl">RA</h1>
+    <div class="lang" role="group" aria-label="Language"><button type="button" id="langEn">EN</button><button type="button" id="langRu">RU</button></div>
+    <span class="tag" id="tag"></span>
+  </header>
+  <div class="matbox" id="mat"></div>
+  <div class="viewer" id="viewer"><canvas id="c3d"></canvas><div id="labels"></div><div class="hint" id="hint"></div></div>
+  <div class="bar" role="group" aria-label="View">
+    <span class="mode"><button type="button" id="m3d" aria-pressed="true"></button><button type="button" id="mfl" aria-pressed="false"></button></span>
+    <button id="btnReset" type="button"></button>
+    <button id="btnDims" type="button" aria-pressed="true"></button>
+  </div>
+  <div class="spec"><section><h2 id="hSpec"></h2><dl id="specList"></dl></section>
+    <section><h2 id="hFiles"></h2><div class="links" id="links"></div></section></div>
+</div>
+<script src="vendor/three-bundle.js"></script>
+<script>
+const INFO={'RA-1':{q:1,ru:'Плита рампы с ушами',en:'Ramp plate with ears'},'RA-2':{q:1,ru:'Плита рампы: борт + 2 уха',en:'Ramp plate: flange + 2 ears'},
+ 'RA-3':{q:1,ru:'Плита: борт 1⅛″ + 2 уха 3½″',en:'Plate: flange 1⅛″ + 2 ears 3½″'},'RA-4':{q:1,ru:'Швеллер 2¼ / 2¾ / 2⅛',en:'Channel 2¼ / 2¾ / 2⅛'},
+ 'RA-5':{q:1,ru:'Уголок с ушком',en:'Angle with side tab'},'RA-6':{q:1,ru:'Швеллер 2½″ с бортами ½″',en:'Channel 2½″, ½″ flanges'},
+ 'RA-7':{q:1,ru:'Короб 34 × 18¼″',en:'Box 34 × 18¼″'},'RA-8':{q:2,ru:'Кронштейн 4⅝ × 2½″',en:'Bracket 4⅝ × 2½″'}};
+const TX={ru:{tag:'Рампа Sienna WAV · размеры в дюймах · готовая деталь (наружные размеры)',mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',
+  hint:'Мышь/палец: вращать, колесо/два пальца: приблизить',m3d:'3D готовая',mfl:'Развертка',reset:'Сбросить вид',dimsOn:'Скрыть размеры',dimsOff:'Показать размеры',
+  spec:'Деталь',files:'Чертёж и файлы',qty:'Кол-во на машину',flat:'Развертка',bends:'Гибов',material:'Материал',pdf:'Чертёж (PDF)',cut:'DXF для лазера',ref:'DXF справочный',all:'Все детали рампы'},
+ en:{tag:'Sienna WAV ramp · inches · finished part (outside dimensions)',mat:'Material: aluminum 5052-H32 · thickness t = 0.125″ (1/8″, 3.18 mm)',
+  hint:'Drag to rotate, wheel / pinch to zoom',m3d:'3D finished',mfl:'Flat pattern',reset:'Reset view',dimsOn:'Hide dimensions',dimsOff:'Show dimensions',
+  spec:'Part',files:'Drawing and files',qty:'Qty per vehicle',flat:'Flat',bends:'Bends',material:'Material',pdf:'Drawing (PDF)',cut:'DXF for laser',ref:'Reference DXF',all:'All ramp parts'}};
+let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+const P=((new URLSearchParams(location.search).get('p'))||'RA-1').toUpperCase();
+let D=null, mode='3d', dimsOn=true;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,1,0.05,1000); camera.up.set(0,0,1);
+const controls=new THREE.TrackballControls(camera,canvas); controls.rotateSpeed=3; controls.zoomSpeed=1.2; controls.panSpeed=0.8; controls.dynamicDampingFactor=0.15;
+scene.add(new THREE.HemisphereLight(0xffffff,0x445566,0.85)); const sun=new THREE.DirectionalLight(0xffffff,0.7); sun.position.set(-8,-10,14); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.35); fill.position.set(8,6,4); scene.add(fill);
+const labelRenderer=new THREE.CSS2DRenderer(); labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.inset='0'; labelsEl.appendChild(labelRenderer.domElement);
+const grp=new THREE.Group(), dimG=new THREE.Group(); scene.add(grp, dimG);
+const matAl=new THREE.MeshStandardMaterial({color:0xb9c2ca,metalness:0.35,roughness:0.45,side:THREE.DoubleSide});
+const edgeMat=new THREE.LineBasicMaterial({color:0x2a3138}), dimMat=new THREE.LineBasicMaterial({color:0xc2410c}), bendMat=new THREE.LineDashedMaterial({color:0xd32f2f,dashSize:0.25,gapSize:0.15});
+function label(txt,cls,pos,parent){const d=document.createElement('div'); d.className=cls; d.textContent=txt; const o=new THREE.CSS2DObject(d); o.position.copy(pos); parent.add(o); return o;}
+function clear(g){while(g.children.length){const c=g.children.pop(); if(c.element&&c.element.remove) c.element.remove(); if(c.geometry) c.geometry.dispose();}}
+function meshFrom(V,F){const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(V.flat(),3)); g.setIndex(F.flat()); g.computeVertexNormals(); return new THREE.Mesh(g,matAl);}
+function lineFrom(pts,mat){const g=new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(p[0],p[1],p[2]||0))); const l=new THREE.Line(g,mat); if(mat.isLineDashedMaterial) l.computeLineDistances(); return l;}
+let box=new THREE.Box3();
+function build(){
+  clear(grp); clear(dimG);
+  if(mode==='3d'){
+    grp.add(meshFrom(D.V,D.F)); D.E.forEach(e=>grp.add(lineFrom(e,edgeMat)));
+    D.pts.forEach(p=>label(p[0],'pt',new THREE.Vector3(p[1],p[2],p[3]),dimG));
+    D.dims.forEach(d=>{const s=new THREE.Vector3(...d[0]), e=new THREE.Vector3(...d[1]), m=new THREE.Vector3(...d[2]);
+      const u=e.clone().sub(s); const L=u.length(); if(L<1e-6) return; u.normalize();
+      const off=m.clone().sub(s); off.sub(u.clone().multiplyScalar(off.dot(u)));
+      const a=s.clone().add(off), b=e.clone().add(off);
+      dimG.add(lineFrom([s.toArray(),a.toArray()],dimMat)); dimG.add(lineFrom([e.toArray(),b.toArray()],dimMat)); dimG.add(lineFrom([a.toArray(),b.toArray()],dimMat));
+      label(d[3],'dim',a.clone().add(b).multiplyScalar(0.5),dimG);});
+  } else {
+    grp.add(meshFrom(D.fV,D.fF)); D.fE.forEach(e=>grp.add(lineFrom(e,edgeMat)));
+    const zt=Math.max(...D.fV.map(v=>v[2]))+0.01;
+    D.bl.forEach(b=>grp.add(lineFrom([[b[0][0],b[0][1],zt],[b[1][0],b[1][1],zt]],bendMat)));
+    const xs=D.fV.map(v=>v[0]), ys=D.fV.map(v=>v[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+    const g=0.06*Math.max(x1-x0,y1-y0);
+    [[[x0,y0-g,zt],[x1,y0-g,zt],(x1-x0).toFixed(3)],[[x1+g,y0,zt],[x1+g,y1,zt],(y1-y0).toFixed(3)]].forEach(([a,b,t])=>{dimG.add(lineFrom([a,b],dimMat));
+      label(t,'dim',new THREE.Vector3((a[0]+b[0])/2,(a[1]+b[1])/2,zt),dimG);});
+  }
+  dimG.visible=dimsOn; labelsEl.hidden=!dimsOn;
+  box=new THREE.Box3().setFromObject(grp); resetView();
+}
+function resetView(){const c=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
+  if(mode==='3d') camera.position.set(c.x-r*1.1,c.y-r*1.5,c.z+r*1.0); else camera.position.set(c.x,c.y-0.001,c.z+r*1.9);
+  controls.target.copy(c); controls.update();}
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?48:35; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(viewer); resize();
+(function loop(){requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
+function texts(){const t=TX[lang], i=INFO[P]||{q:1,ru:'',en:''}; document.documentElement.lang=lang;
+  document.getElementById('ttl').textContent=P+' · '+i[lang]; document.getElementById('tag').textContent=t.tag; document.getElementById('mat').textContent=t.mat;
+  document.getElementById('hint').textContent=t.hint; document.getElementById('m3d').textContent=t.m3d; document.getElementById('mfl').textContent=t.mfl;
+  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnDims').textContent=dimsOn?t.dimsOn:t.dimsOff;
+  document.getElementById('hSpec').textContent=t.spec; document.getElementById('hFiles').textContent=t.files;
+  document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
+  if(D){const xs=D.fV.map(v=>v[0]), ys=D.fV.map(v=>v[1]);
+    document.getElementById('specList').innerHTML=`<dt>${t.material}</dt><dd>Al 5052-H32 · 0.125″</dd><dt>${t.qty}</dt><dd>${i.q}</dd><dt>${t.flat}</dt><dd>${(Math.max(...xs)-Math.min(...xs)).toFixed(3)} × ${(Math.max(...ys)-Math.min(...ys)).toFixed(3)}″</dd><dt>${t.bends}</dt><dd>${D.bl.length}</dd>`;}
+  const m='drawings/MFG/'+P; document.getElementById('links').innerHTML=`<a href="${m}_drawing.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="${m}_cut.dxf" download>${t.cut}</a><a href="${m}_ref.dxf" download>${t.ref}</a><a href="ra.html">${t.all}</a>`;}
+document.getElementById('langEn').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('langRu').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('m3d').onclick=()=>{mode='3d';document.getElementById('m3d').setAttribute('aria-pressed','true');document.getElementById('mfl').setAttribute('aria-pressed','false');build();};
+document.getElementById('mfl').onclick=()=>{mode='flat';document.getElementById('m3d').setAttribute('aria-pressed','false');document.getElementById('mfl').setAttribute('aria-pressed','true');build();};
+document.getElementById('btnReset').onclick=resetView;
+document.getElementById('btnDims').onclick=()=>{dimsOn=!dimsOn; dimG.visible=dimsOn; labelsEl.hidden=!dimsOn; texts();};
+texts();
+fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j; texts(); build();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+</script>
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+</body>
+</html>

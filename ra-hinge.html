@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramp Hinge RA-1 + RA-2 · Sienna WAV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#e9edf0; --panel:#f6f8f9; --ink:#1b2126; --muted:#5b6670; --line:#c9d1d7;
+  --steel:#8f9aa4; --plate:#a9b3bb; --dim:#c2410c; --dim-bg:#fff4ec; --focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+    --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+  --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{position:relative;height:min(68vh,640px);min-height:360px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,var(--panel),var(--bg))}
+#c3d,#labels{position:absolute;inset:0}
+#c3d{width:100%;height:100%;display:block;touch-action:none}
+#labels{pointer-events:none}
+.dim{font-family:var(--mono);font-size:calc(12px * var(--ds,1));font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
+.hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:4px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.bar button:hover,.bar label:hover{border-color:var(--muted)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.bar input{accent-color:var(--dim);margin:0}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.spec section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.spec h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.spec dt{color:var(--ink)}
+.spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.spec .dist{grid-column:1/-1}
+.spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
+.distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.spec .dist dd{white-space:nowrap}
+.pick{cursor:pointer;border-radius:3px}
+.pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
+.pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600;font-size:14px;padding:3px 8px;pointer-events:auto;cursor:pointer;z-index:5}
+.nodims .dim:not(.hl){display:none!important}
+.err{padding:20px;color:var(--ink)}
+header{position:relative}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
+.lang button{font-family:var(--mono);font-size:13px;border:0;background:var(--panel);color:var(--muted);padding:5px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--dim);color:var(--panel)}
+.lang button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media (max-width:520px){.dim{font-size:calc(10.5px * var(--ds,1));padding:0 4px}}
+#btnDims[aria-pressed="false"]{border-color:var(--dim);color:var(--dim)}
+</style>
+<style>
+.lang button,.mode button{font-family:var(--mono);font-size:13px;padding:5px 10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"],.mode button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:var(--panel)}
+.matbox{border:2px solid var(--dim);background:var(--dim-bg);color:var(--dim);border-radius:6px;padding:8px 12px;font-weight:700}
+.pt{font-family:var(--mono);font-size:15px;font-weight:700;color:#c62828;text-shadow:0 0 3px var(--panel),0 0 3px var(--panel)}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+.links a:hover{border-color:var(--dim)}
+</style>
+<style>
+.parts{display:flex;flex-wrap:wrap;gap:8px}
+.parts label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.parts label.off{opacity:.55}
+.sw{width:12px;height:12px;border-radius:2px;border:1px solid rgba(0,0,0,.35);display:inline-block}
+.plab{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:#2f3b45;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.plab.new{background:#c2410c}
+.steps{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.steps button{font-family:var(--mono);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 12px;cursor:pointer}
+.steps button:disabled{opacity:.4;cursor:default}
+#stepTxt{font-size:15px}
+#stepNo{font-family:var(--mono);color:var(--dim);font-weight:700}
+.notes li{margin:2px 0}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+</style>
+<style>
+.player{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.player button{font-family:var(--font);font-size:15px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;padding:7px 14px;cursor:pointer;min-width:44px}
+.player button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:var(--panel)}
+.player input[type=range]{flex:1 1 220px;accent-color:var(--dim);min-width:160px}
+#deg{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--dim);min-width:64px;text-align:right}
+.spd{display:inline-flex;gap:4px}
+.spd button{min-width:auto;padding:6px 9px;font-family:var(--mono);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="ttl"></h1>
+    <div class="lang" role="group" aria-label="Language"><button type="button" id="langEn">EN</button><button type="button" id="langRu">RU</button></div>
+    <span class="tag" id="tag"></span>
+  </header>
+  <div class="matbox" id="mat"></div>
+  <div class="viewer" id="viewer"><canvas id="c3d"></canvas><div id="labels"></div><div class="hint" id="hint"></div></div>
+  <div class="player" role="group" aria-label="Player">
+    <button id="bPlay" type="button" aria-pressed="false">▶</button>
+    <button id="b0" type="button">0°</button>
+    <input id="ang" type="range" min="0" max="180" step="1" value="0" aria-label="Opening angle">
+    <button id="b180" type="button">180°</button>
+    <span id="deg">0°</span>
+    <span class="spd" id="spd"></span>
+  </div>
+  <div class="bar" role="group" aria-label="View">
+    <button id="btnReset" type="button"></button>
+    <button id="btnLab" type="button" aria-pressed="true"></button>
+  </div>
+  <div class="parts" id="parts" role="group" aria-label="Parts"></div>
+  <div class="spec">
+    <section><h2 id="hInfo"></h2><ul class="notes" id="info"></ul></section>
+    <section><h2 id="hLinks"></h2><div class="links" id="links"></div></section>
+  </div>
+</div>
+<script src="vendor/three-bundle.js"></script>
+<script>
+const PX=-1.25, PZ=1.21875;   // hinge axis along Y (inches), RA-1 frame
+const PARTS=[
+ {k:'RA-1',ids:['RA1'],c:0x9aa3ab,la:[0.75,0.5,1.02],ru:'Плита рампы, уши вверх',en:'Ramp plate, ears up'},
+ {k:'RA-2',ids:['RA2'],c:0xd2b27a,rot:true,la:[0.6,0.5,1.02],ru:'Плита рампы, уши вниз — открывается',en:'Ramp plate, ears down — opens'},
+ {k:'BOLTS',ids:['Bolt1','Spacer1','Bolt2','Spacer2'],c:0x3a3f45,ru:'Болты 3/8 × 1 + гайка, втулки OD ¾',en:'Bolts 3/8 × 1 + nut, spacers OD ¾'}];
+const TX={ru:{ttl:'Блок RA-1 + RA-2 — шарнир (плеер открытия)',tag:'Sienna WAV · дюймы · 0° закрыт, 180° открыт',
+  mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',hint:'Мышь/палец: вращать, колесо/два пальца: приблизить',
+  reset:'Сбросить вид',labOn:'Скрыть названия',labOff:'Показать названия',bolts:'Болты',info:'Как устроено',links:'Ссылки',
+  I:['Закрыто (0°): RA-2 лежит на ушах RA-1, уши RA-2 снаружи ушей RA-1.','Ось шарнира: 2 болта 3/8 через уши RA-1 (полукруг R 1 3/32) и уши RA-2, между ушами втулки.',
+     'Открыто (180°): плиты в одной плоскости, уши продолжают друг друга.','Проверено в FreeCAD на 0…180°: детали не задевают.'],
+  asm:'Сборка рампы 3D',parts:'Все детали рампы'},
+ en:{ttl:'Block RA-1 + RA-2 — hinge (opening player)',tag:'Sienna WAV · inches · 0° closed, 180° open',
+  mat:'Material: aluminum 5052-H32 · thickness t = 0.125″ (1/8″, 3.18 mm)',hint:'Drag to rotate, wheel / pinch to zoom',
+  reset:'Reset view',labOn:'Hide names',labOff:'Show names',bolts:'Bolts',info:'How it works',links:'Links',
+  I:['Closed (0°): RA-2 lies on the RA-1 ears, RA-2 ears outside the RA-1 ears.','Hinge axis: 2 bolts 3/8 through the RA-1 ears (half circle R 1 3/32) and the RA-2 ears, spacers between the ears.',
+     'Open (180°): plates flush, the ears continue each other.','Checked in FreeCAD over 0…180°: no clash.'],
+  asm:'Ramp assembly 3D',parts:'All ramp parts'}};
+let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let labOn=true, ang=0, playing=false, dir=1, speed=1; const on={}; PARTS.forEach(p=>on[p.k]=true);
+const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,1,0.05,2000); camera.up.set(0,0,1);
+const controls=new THREE.TrackballControls(camera,canvas); controls.rotateSpeed=3; controls.zoomSpeed=1.2; controls.panSpeed=0.8; controls.dynamicDampingFactor=0.15;
+scene.add(new THREE.HemisphereLight(0xffffff,0x445566,0.85)); const sun=new THREE.DirectionalLight(0xffffff,0.7); sun.position.set(-20,-30,40); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.35); fill.position.set(20,15,-10); scene.add(fill);
+const labelRenderer=new THREE.CSS2DRenderer(); labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.inset='0'; labelsEl.appendChild(labelRenderer.domElement);
+const edgeMat=new THREE.LineBasicMaterial({color:0x2a3138});
+const G={}; const pivot=new THREE.Group(); pivot.position.set(PX,0,PZ); scene.add(pivot); let box=new THREE.Box3();
+function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
+  PARTS.forEach(p=>{const g=new THREE.Group(); const mat=new THREE.MeshStandardMaterial({color:p.c,metalness:0.35,roughness:0.5,side:THREE.DoubleSide});
+    p.ids.forEach(id=>{const r=byId[id]; if(!r) return; const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals();
+      g.add(new THREE.Mesh(geo,mat)); r.E.forEach(e=>{const lg=new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))); g.add(new THREE.Line(lg,edgeMat));});});
+    const b=new THREE.Box3().setFromObject(g);
+    if(p.la){const la=p.la; const d=document.createElement('div'); d.className='plab'; d.textContent=p.k; const L=new THREE.CSS2DObject(d);
+      L.position.set(b.min.x+(b.max.x-b.min.x)*la[0],b.min.y+(b.max.y-b.min.y)*la[1],b.min.z+(b.max.z-b.min.z)*la[2]); g.add(L); g.userData.L=L;}
+    if(p.rot){g.position.set(-PX,0,-PZ); pivot.add(g);} else scene.add(g); G[p.k]=g; box.expandByObject(g);});
+  // closed + 180 deg extent for the camera
+  const b2=box.clone(); b2.min.x=Math.min(b2.min.x,2*PX-box.max.x); b2.max.z=Math.max(b2.max.z,PZ+(box.max.x-PX)*0.85); box=b2; resetView(); apply();}
+function apply(){pivot.rotation.y=-ang*Math.PI/180; PARTS.forEach(p=>{const g=G[p.k]; if(!g) return; g.visible=on[p.k]; if(g.userData.L) g.userData.L.visible=labOn&&on[p.k];});
+  document.getElementById('deg').textContent=Math.round(ang)+'°'; document.getElementById('ang').value=Math.round(ang);}
+function resetView(){const c=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
+  camera.position.set(c.x+r*0.35,c.y-r*1.5,c.z+r*0.75); controls.target.copy(c); controls.update();}
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?50:35; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(viewer); resize();
+let last=performance.now();
+(function loop(t){requestAnimationFrame(loop); const dt=Math.min(0.1,(t-last)/1000); last=t;
+  if(playing){ang+=dir*45*speed*dt; if(ang>=180){ang=180;dir=-1;} if(ang<=0){ang=0;dir=1;} apply();}
+  controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})(last);
+function setPlay(v){playing=v; const b=document.getElementById('bPlay'); b.textContent=v?'❚❚':'▶'; b.setAttribute('aria-pressed',String(v));}
+function hex(c){return '#'+c.toString(16).padStart(6,'0');}
+function texts(){const t=TX[lang]; document.documentElement.lang=lang;
+  ['ttl','tag','mat','hint'].forEach(k=>document.getElementById(k).textContent=t[k]);
+  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnLab').textContent=labOn?t.labOn:t.labOff;
+  document.getElementById('hInfo').textContent=t.info; document.getElementById('hLinks').textContent=t.links;
+  document.getElementById('info').innerHTML=t.I.map(n=>`<li>${n}</li>`).join('');
+  document.getElementById('links').innerHTML=`<a href="ra-asm.html">${t.asm}</a><a href="ra.html">${t.parts}</a>`;
+  document.getElementById('parts').innerHTML=PARTS.map(p=>`<label class="${on[p.k]?'':'off'}"><input type="checkbox" data-k="${p.k}" ${on[p.k]?'checked':''}><span class="sw" style="background:${hex(p.c)}"></span>${p.k==='BOLTS'?t.bolts:p.k} · ${p[lang]}</label>`).join('');
+  document.querySelectorAll('#parts input').forEach(cb=>cb.onchange=()=>{on[cb.dataset.k]=cb.checked; cb.parentElement.classList.toggle('off',!cb.checked); apply();});
+  document.getElementById('spd').innerHTML=[0.5,1,2].map(v=>`<button type="button" data-s="${v}" aria-pressed="${v===speed}">${v}×</button>`).join('');
+  document.querySelectorAll('#spd button').forEach(b=>b.onclick=()=>{speed=+b.dataset.s; texts();});
+  document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));}
+document.getElementById('langEn').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('langRu').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('bPlay').onclick=()=>{if(!playing&&ang>=180) dir=-1; if(!playing&&ang<=0) dir=1; setPlay(!playing);};
+document.getElementById('b0').onclick=()=>{setPlay(false); ang=0; apply();};
+document.getElementById('b180').onclick=()=>{setPlay(false); ang=180; apply();};
+document.getElementById('ang').oninput=e=>{setPlay(false); ang=+e.target.value; apply();};
+document.getElementById('btnReset').onclick=resetView;
+document.getElementById('btnLab').onclick=()=>{labOn=!labOn; apply(); texts();};
+texts();
+fetch('drawings/MFG/RA12_hinge.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+</script>
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+</body>
+</html>

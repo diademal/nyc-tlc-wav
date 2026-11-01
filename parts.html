@@ -79,6 +79,7 @@ const PARTS = [
   ['Front (FF)', 'FF3-2', 'ff3-2-3d.html'],
   ['Front (FF)', 'FF-4', 'ff4-3d.html'],
   ['Ramp (RA)', 'RA', 'ra3d.html?p=ALL'],
+  ['Ramp (RA)', 'RA Assembly', 'ra-asm.html'],
   ['Ramp (RA)', 'RA-1', 'ra3d.html?p=RA-1'],
   ['Ramp (RA)', 'RA-2', 'ra3d.html?p=RA-2'],
   ['Ramp (RA)', 'RA-3', 'ra3d.html?p=RA-3'],
@@ -90,8 +91,8 @@ const PARTS = [
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20261031-3';
-const NOFLAT = f => /^(cost|ra)\.html/.test(f);   // bump on every upload so browsers load the new pages
+const VER = '20261101-1';
+const NOFLAT = f => /^(cost|ra|ra-asm)\.html/.test(f);   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {

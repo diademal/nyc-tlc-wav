@@ -81,6 +81,7 @@ const PARTS = [
   ['Ramp (RA)', 'RA', 'ra3d.html?p=ALL'],
   ['Ramp (RA)', 'RA Assembly', 'ra-asm.html'],
   ['Ramp (RA)', 'RA-1+2 Player', 'ra12-player.html'],
+  ['Ramp (RA)', 'RA-1+2 Hinge', 'ra-hinge.html'],
   ['Ramp (RA)', 'RA-1', 'ra3d.html?p=RA-1'],
   ['Ramp (RA)', 'RA-2', 'ra3d.html?p=RA-2'],
   ['Ramp (RA)', 'RA-3', 'ra3d.html?p=RA-3'],
@@ -92,8 +93,8 @@ const PARTS = [
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20261101-2';
-const NOFLAT = f => /^(cost|ra|ra-asm|ra12-player)\.html/.test(f);   // bump on every upload so browsers load the new pages
+const VER = '20261101-3';
+const NOFLAT = f => /^(cost|ra|ra-asm|ra12-player|ra-hinge)\.html/.test(f);   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {

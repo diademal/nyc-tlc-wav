@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramp Assembly · Sienna WAV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#e9edf0; --panel:#f6f8f9; --ink:#1b2126; --muted:#5b6670; --line:#c9d1d7;
+  --steel:#8f9aa4; --plate:#a9b3bb; --dim:#c2410c; --dim-bg:#fff4ec; --focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+    --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+  --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{position:relative;height:min(68vh,640px);min-height:360px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,var(--panel),var(--bg))}
+#c3d,#labels{position:absolute;inset:0}
+#c3d{width:100%;height:100%;display:block;touch-action:none}
+#labels{pointer-events:none}
+.dim{font-family:var(--mono);font-size:calc(12px * var(--ds,1));font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
+.hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:4px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.bar button:hover,.bar label:hover{border-color:var(--muted)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.bar input{accent-color:var(--dim);margin:0}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.spec section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.spec h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.spec dt{color:var(--ink)}
+.spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.spec .dist{grid-column:1/-1}
+.spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
+.distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.spec .dist dd{white-space:nowrap}
+.pick{cursor:pointer;border-radius:3px}
+.pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
+.pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600;font-size:14px;padding:3px 8px;pointer-events:auto;cursor:pointer;z-index:5}
+.nodims .dim:not(.hl){display:none!important}
+.err{padding:20px;color:var(--ink)}
+header{position:relative}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
+.lang button{font-family:var(--mono);font-size:13px;border:0;background:var(--panel);color:var(--muted);padding:5px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--dim);color:var(--panel)}
+.lang button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media (max-width:520px){.dim{font-size:calc(10.5px * var(--ds,1));padding:0 4px}}
+#btnDims[aria-pressed="false"]{border-color:var(--dim);color:var(--dim)}
+</style>
+<style>
+.lang button,.mode button{font-family:var(--mono);font-size:13px;padding:5px 10px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"],.mode button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:var(--panel)}
+.matbox{border:2px solid var(--dim);background:var(--dim-bg);color:var(--dim);border-radius:6px;padding:8px 12px;font-weight:700}
+.pt{font-family:var(--mono);font-size:15px;font-weight:700;color:#c62828;text-shadow:0 0 3px var(--panel),0 0 3px var(--panel)}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+.links a:hover{border-color:var(--dim)}
+</style>
+<style>
+.parts{display:flex;flex-wrap:wrap;gap:8px}
+.parts label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.parts label.off{opacity:.55}
+.sw{width:12px;height:12px;border-radius:2px;border:1px solid rgba(0,0,0,.35);display:inline-block}
+.plab{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:#2f3b45;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.plab.new{background:#c2410c}
+.steps{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.steps button{font-family:var(--mono);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 12px;cursor:pointer}
+.steps button:disabled{opacity:.4;cursor:default}
+#stepTxt{font-size:15px}
+#stepNo{font-family:var(--mono);color:var(--dim);font-weight:700}
+.notes li{margin:2px 0}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="ttl"></h1>
+    <div class="lang" role="group" aria-label="Language"><button type="button" id="langEn">EN</button><button type="button" id="langRu">RU</button></div>
+    <span class="tag" id="tag"></span>
+  </header>
+  <div class="matbox" id="mat"></div>
+  <div class="viewer" id="viewer"><canvas id="c3d"></canvas><div id="labels"></div><div class="hint" id="hint"></div></div>
+  <div class="bar" role="group" aria-label="View">
+    <button id="btnReset" type="button"></button>
+    <button id="btnExpl" type="button" aria-pressed="false"></button>
+    <button id="btnLab" type="button" aria-pressed="true"></button>
+    <button id="btnAll" type="button"></button>
+  </div>
+  <div class="parts" id="parts" role="group" aria-label="Parts"></div>
+  <div class="spec">
+    <section><h2 id="hSteps"></h2>
+      <div class="steps"><button id="sPrev" type="button">‹</button><span id="stepNo"></span><button id="sNext" type="button">›</button><button id="sAll" type="button"></button></div>
+      <p id="stepTxt"></p></section>
+    <section><h2 id="hNotes"></h2><ul class="notes" id="notes"></ul><div class="links" id="links"></div></section>
+  </div>
+</div>
+<script src="vendor/three-bundle.js"></script>
+<script>
+const PARTS=[
+ {k:'RA-7',ids:['RA7'],la:[1.02,0.35,0.5],c:0xb9c2ca,ex:[0,0,0],ru:'Короб (крышка сверху)',en:'Box (lid on top)'},
+ {k:'RA-5',ids:['RA5'],la:[0.8,0.7,0.1],c:0x7cc48a,ex:[0,0,-9],ru:'Уголок с усами — внутри RA-7',en:'Angle with whiskers — inside RA-7'},
+ {k:'RA-3',ids:['RA3'],la:[-0.02,0.4,0.1],c:0x8fb4d6,ex:[0,0,-16],ru:'Плита под бортиками RA-7',en:'Plate under the RA-7 lips'},
+ {k:'RA-2',ids:['T_RA2'],la:[0.2,1.02,0.6],c:0xd2b27a,ex:[0,0,7],ru:'Плита рампы на крышке RA-7',en:'Ramp plate on the RA-7 lid'},
+ {k:'RA-1',ids:['T_RA1'],la:[0.7,0.6,1.0],c:0x9aa3ab,ex:[0,0,14],ru:'Плита рампы на RA-2 (шарнир)',en:'Ramp plate on RA-2 (hinge)'},
+ {k:'BOLTS',ids:['T_Bolt1','T_Spacer1','T_Bolt2','T_Spacer2'],c:0x3a3f45,ex:[0,0,14],side:5,ru:'Болты шарнира 3/8 + втулки',en:'Hinge bolts 3/8 + spacers'}];
+const TX={ru:{ttl:'Рампа — сборка (короб RA-7 + RA-5 + RA-3 + RA-2 + RA-1)',tag:'Sienna WAV · дюймы · сборка по шагам, детали можно выключать',
+  mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',hint:'Мышь/палец: вращать, колесо/два пальца: приблизить',
+  reset:'Сбросить вид',explOn:'Собрать',explOff:'Разобрать',labOn:'Скрыть названия',labOff:'Показать названия',all:'Показать все',
+  steps:'Как собирается',allSteps:'Все шаги',notes:'Открытые вопросы',bolts:'Болты',parts:'Все детали рампы',
+  S:['RA-7 — короб, крышка сверху, вырез в передней стенке слева.','RA-5 внутри RA-7: ребро упирается в крышку, усы — в переднюю стенку.',
+     'RA-3 снизу, прижата к боковым бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-2 на крышке RA-7: край с 6 дырками на ряд дырок у задней стороны, уши вверх.',
+     'RA-1 на RA-2 (сложенный шарнир).','Болты 3/8 + втулки через уши RA-1 и RA-2 — шарнир.'],
+  N:['Передняя стенка RA-7 (3½–4) ниже бортиков (3) — проходит сквозь плиту RA-3 на ¼.','RA-2 / RA-7: средняя пара дырок не совпадает (16¼ / 17¾ против 11 / 15½).',
+     'RA-3 / RA-7: дырки крепления пока не совпадают.','RA-1 и RA-2 выступают вперёд за RA-7 на 3¾–5.']},
+ en:{ttl:'Ramp — assembly (box RA-7 + RA-5 + RA-3 + RA-2 + RA-1)',tag:'Sienna WAV · inches · step-by-step assembly, parts can be hidden',
+  mat:'Material: aluminum 5052-H32 · thickness t = 0.125″ (1/8″, 3.18 mm)',hint:'Drag to rotate, wheel / pinch to zoom',
+  reset:'Reset view',explOn:'Assemble',explOff:'Take apart',labOn:'Hide names',labOff:'Show names',all:'Show all',
+  steps:'How it goes together',allSteps:'All steps',notes:'Open questions',bolts:'Bolts',parts:'All ramp parts',
+  S:['RA-7 — box, lid on top, straight cutout in the front wall on the left.','RA-5 inside RA-7: rib against the lid, whiskers against the front wall.',
+     'RA-3 underneath, against the RA-7 side lips, ears and flange up, ears at the back.','RA-2 on the RA-7 lid: 6-hole edge on the back hole row, ears up.',
+     'RA-1 on RA-2 (folded hinge).','3/8 bolts + spacers through the RA-1 and RA-2 ears — the hinge.'],
+  N:['RA-7 front wall (3½–4) is lower than the lips (3) — goes ¼ into the RA-3 plate.','RA-2 / RA-7: middle hole pair does not match (16¼ / 17¾ vs 11 / 15½).',
+     'RA-3 / RA-7: fastening holes do not match yet.','RA-1 and RA-2 stick out past the RA-7 front by 3¾–5.']}};
+let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let labOn=true, expl=0, explT=0, step=PARTS.length; const on={}; PARTS.forEach(p=>on[p.k]=true);
+const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,1,0.05,2000); camera.up.set(0,0,1);
+const controls=new THREE.TrackballControls(camera,canvas); controls.rotateSpeed=3; controls.zoomSpeed=1.2; controls.panSpeed=0.8; controls.dynamicDampingFactor=0.15;
+scene.add(new THREE.HemisphereLight(0xffffff,0x445566,0.85)); const sun=new THREE.DirectionalLight(0xffffff,0.7); sun.position.set(-20,-30,40); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.35); fill.position.set(20,15,-10); scene.add(fill);
+const labelRenderer=new THREE.CSS2DRenderer(); labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.inset='0'; labelsEl.appendChild(labelRenderer.domElement);
+const edgeMat=new THREE.LineBasicMaterial({color:0x2a3138});
+const G={}; let box=new THREE.Box3();
+function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
+  PARTS.forEach(p=>{const g=new THREE.Group(); const mat=new THREE.MeshStandardMaterial({color:p.c,metalness:0.35,roughness:0.5,side:THREE.DoubleSide});
+    p.ids.forEach(id=>{const r=byId[id]; if(!r) return; const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals();
+      const sub=new THREE.Group(); sub.add(new THREE.Mesh(geo,mat));
+      r.E.forEach(e=>{const lg=new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))); sub.add(new THREE.Line(lg,edgeMat));});
+      if(p.side){const cx=r.V.reduce((s,v)=>s+v[0],0)/r.V.length; sub.userData.side=cx>17?p.side:-p.side;}
+      g.add(sub);});
+    const b=new THREE.Box3().setFromObject(g), la=p.la||[0.5,0.5,1], c=new THREE.Vector3(b.min.x+(b.max.x-b.min.x)*la[0],b.min.y+(b.max.y-b.min.y)*la[1],b.min.z+(b.max.z-b.min.z)*la[2]);
+    const d=document.createElement('div'); d.className='plab'; d.textContent=p.k==='BOLTS'?'':p.k; const L=new THREE.CSS2DObject(d); L.position.copy(c); g.add(L); g.userData.lab=d; g.userData.L=L;
+    scene.add(g); G[p.k]=g;});
+  box=new THREE.Box3(); PARTS.forEach(p=>box.expandByObject(G[p.k])); resetView(); apply();}
+function apply(){PARTS.forEach((p,i)=>{const g=G[p.k]; if(!g) return; g.visible=on[p.k]&&i<step; g.position.set(p.ex[0]*explT,p.ex[1]*explT,p.ex[2]*explT);
+    g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*explT;});
+    g.userData.lab.className='plab'+(i===step-1&&step<PARTS.length?' new':''); g.userData.L.visible=labOn&&g.visible;});}
+function resetView(){const bb=box.clone(); if(expl){bb.min.z-=16; bb.max.z+=14;} const c=bb.getCenter(new THREE.Vector3()), sz=bb.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
+  camera.position.set(c.x-r*0.9,c.y-r*1.4,c.z+r*0.9); controls.target.copy(c); controls.update();}
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?50:35; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(viewer); resize();
+(function loop(){requestAnimationFrame(loop); if(Math.abs(explT-expl)>0.002){explT+=(expl-explT)*0.12; apply();} controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
+function hex(c){return '#'+c.toString(16).padStart(6,'0');}
+function texts(){const t=TX[lang]; document.documentElement.lang=lang;
+  ['ttl','tag','mat','hint'].forEach(k=>document.getElementById(k).textContent=t[k]);
+  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnExpl').textContent=expl?t.explOn:t.explOff;
+  document.getElementById('btnLab').textContent=labOn?t.labOn:t.labOff; document.getElementById('btnAll').textContent=t.all;
+  document.getElementById('hSteps').textContent=t.steps; document.getElementById('hNotes').textContent=t.notes; document.getElementById('sAll').textContent=t.allSteps;
+  document.getElementById('parts').innerHTML=PARTS.map(p=>`<label class="${on[p.k]?'':'off'}"><input type="checkbox" data-k="${p.k}" ${on[p.k]?'checked':''}><span class="sw" style="background:${hex(p.c)}"></span>${p.k==='BOLTS'?t.bolts:p.k} · ${p[lang]}</label>`).join('');
+  document.querySelectorAll('#parts input').forEach(cb=>cb.onchange=()=>{on[cb.dataset.k]=cb.checked; cb.parentElement.classList.toggle('off',!cb.checked); apply();});
+  document.getElementById('stepNo').textContent=(lang==='ru'?'Шаг ':'Step ')+step+' / '+PARTS.length;
+  document.getElementById('stepTxt').textContent=t.S[step-1]; document.getElementById('sPrev').disabled=step<=1; document.getElementById('sNext').disabled=step>=PARTS.length;
+  document.getElementById('notes').innerHTML=t.N.map(n=>`<li>${n}</li>`).join('');
+  document.getElementById('links').innerHTML=`<a href="ra.html">${t.parts}</a>`;
+  document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));}
+document.getElementById('langEn').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('langRu').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('btnReset').onclick=resetView;
+document.getElementById('btnExpl').onclick=()=>{expl=expl?0:1; document.getElementById('btnExpl').setAttribute('aria-pressed',String(!!expl)); resetView(); texts();};
+document.getElementById('btnLab').onclick=()=>{labOn=!labOn; apply(); texts();};
+document.getElementById('btnAll').onclick=()=>{PARTS.forEach(p=>on[p.k]=true); step=PARTS.length; apply(); texts();};
+document.getElementById('sPrev').onclick=()=>{if(step>1){step--; apply(); texts();}};
+document.getElementById('sNext').onclick=()=>{if(step<PARTS.length){step++; apply(); texts();}};
+document.getElementById('sAll').onclick=()=>{step=PARTS.length; apply(); texts();};
+texts();
+fetch('drawings/MFG/RA_asm.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+</script>
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+</body>
+</html>

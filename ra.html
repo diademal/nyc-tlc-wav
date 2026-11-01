@@ -65,7 +65,7 @@ function render(){
   document.getElementById('mat').innerHTML=t.mat+'<small>'+t.sub+'</small>';
   document.getElementById('bru').setAttribute('aria-pressed',String(lang==='ru')); document.getElementById('ben').setAttribute('aria-pressed',String(lang==='en'));
   const show=RA.filter(r=>!want||r.p===want);
-  document.getElementById('tabs').innerHTML=RA.map(r=>`<a href="?p=${r.p}" ${r.p===want?'aria-current="page"':''}>${r.p}</a>`).join('')+`<a href="?" ${!want?'aria-current="page"':''}>${lang==='ru'?'все':'all'}</a>`;
+  document.getElementById('tabs').innerHTML=RA.map(r=>`<a href="?p=${r.p}" ${r.p===want?'aria-current="page"':''}>${r.p}</a>`).join('')+`<a href="?" ${!want?'aria-current="page"':''}>${lang==='ru'?'все':'all'}</a>`+`<a href="ra-asm.html" style="border-color:var(--acc);font-weight:700">${lang==='ru'?'Сборка 3D':'Assembly 3D'}</a>`;
   document.getElementById('list').innerHTML=show.map(r=>{const m='drawings/MFG/'+r.p; return `<section class="card" id="${r.p}">
    <div class="row"><h2>${r.p}</h2><span>${r[lang]}</span></div>
    <div class="row kv"><span>${t.qty}: <b>${r.q}</b></span><span>${t.flat}: <b>${r.f}″</b></span><span>${t.bends}: <b>${r.b}</b></span><span style="color:var(--acc)"><b>Al 5052-H32 · t 0.125″</b></span></div>

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramp RA-1+RA-2 Player · Sienna WAV</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#e9edf0; --panel:#f6f8f9; --ink:#1b2126; --muted:#5b6670; --line:#c9d1d7;
+  --steel:#8f9aa4; --plate:#a9b3bb; --dim:#c2410c; --dim-bg:#fff4ec; --focus:#0b6bcb;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+    --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12171b; --panel:#1a2126; --ink:#e3e8ec; --muted:#95a1ab; --line:#2c353c;
+  --steel:#7d8993; --plate:#95a1ab; --dim:#ff8a4c; --dim-bg:#2a1a10; --focus:#6cb4ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;letter-spacing:.01em;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.viewer{position:relative;height:min(68vh,640px);min-height:360px;border:1px solid var(--line);border-radius:6px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%,var(--panel),var(--bg))}
+#c3d,#labels{position:absolute;inset:0}
+#c3d{width:100%;height:100%;display:block;touch-action:none}
+#labels{pointer-events:none}
+.dim{font-family:var(--mono);font-size:calc(12px * var(--ds,1));font-weight:500;color:var(--dim);background:var(--dim-bg);border:1px solid var(--dim);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;line-height:1.3}
+.dim.note{color:var(--ink);border-color:var(--line);background:var(--panel)}
+.hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:4px;padding:7px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.bar button:hover,.bar label:hover{border-color:var(--muted)}
+.bar button:focus-visible,.bar input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.bar input{accent-color:var(--dim);margin:0}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.spec section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.spec h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.spec dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.spec dt{color:var(--ink)}
+.spec dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--dim)}
+.spec .dist{grid-column:1/-1}
+.spec .dist dl{grid-template-columns:repeat(auto-fill,minmax(150px,auto) minmax(110px,auto));column-gap:24px}
+.distnote{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.spec .dist dd{white-space:nowrap}
+.pick{cursor:pointer;border-radius:3px}
+.pick:hover,.pick:focus-visible{background:var(--dim-bg);outline:none}
+.pick.on{background:var(--dim-bg);box-shadow:inset 3px 0 0 #1a73e8}
+.dim.hl{background:#1a73e8;border-color:#1a73e8;color:#fff;font-weight:600;font-size:14px;padding:3px 8px;pointer-events:auto;cursor:pointer;z-index:5}
+.nodims .dim:not(.hl){display:none!important}
+.err{padding:20px;color:var(--ink)}
+header{position:relative}
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;order:3;margin-left:auto}
+.lang button{font-family:var(--mono);font-size:13px;border:0;background:var(--panel);color:var(--muted);padding:5px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--dim);color:var(--panel)}
+.lang button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media (max-width:520px){.dim{font-size:calc(10.5px * var(--ds,1));padding:0 4px}}
+#btnDims[aria-pressed="false"]{border-color:var(--dim);color:var(--dim)}
+</style>
+<style>
+.lang button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:var(--panel)}
+.matbox{border:2px solid var(--dim);background:var(--dim-bg);color:var(--dim);border-radius:6px;padding:8px 12px;font-weight:700}
+.plab{font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:#2f3b45;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.player{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.player .play{width:44px;height:44px;border-radius:50%;border:2px solid var(--dim);background:var(--dim);color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;flex:none}
+.player .play[aria-pressed="true"]{background:var(--panel);color:var(--dim)}
+.player .sl{flex:1 1 260px;display:flex;align-items:center;gap:10px}
+.player input[type=range]{flex:1;accent-color:var(--dim);height:28px}
+.player .ang{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--dim);min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.player .marks{display:flex;gap:6px}
+.player .marks button,.bar button,.bar label{font-family:var(--font);font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.player .marks button:hover,.bar button:hover{border-color:var(--muted)}
+.bar button[aria-pressed="true"]{border-color:var(--dim);color:var(--dim);background:var(--dim-bg)}
+.bar select{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:4px;padding:6px 8px}
+.links a{font-family:var(--mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:var(--panel);display:inline-block;margin:0 6px 6px 0}
+.links a:hover{border-color:var(--dim)}
+.notes li{margin:2px 0}
+.hud{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:4px 8px;pointer-events:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="ttl"></h1>
+    <div class="lang" role="group" aria-label="Language"><button type="button" id="langEn">EN</button><button type="button" id="langRu">RU</button></div>
+    <span class="tag" id="tag"></span>
+  </header>
+  <div class="matbox" id="mat"></div>
+  <div class="viewer" id="viewer"><canvas id="c3d"></canvas><div id="labels"></div><div class="hint" id="hint"></div><div class="hud" id="hud"></div></div>
+  <div class="player" role="group" aria-label="Player">
+    <button class="play" id="btnPlay" type="button" aria-pressed="false" title="Play / Pause">▶</button>
+    <div class="sl"><span id="lClosed"></span><input type="range" id="angle" min="0" max="180" step="1" value="0"><span id="lOpen"></span><span class="ang" id="angTxt">0°</span></div>
+    <div class="marks"><button type="button" data-a="0">0°</button><button type="button" data-a="90">90°</button><button type="button" data-a="180">180°</button></div>
+  </div>
+  <div class="bar" role="group" aria-label="View">
+    <button id="btnReset" type="button"></button>
+    <button id="btnLab" type="button" aria-pressed="true"></button>
+    <button id="btnBox" type="button" aria-pressed="true"></button>
+    <button id="btnAxis" type="button" aria-pressed="true"></button>
+    <label><span id="lSpeed"></span> <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+    <label><input type="checkbox" id="loop" checked> <span id="lLoop"></span></label>
+  </div>
+  <div class="spec">
+    <section><h2 id="hHow"></h2><ul class="notes" id="how"></ul></section>
+    <section><h2 id="hDims"></h2><dl id="dims"></dl><div class="links" id="links"></div></section>
+  </div>
+</div>
+<script src="vendor/three-bundle.js"></script>
+<script>
+// Плэер шарнира: RA-1 раскрывается относительно RA-2 вокруг оси болтов 3/8.
+// Данные — drawings/MFG/RA_asm.json (дюймы, Z вверх), как в ra-asm.html.
+const IDS={ra2:['T_RA2'],ra1:['T_RA1'],hinge:['T_Bolt1','T_Spacer1','T_Bolt2','T_Spacer2'],box:['RA7']};
+const COL={ra2:0xd2b27a,ra1:0x9aa3ab,hinge:0x3a3f45,box:0xb9c2ca};
+const TX={ru:{ttl:'Рампа — блок RA-1 + RA-2: как раскрывается',tag:'Sienna WAV · дюймы · RA-1 поворачивается на шарнире (болты 3/8) относительно RA-2',
+  mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',hint:'Мышь/палец: вращать, колесо/два пальца: приблизить',
+  reset:'Сбросить вид',labOn:'Скрыть названия',labOff:'Показать названия',boxOn:'Скрыть короб RA-7',boxOff:'Показать короб RA-7',axisOn:'Скрыть ось шарнира',axisOff:'Показать ось шарнира',
+  speed:'Скорость',loop:'Туда-обратно',closed:'Сложено',open:'Раскрыто',how:'Что происходит',dims:'Размеры',parts:'Все детали рампы',asm:'Сборка рампы',
+  H:['RA-2 лежит на крышке короба RA-7 (уши вверх). RA-1 в сложенном виде лежит на RA-2.','Болты 3/8 + втулки через уши RA-1 и RA-2 образуют шарнир — ось вдоль X.',
+     'При раскрытии RA-1 поворачивается вокруг оси болтов на 180° и ложится продолжением RA-2 (ползунок или ▶).','Короб RA-7 показан для ориентира, его можно скрыть.'],
+  D:{len2:'RA-2 — длина (Y)',len1:'RA-1 — длина (Y)',w:'Ширина (X)',axis:'Ось шарнира: Y / Z',reach:'Вылет RA-1 при 180° (от задней кромки RA-2)',tip:'Край RA-1 сейчас: Y / Z'}},
+ en:{ttl:'Ramp — RA-1 + RA-2 block: how it opens',tag:'Sienna WAV · inches · RA-1 swings on the hinge (3/8 bolts) relative to RA-2',
+  mat:'Material: aluminum 5052-H32 · thickness t = 0.125″ (1/8″, 3.18 mm)',hint:'Drag to rotate, wheel / pinch to zoom',
+  reset:'Reset view',labOn:'Hide names',labOff:'Show names',boxOn:'Hide box RA-7',boxOff:'Show box RA-7',axisOn:'Hide hinge axis',axisOff:'Show hinge axis',
+  speed:'Speed',loop:'Back and forth',closed:'Folded',open:'Open',how:'What happens',dims:'Dimensions',parts:'All ramp parts',asm:'Ramp assembly',
+  H:['RA-2 sits on the RA-7 box lid (ears up). Folded, RA-1 lies on top of RA-2.','3/8 bolts + spacers through the RA-1 and RA-2 ears form the hinge — axis along X.',
+     'Opening: RA-1 rotates 180° about the bolt axis and lands as a continuation of RA-2 (slider or ▶).','The RA-7 box is shown for reference and can be hidden.'],
+  D:{len2:'RA-2 — length (Y)',len1:'RA-1 — length (Y)',w:'Width (X)',axis:'Hinge axis: Y / Z',reach:'RA-1 reach at 180° (from RA-2 back edge)',tip:'RA-1 edge now: Y / Z'}}};
+let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let labOn=true, boxOn=true, axisOn=true, playing=false, dir=1, ang=0, speed=1;
+const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(35,1,0.05,2000); camera.up.set(0,0,1);
+const controls=new THREE.TrackballControls(camera,canvas); controls.rotateSpeed=3; controls.zoomSpeed=1.2; controls.panSpeed=0.8; controls.dynamicDampingFactor=0.15;
+scene.add(new THREE.HemisphereLight(0xffffff,0x445566,0.85)); const sun=new THREE.DirectionalLight(0xffffff,0.7); sun.position.set(-20,-30,40); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.35); fill.position.set(20,15,-10); scene.add(fill);
+const labelRenderer=new THREE.CSS2DRenderer(); labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.inset='0'; labelsEl.appendChild(labelRenderer.domElement);
+const edgeMat=new THREE.LineBasicMaterial({color:0x2a3138});
+const G={}, BB={}; let box=new THREE.Box3(), pivot=null, axisLine=null, hinge={y:22,z:1.218,x0:0,x1:34};
+function mkGroup(ids,byId,color,opacity){const g=new THREE.Group(); const mat=new THREE.MeshStandardMaterial({color,metalness:0.35,roughness:0.5,side:THREE.DoubleSide,transparent:opacity<1,opacity});
+  const bb=new THREE.Box3();
+  ids.forEach(id=>{const r=byId[id]; if(!r) return; const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals(); geo.computeBoundingBox(); bb.union(geo.boundingBox);
+    g.add(new THREE.Mesh(geo,mat)); if(opacity===1) r.E.forEach(e=>{const lg=new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))); g.add(new THREE.Line(lg,edgeMat));});});
+  return [g,bb];}
+function label(g,text,pos){const d=document.createElement('div'); d.className='plab'; d.textContent=text; const L=new THREE.CSS2DObject(d); L.position.copy(pos); g.add(L); g.userData.L=L;}
+function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
+  // ось шарнира — по центрам болтов
+  const bolts=['T_Bolt1','T_Bolt2'].map(id=>byId[id]).filter(Boolean);
+  if(bolts.length===2){const c=bolts.map(r=>{const b=new THREE.Box3(); r.V.forEach(v=>b.expandByPoint(new THREE.Vector3(v[0],v[1],v[2]))); return b.getCenter(new THREE.Vector3());});
+    hinge={y:(c[0].y+c[1].y)/2,z:(c[0].z+c[1].z)/2,x0:Math.min(c[0].x,c[1].x)-1,x1:Math.max(c[0].x,c[1].x)+1};}
+  let g,bb;
+  [g,bb]=mkGroup(IDS.box,byId,COL.box,0.28); G.box=g; BB.box=bb; scene.add(g);
+  [g,bb]=mkGroup(IDS.ra2,byId,COL.ra2,1); G.ra2=g; BB.ra2=bb; label(g,'RA-2',new THREE.Vector3(bb.min.x+(bb.max.x-bb.min.x)*0.2,bb.min.y+(bb.max.y-bb.min.y)*0.35,bb.max.z+0.3)); scene.add(g);
+  [g,bb]=mkGroup(IDS.hinge,byId,COL.hinge,1); G.hinge=g; scene.add(g);
+  // RA-1 — внутри поворотного узла (pivot) с центром на оси шарнира
+  [g,bb]=mkGroup(IDS.ra1,byId,COL.ra1,1); G.ra1=g; BB.ra1=bb;
+  label(g,'RA-1',new THREE.Vector3(bb.min.x+(bb.max.x-bb.min.x)*0.75,bb.min.y+(bb.max.y-bb.min.y)*0.4,bb.max.z+0.3));
+  pivot=new THREE.Group(); pivot.position.set(0,hinge.y,hinge.z); g.position.set(0,-hinge.y,-hinge.z); pivot.add(g); scene.add(pivot);
+  // линия оси
+  const ag=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(hinge.x0-2,hinge.y,hinge.z),new THREE.Vector3(hinge.x1+2,hinge.y,hinge.z)]);
+  axisLine=new THREE.Line(ag,new THREE.LineDashedMaterial({color:0xc2410c,dashSize:0.6,gapSize:0.3})); axisLine.computeLineDistances(); scene.add(axisLine);
+  box=new THREE.Box3().union(BB.ra2).union(BB.box);
+  // сцена должна вмещать и раскрытое положение
+  const open=BB.ra1.clone(); const yMin=2*hinge.y-open.max.y, yMax=2*hinge.y-open.min.y; box.expandByPoint(new THREE.Vector3(open.min.x,yMin,hinge.z)); box.expandByPoint(new THREE.Vector3(open.max.x,yMax,hinge.z+ (open.max.y-hinge.y)));
+  resetView(); apply(); dims();}
+function apply(){pivot.rotation.x=-ang*Math.PI/180; G.box.visible=boxOn; axisLine.visible=axisOn;
+  [G.ra1,G.ra2].forEach(g=>{if(g.userData.L) g.userData.L.visible=labOn;});
+  document.getElementById('angle').value=Math.round(ang); document.getElementById('angTxt').textContent=Math.round(ang)+'°';
+  // край RA-1 (дальний от шарнира): в сложенном виде это min.y
+  const r=BB.ra1.min.y-hinge.y, a=-ang*Math.PI/180, ey=hinge.y+r*Math.cos(a), ez=hinge.z+r*Math.sin(a);
+  document.getElementById('hud').textContent=(lang==='ru'?'RA-1 край: ':'RA-1 edge: ')+'Y '+ey.toFixed(2)+'″ · Z '+ez.toFixed(2)+'″';
+  const t=document.getElementById('dTip'); if(t) t.textContent=ey.toFixed(2)+' / '+ez.toFixed(2)+'″';}
+function resetView(){const c=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
+  camera.position.set(c.x-r*1.0,c.y-r*1.25,c.z+r*0.75); controls.target.copy(c); controls.update();}
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?50:35; camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(viewer); resize();
+let last=performance.now();
+(function loop(now){requestAnimationFrame(loop); const dt=Math.min(0.1,(now-last)/1000); last=now;
+  if(playing&&pivot){ang+=dir*60*speed*dt; if(ang>=180){ang=180; if(document.getElementById('loop').checked) dir=-1; else stop();} if(ang<=0){ang=0; if(dir<0){ if(document.getElementById('loop').checked) dir=1; else stop(); }} apply();}
+  controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})(last);
+function stop(){playing=false; document.getElementById('btnPlay').setAttribute('aria-pressed','false'); document.getElementById('btnPlay').textContent='▶';}
+function play(){playing=true; if(ang>=180) {ang=0; dir=1;} else if(dir<0&&ang<=0) dir=1; document.getElementById('btnPlay').setAttribute('aria-pressed','true'); document.getElementById('btnPlay').textContent='❚❚';}
+function dims(){const t=TX[lang].D, f=v=>v.toFixed(2)+'″';
+  const reach=(hinge.y-BB.ra1.min.y)+(hinge.y-BB.ra2.max.y);
+  document.getElementById('dims').innerHTML=`<dt>${t.len2}</dt><dd>${f(BB.ra2.max.y-BB.ra2.min.y)}</dd><dt>${t.len1}</dt><dd>${f(BB.ra1.max.y-BB.ra1.min.y)}</dd><dt>${t.w}</dt><dd>${f(BB.ra2.max.x-BB.ra2.min.x)}</dd><dt>${t.axis}</dt><dd>${f(hinge.y)} / ${f(hinge.z)}</dd><dt>${t.reach}</dt><dd>${f(2*hinge.y-BB.ra1.min.y-BB.ra2.max.y)}</dd><dt>${t.tip}</dt><dd id="dTip"></dd>`;}
+function texts(){const t=TX[lang]; document.documentElement.lang=lang;
+  ['ttl','tag','mat','hint'].forEach(k=>document.getElementById(k).textContent=t[k]);
+  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnLab').textContent=labOn?t.labOn:t.labOff;
+  document.getElementById('btnBox').textContent=boxOn?t.boxOn:t.boxOff; document.getElementById('btnAxis').textContent=axisOn?t.axisOn:t.axisOff;
+  document.getElementById('lSpeed').textContent=t.speed; document.getElementById('lLoop').textContent=t.loop; document.getElementById('lClosed').textContent=t.closed; document.getElementById('lOpen').textContent=t.open;
+  document.getElementById('hHow').textContent=t.how; document.getElementById('hDims').textContent=t.dims;
+  document.getElementById('how').innerHTML=t.H.map(n=>`<li>${n}</li>`).join('');
+  document.getElementById('links').innerHTML=`<a href="ra-asm.html">${t.asm}</a><a href="ra.html">${t.parts}</a>`;
+  document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
+  if(pivot){dims(); apply();}}
+document.getElementById('langEn').onclick=()=>{lang='en';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('langRu').onclick=()=>{lang='ru';try{localStorage.setItem('fr4-lang',lang)}catch(e){};texts();};
+document.getElementById('btnReset').onclick=resetView;
+document.getElementById('btnLab').onclick=()=>{labOn=!labOn; document.getElementById('btnLab').setAttribute('aria-pressed',String(labOn)); texts();};
+document.getElementById('btnBox').onclick=()=>{boxOn=!boxOn; document.getElementById('btnBox').setAttribute('aria-pressed',String(boxOn)); texts();};
+document.getElementById('btnAxis').onclick=()=>{axisOn=!axisOn; document.getElementById('btnAxis').setAttribute('aria-pressed',String(axisOn)); texts();};
+document.getElementById('btnPlay').onclick=()=>{playing?stop():play();};
+document.getElementById('angle').oninput=e=>{stop(); ang=+e.target.value; if(pivot) apply();};
+document.getElementById('speed').onchange=e=>{speed=+e.target.value;};
+document.querySelectorAll('.marks button').forEach(b=>b.onclick=()=>{stop(); ang=+b.dataset.a; if(pivot) apply();});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return; if(e.key===' '){e.preventDefault(); playing?stop():play();}
+  if(e.key==='ArrowRight'){stop(); ang=Math.min(180,ang+5); apply();} if(e.key==='ArrowLeft'){stop(); ang=Math.max(0,ang-5); apply();}});
+texts();
+fetch('drawings/MFG/RA_asm.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+</script>
+<div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+</body>
+</html>

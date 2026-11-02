@@ -65,13 +65,13 @@ td.n{font-family:var(--mono);text-align:right}
 </div>
 <script>
 const TX={en:{ttl:'Laser cut sheets',tag:'Sienna WAV · inches · 1 vehicle set · sheet 48 × 96 in',
-  intro:'Ready-to-cut files: all flat parts of one vehicle placed on standard 48 × 96 in sheets — one steel sheet and one aluminum sheet. Edge margin ½″, gap between parts 0.3″. Give the <b>CUT</b> DXF to the laser shop. The <b>MARKED</b> DXF has extra layers that are not cut: SHEET (sheet outline), MARK (bend-line ticks, etch only), LABEL (part names). Bend allowance is already in every flat (inside radius = t, K = 0.44). For more vehicles repeat the sheets.',
+  intro:'Ready-to-cut files: all flat parts of one vehicle placed on standard 48 × 96 in sheets — one steel sheet, one aluminum sheet and a 12 × 24″ piece of stainless for RA-9 (an offcut is fine). RA-3 is cut as RA-3A — with the “M&N / AUTO GROUP” stencil. Edge margin ½″, gap between parts 0.3″. Give the <b>CUT</b> DXF to the laser shop. The <b>MARKED</b> DXF has extra layers that are not cut: SHEET (sheet outline), MARK (bend-line ticks, etch only), LABEL (part names). Bend allowance is already in every flat (inside radius = t, K = 0.44). For more vehicles repeat the sheets.',
   zip:'All laser files (ZIP)',sheet:'Sheet',of:'of',parts:'parts',use:'parts area',cut:'DXF to cut',marked:'DXF with marks + labels',pdf:'Layout (PDF)',csv:'Parts list (CSV)',
-  part:'Part',qty:'Qty / vehicle',mat:'Material',len:'Cut length',tubeH:'Tubes — cut list (not on the sheets)',grp:'Parts',steel:'Steel — 11 ga',alu:'Aluminum — 0.125″'},
+  part:'Part',qty:'Qty / vehicle',mat:'Material',len:'Cut length',tubeH:'Tubes — cut list (not on the sheets)',grp:'Parts',steel:'Steel — 11 ga',alu:'Aluminum — 0.125″',ss:'Stainless — 18 ga'},
  ru:{ttl:'Листы для лазерной резки',tag:'Sienna WAV · дюймы · комплект на 1 машину · лист 48 × 96″',
-  intro:'Готовые файлы для резки: все плоские детали одной машины разложены на стандартные листы 48 × 96″ — один лист стали и один лист алюминия. Отступ от края ½″, зазор между деталями 0.3″. Лазерной компании отдавать <b>CUT</b> DXF. В <b>MARKED</b> DXF есть слои, которые не режутся: SHEET (контур листа), MARK (риски линий гиба — только гравировка), LABEL (названия деталей). Припуск на гиб уже в развертках (внутренний радиус = t, K = 0.44). Для нескольких машин повторить листы.',
+  intro:'Готовые файлы для резки: все плоские детали одной машины разложены на стандартные листы 48 × 96″ — один лист стали, один лист алюминия и кусок нержавейки 12 × 24″ под RA-9 (подойдёт обрезок). RA-3 режется как RA-3A — с трафаретом «M&N / AUTO GROUP». Отступ от края ½″, зазор между деталями 0.3″. Лазерной компании отдавать <b>CUT</b> DXF. В <b>MARKED</b> DXF есть слои, которые не режутся: SHEET (контур листа), MARK (риски линий гиба — только гравировка), LABEL (названия деталей). Припуск на гиб уже в развертках (внутренний радиус = t, K = 0.44). Для нескольких машин повторить листы.',
   zip:'Все файлы для лазера (ZIP)',sheet:'Лист',of:'из',parts:'деталей',use:'площадь деталей',cut:'DXF для резки',marked:'DXF с рисками и подписями',pdf:'Раскладка (PDF)',csv:'Список деталей (CSV)',
-  part:'Деталь',qty:'Шт / машина',mat:'Материал',len:'Длина реза',tubeH:'Трубы — резка в размер (не на листах)',grp:'Детали',steel:'Сталь — 11 ga',alu:'Алюминий — 0.125″'}};
+  part:'Деталь',qty:'Шт / машина',mat:'Материал',len:'Длина реза',tubeH:'Трубы — резка в размер (не на листах)',grp:'Детали',steel:'Сталь — 11 ga',alu:'Алюминий — 0.125″',ss:'Нержавейка — 18 ga'}};
 let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 let L=null;
 function f(v){const w=Math.floor(v+1e-6),r=v-w,e=[[0,''],[.125,'⅛'],[.25,'¼'],[.375,'⅜'],[.5,'½'],[.625,'⅝'],[.75,'¾'],[.875,'⅞']];for(const [x,s] of e){if(Math.abs(r-x)<0.01)return w+(s?' '+s:'')+'″';}return v.toFixed(3)+'″';}
@@ -79,9 +79,9 @@ function render(){const t=TX[lang]; document.documentElement.lang=lang; document
   ['ttl','tag','tubeH'].forEach(k=>document.getElementById(k).textContent=t[k]); document.getElementById('intro').innerHTML=t.intro; document.getElementById('zip').textContent=t.zip;
   document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
   if(!L) return; const box=document.getElementById('sets'); box.innerHTML='';
-  for(const [k,v] of Object.entries(L.report)){ const isAl=k.startsWith('AL');
+  for(const [k,v] of Object.entries(L.report)){ const lab=k.startsWith('AL')?t.alu:k.startsWith('STAIN')?t.ss:t.steel;
     for(const sh of v.sheets){const c=document.createElement('div'); c.className='card wide sheet'; const b='drawings/LASER/'+sh.base;
-      c.innerHTML=`<h3><span class="p">${isAl?t.alu:t.steel}</span>${t.sheet} ${sh.sheet} ${t.of} ${sh.of} · 48 × 96″<span class="q">${sh.n} ${t.parts}</span></h3>
+      c.innerHTML=`<h3><span class="p">${lab}</span>${t.sheet} ${sh.sheet} ${t.of} ${sh.of} · ${sh.size||'48 × 96″'}<span class="q">${sh.n} ${t.parts}</span></h3>
       <div class="meta"><span>${t.mat}: ${lang==='ru'?v.ru:v.mat}</span><span>${t.use} ≈ ${sh.bbox_use}%</span></div>
       <a href="${b}.pdf" target="_blank" rel="noopener"><img src="${b}.webp" alt="${k} sheet ${sh.sheet}" loading="lazy"></a>
       <div class="dl"><a href="${b}_CUT.dxf" download>${t.cut}</a><a href="${b}_MARKED.dxf" download>${t.marked}</a><a href="${b}.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="drawings/LASER/${k}_parts.csv" download>${t.csv}</a></div>

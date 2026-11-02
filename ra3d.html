@@ -96,7 +96,7 @@ header{position:relative}
 <script src="vendor/three-bundle.js"></script>
 <script>
 const INFO={'RA-1':{q:1,ru:'Плита рампы с ушами',en:'Ramp plate with ears'},'RA-2':{q:1,ru:'Плита рампы: борт + 2 уха',en:'Ramp plate: flange + 2 ears'},
- 'RA-3':{q:1,ru:'Плита: борт 1⅛″ + 2 уха 3½″',en:'Plate: flange 1⅛″ + 2 ears 3½″'},'RA-3L':{q:1,ru:'Плита RA-3 с надписью M&N WAV',en:'RA-3 plate with the M&N WAV logo'},'RA-4':{q:1,ru:'Z-профиль 2¼ / 2¾ / 2⅛',en:'Z-section 2¼ / 2¾ / 2⅛'},
+ 'RA-3':{q:1,ru:'Плита: борт 1⅛″ + 2 уха 3½″',en:'Plate: flange 1⅛″ + 2 ears 3½″'},'RA-3L':{q:1,ru:'Плита RA-3 с надписью M&N WAV',en:'RA-3 plate with the M&N WAV logo'},'RA-9':{q:1,ru:'Нержавейка за надписью 19⅛ × 8¾″',en:'Stainless plate behind the logo 19⅛ × 8¾″'},'RA-4':{q:1,ru:'Z-профиль 2¼ / 2¾ / 2⅛',en:'Z-section 2¼ / 2¾ / 2⅛'},
  'RA-5':{q:1,ru:'Уголок с ушком',en:'Angle with side tab'},'RA-6':{q:1,ru:'Швеллер 2½″ с бортами ½″',en:'Channel 2½″, ½″ flanges'},
  'RA-7':{q:1,ru:'Короб 34 × 18¼″',en:'Box 34 × 18¼″'},'RA-8':{q:2,ru:'Кронштейн 4⅝ × 2½″',en:'Bracket 4⅝ × 2½″'}};
 const TX={ru:{tag:'Рампа Sienna WAV · размеры в дюймах · готовая деталь (наружные размеры)',mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',
@@ -190,6 +190,7 @@ if(new URLSearchParams(location.search).get('mode')==='flat') mode='flat';
 texts();
 if(ALL){Promise.all(Object.keys(INFO).map(k=>fetch('drawings/MFG/'+k+'_3d.json').then(r=>r.json()).then(j=>{DS[k]=j;}))).then(()=>{texts(); build();});}
 else fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j; texts(); build();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+if(P==='RA-9'){document.addEventListener('DOMContentLoaded',()=>{});setTimeout(()=>{const b=document.getElementById('matBadge');if(b){b.innerHTML='Material: <b>Stainless 304, brushed</b> · <b>18 ga · t = 0.048″ (1.2 mm)</b>';b.dataset.src=b.innerHTML;} const m=document.getElementById('mat'); if(m) m.textContent=(lang==='ru'?'Металл: нержавеющая сталь 304, шлифованная · 18 ga, t = 0.048″ (1.2 мм)':'Material: stainless steel 304, brushed · 18 ga, t = 0.048″ (1.2 mm)');},300);}
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
 <script src="video-card.js"></script>

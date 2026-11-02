@@ -39,6 +39,7 @@ ol li:hover{border-color:var(--accent)}
 ol li.on{border-color:var(--accent);background:var(--accent-bg)}
 ol li.on .n{color:var(--accent);font-weight:600}
 .note{font-size:13px;color:var(--muted)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--line);border-radius:4px;padding:6px 10px;min-height:36px;cursor:pointer}.chk input{accent-color:var(--accent);margin:0}
 .err{padding:30px;text-align:center;color:var(--muted)}
 </style>
 </head>
@@ -56,6 +57,7 @@ ol li.on .n{color:var(--accent);font-weight:600}
         <input type="range" id="slider" min="0" max="1000" value="0" aria-label="Timeline">
         <span class="t" id="tm"></span>
         <button type="button" id="rec"></button>
+        <label class="chk"><input type="checkbox" id="centerCb" checked><span id="centerTxt"></span></label>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px"><ol id="steps"></ol><div class="note" id="note"></div></div>
@@ -876,7 +878,9 @@ function boxOf(useFin){const bx=new THREE.Box3();BL.forEach(o=>{const P=useFin?o
     o.b.mesh.V.forEach((v,i)=>{if(i%3)return;bx.expandByPoint(new THREE.Vector3(...fold(v[0],v[1],0,o.b.bends,ang)).applyMatrix4(M));});});
   rings.forEach(R=>{const c=useFin?R.p1:R.p0;bx.expandByPoint(c.clone().addScalar(R.r.od/2));bx.expandByPoint(c.clone().addScalar(-R.r.od/2));});boxes.forEach(B=>{const c=useFin?B.p1:B.p0;bx.expandByPoint(c.clone().add(B.h));bx.expandByPoint(c.clone().sub(B.h));});return bx;}
 function cam(bx){const c=bx.getCenter(new THREE.Vector3()),s=bx.getSize(new THREE.Vector3()).length();const dir=new THREE.Vector3(-0.42,-1,0.66).normalize();return [c.clone().addScaledVector(dir,s*1.55),c];}
-const CA=cam(boxOf(false)),CB=cam(boxOf(true));let userCam=false;controls.addEventListener('start',()=>{userCam=true;});
+const CA=cam(boxOf(false)),CB=cam(boxOf(true));let userCam=false;let centerOn=true;try{centerOn=localStorage.getItem('ra-center')!=='0';}catch(e){}
+controls.addEventListener('start',()=>{userCam=true;if(centerOn){centerOn=false;const c=document.getElementById('centerCb');if(c)c.checked=false;try{localStorage.setItem('ra-center','0');}catch(e){}}});
+const cc=document.getElementById('centerCb');if(cc){cc.checked=centerOn;cc.onchange=e=>{centerOn=e.target.checked;if(centerOn)userCam=false;try{localStorage.setItem('ra-center',centerOn?'1':'0');}catch(x){}setT(T0);};}
 const ease=t=>t<0?0:t>1?1:t*t*(3-2*t);
 let cur=-1;
 function setT(t){
@@ -887,7 +891,7 @@ function setT(t){
   for(const B of boxes){if(B.fix)continue;B.g.position.lerpVectors(B.p0,B.p1,ring);B.g.position.z+=Math.sin(Math.PI*ring)*1.5;}
   for(const R of rings){R.m.position.lerpVectors(R.p0,R.p1,ring);R.m.position.z+=Math.sin(Math.PI*ring)*3;R.m.quaternion.copy(R.q0).slerp(R.q1,ring);}
   const fc=nIns?insAll/nIns:Math.min(1,Math.max(0,(t-START[SEQ.length-1])/SEQ[SEQ.length-1][0]));
-  if(!userCam){camera.position.lerpVectors(CA[0],CB[0],fc);controls.target.lerpVectors(CA[1],CB[1],fc);}
+  if(centerOn||!userCam){camera.position.lerpVectors(CA[0],CB[0],fc);controls.target.lerpVectors(CA[1],CB[1],fc);}
   matW.opacity=weld;welds.visible=weld>0.001;matD.opacity=drill;drills.visible=drill>0.001;
   let k=0;for(let i=0;i<SEQ.length;i++)if(t>=START[i]-1e-6)k=i;
   if(k!==cur){cur=k;renderSteps();}
@@ -898,7 +902,7 @@ function renderSteps(){const st=TX[lang].steps;
   document.querySelectorAll('#steps li').forEach((li,i)=>li.classList.toggle('on',i===cur));}
 function buildList(){const ol=document.getElementById('steps');ol.innerHTML='';
   TX[lang].steps.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span>'+s+'</span>';li.onclick=()=>{playing=false;updBtn();T0=START[i]+SEQ[i][0]-0.001;setT(T0);};ol.appendChild(li);});
-  const t=TX[lang];document.getElementById('ttl').textContent=t.ttl;document.getElementById('tag').textContent=t.tag;document.getElementById('note').textContent=t.note;document.title=t.ttl;
+  const t=TX[lang];const ct=document.getElementById('centerTxt');if(ct)ct.textContent=lang==='ru'?'Держать по центру':'Keep centred';document.getElementById('ttl').textContent=t.ttl;document.getElementById('tag').textContent=t.tag;document.getElementById('note').textContent=t.note;document.title=t.ttl;
   document.documentElement.lang=lang;document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en'));document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
   updBtn();cur=-1;setT(T0);}
 let T0=0,playing=false,last=0,recorder=null;

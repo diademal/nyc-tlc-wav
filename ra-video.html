@@ -40,6 +40,7 @@ ol li.on{border-color:var(--accent);background:var(--accent-bg)}
 ol li.on .n{color:var(--accent);font-weight:600}
 .note{font-size:13px;color:var(--muted)}
 .plab{font:600 12px/1 var(--mono);background:#26313a;color:#fff;padding:3px 6px;border-radius:3px;white-space:nowrap}.plab.new{background:var(--accent)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--line);border-radius:4px;padding:6px 10px;min-height:36px;cursor:pointer}.chk input{accent-color:var(--accent);margin:0}
 .err{padding:30px;text-align:center;color:var(--muted)}
 </style>
 </head>
@@ -57,7 +58,9 @@ ol li.on .n{color:var(--accent);font-weight:600}
         <input type="range" id="slider" min="0" max="1000" value="0" aria-label="Timeline">
         <span class="t" id="tm"></span>
         <button type="button" id="rec"></button>
-        <label style="display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--accent);border-radius:4px;padding:6px 10px;min-height:36px"><input type="checkbox" id="logoCb"><span id="logoTxt"></span></label>
+        <label class="chk"><input type="checkbox" id="logoCb"><span id="logoTxt"></span></label>
+        <label class="chk"><input type="checkbox" id="namesCb"><span id="namesTxt"></span></label>
+        <label class="chk"><input type="checkbox" id="centerCb" checked><span id="centerTxt"></span></label>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px"><ol id="steps"></ol><div class="note" id="note"></div></div>
@@ -72,6 +75,7 @@ const PARTS=[
  {k:'B4',gen:'b4',c:0x2f3a44,fl:[0,0,6],lab:''},
  {k:'RA5',ids:['RA5'],c:0x7cc48a,fl:[0,0,-12],lab:'RA-5',la:[0.8,0.7,0.1]},
  {k:'RA3',ids:['RA3'],alt:['RA3L'],c:0x8fb4d6,fl:[0,0,-14],lab:'RA-3',la:[-0.02,0.4,0.1]},
+ {k:'RA9',ids:['RA9'],c:0xe3e7ea,fl:[0,0,-12],lab:'RA-9',la:[0.5,0.5,0.0]},
  {k:'RA8',ids:['RA8a','RA8b'],c:0xc9b24a,fl:[0,0,-10],lab:'RA-8',la:[1.0,0.5,0.0],side:6},
  {k:'B8',gen:'b8',c:0x2f3a44,fl:[0,0,-6],lab:''},
  {k:'RA2',ids:['T_RA2'],c:0xd2b27a,fl:[0,0,12],lab:'RA-2',la:[0.2,1.02,0.6]},
@@ -81,24 +85,25 @@ const HX=[0,22.0,1.21875];                       // RA-1 / RA-2 hinge axis (alon
 const B4=[[2.25,0.75],[3.75,0.75],[30.25,0.75],[31.75,0.75]];
 const B8=[[-0.375,13.5],[-0.375,17.125],[34.375,13.5],[34.375,17.125]];   // RA-8 flange bolts 8 mm through RA-3 (z -3.125 .. -3.25)
 // timeline: [duration, part index | 'fold']
-const SEQ=[[1.8,0],[2.2,1],[1.6,2],[2.2,3],[2.2,4],[2.0,5],[1.6,6],[2.2,7],[2.2,8],[1.6,9],[2.8,'fold']];
+const SEQ=[[1.8,0],[2.2,1],[1.6,2],[2.2,3],[2.2,4],[1.8,5],[2.0,6],[1.6,7],[2.2,8],[2.2,9],[1.6,10],[2.8,'fold']];
 const START=[];let acc=0;for(const s of SEQ){START.push(acc);acc+=s[0];} const TOTAL=acc+1.2;
-const TX={en:{ttl:'Ramp — assembly video',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-8 → RA-2 → RA-1',play:'▶ Play',logo:'RA-3 with logo',pause:'❚❚ Pause',rec:'● Record video',recing:'● Recording…',
+const TX={en:{ttl:'Ramp — assembly video',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-9 → RA-8 → RA-2 → RA-1',play:'▶ Play',logo:'RA-3 with logo',names:'Part names',center:'Keep centred',pause:'❚❚ Pause',rec:'● Record video',recing:'● Recording…',
   note:'Mouse: rotate, wheel: zoom. Click a step to jump to it. “Record video” saves an .mp4 clip.',
   steps:['RA-7 — the box: plate on top, side walls with lips, front wall.','RA-4 goes into RA-7 at the back edge: 2⅛ side with 6 squares against the plate on the back hole row, 2¼ side at the bottom pointing in.',
    'RA-4 is bolted to RA-7 — 4 × 8 mm bolts (2¼, 3¾, 30¼, 31¾).','RA-5 goes into RA-7: fork tab down, 2¾ side up against the plate, whiskers to the front wall.',
-   'RA-3 comes up under the RA-7 side lips, ears and flange up, ears at the back.','RA-8 brackets (2, the right one mirrored) on the RA-3 ends: flange on the two 8 mm holes of the flange side, plate against the end, arc away from the ears.','RA-8 bolted to RA-3 — 2 × 8 mm bolts each.','RA-2 lies on RA-7, its 6-hole edge on the back hole row.',
+   'RA-3 comes up under the RA-7 side lips, ears and flange up, ears at the back.','RA-9 stainless plate (18 ga, 19⅛ × 8¾) on the inner face of RA-3L behind the logo cut — the letters show bright.','RA-8 brackets (2, the right one mirrored) on the RA-3 ends: flange on the two 8 mm holes of the flange side, plate against the end, arc away from the ears.','RA-8 bolted to RA-3 — 2 × 8 mm bolts each.','RA-2 lies on RA-7, its 6-hole edge on the back hole row.',
    'RA-1 joins RA-2 opened (180°) — the hinge ears line up.','Hinge bolts 3/8 + spacers go through the RA-1 and RA-2 ears.','RA-1 folds over onto RA-2 — the ramp is assembled.'],
   badge:'Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b>'},
- ru:{ttl:'Рампа — видео сборки',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-8 → RA-2 → RA-1',play:'▶ Пуск',logo:'RA-3 с надписью',pause:'❚❚ Пауза',rec:'● Записать видео',recing:'● Идёт запись…',
+ ru:{ttl:'Рампа — видео сборки',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-9 → RA-8 → RA-2 → RA-1',play:'▶ Пуск',logo:'RA-3 с надписью',names:'Названия деталей',center:'Держать по центру',pause:'❚❚ Пауза',rec:'● Записать видео',recing:'● Идёт запись…',
   note:'Мышь: вращать, колесо: приблизить. Нажмите на шаг, чтобы перейти к нему. «Записать видео» сохраняет ролик .mp4.',
   steps:['RA-7 — короб: дно сверху, боковины с бортиками, передняя стенка.','RA-4 заходит внутрь RA-7 у заднего края: сторона 2⅛ с 6 квадратами к дну на задний ряд дырок, сторона 2¼ внизу смотрит внутрь.',
    'RA-4 крепится к RA-7 — 4 болта 8 мм (2¼, 3¾, 30¼, 31¾).','RA-5 заходит внутрь RA-7: рогатка внизу, сторона 2¾ вверх к дну, усы к передней стенке.',
-   'RA-3 подходит снизу к бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-8 (2 шт, правый зеркальный) на торцы RA-3: фланец на две дырки 8 мм со стороны бортика, пластина прижата к торцу, полукруг от ушей.','RA-8 крепится к RA-3 — по 2 болта 8 мм.','RA-2 ложится на RA-7, край с 6 дырками на задний ряд дырок.',
+   'RA-3 подходит снизу к бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-9 — нержавейка (18 ga, 19⅛ × 8¾) на внутренней стороне RA-3L за вырезом — буквы видны на светлом.','RA-8 (2 шт, правый зеркальный) на торцы RA-3: фланец на две дырки 8 мм со стороны бортика, пластина прижата к торцу, полукруг от ушей.','RA-8 крепится к RA-3 — по 2 болта 8 мм.','RA-2 ложится на RA-7, край с 6 дырками на задний ряд дырок.',
    'RA-1 подходит к RA-2 в открытом виде (180°) — уши шарнира совпадают.','Болты шарнира 3/8 + втулки через уши RA-1 и RA-2.','RA-1 складывается на RA-2 — рампа собрана.'],
   badge:'Металл: <b>алюминий 5052-H32</b> · <b>t = 0.125″ (3.18 мм)</b>'}};
 let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 let logoOn=false; try{logoOn=localStorage.getItem('ra3logo')==='1';}catch(e){}
+let namesOn=false, centerOn=true; try{namesOn=localStorage.getItem('ra-names')==='1'; centerOn=localStorage.getItem('ra-center')!=='0';}catch(e){}
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
 const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(34,1,0.05,2000); camera.up.set(0,0,1);
@@ -126,18 +131,18 @@ function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
       L.position.set(b.min.x+(b.max.x-b.min.x)*la[0],b.min.y+(b.max.y-b.min.y)*la[1],b.min.z+(b.max.z-b.min.z)*la[2]); g.add(L); g.userData.d=d; g.userData.L=L;}
     scene.add(g); G.push(g); box.expandByObject(g);});
   ready=true; setT(T0);}
-let userCam=false; controls.addEventListener('start',()=>{userCam=true;});
+let userCam=false; controls.addEventListener('start',()=>{userCam=true; if(centerOn){centerOn=false; document.getElementById('centerCb').checked=false; try{localStorage.setItem('ra-center','0');}catch(e){}}});
 function camAt(t){const bb=box.clone(); bb.max.y+=20; const c=bb.getCenter(new THREE.Vector3()), sz=bb.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
-  const u=ease((t-START[7])/SEQ[7][0]), z=-0.75+1.65*u; camera.position.set(c.x-r*1.0,c.y-r*1.55,c.z+r*z*1.1); controls.target.copy(c);}
+  const u=ease((t-START[8])/SEQ[8][0]), z=-0.75+1.65*u; camera.position.set(c.x-r*1.0,c.y-r*1.55,c.z+r*z*1.1); controls.target.copy(c);}
 let cur=-1;
 function setT(t){ if(ready){
   PARTS.forEach((p,i)=>{const g=G[i]; const si=SEQ.findIndex(s=>s[1]===i); const f=ease((t-START[si])/(SEQ[si][0]*0.85)); g.visible=t>START[si]+1e-6||si===0;
     const off=new THREE.Vector3(p.fl[0]*(1-f),p.fl[1]*(1-f),p.fl[2]*(1-f));
-    if(p.hinge){const fo=ease((t-START[10])/SEQ[10][0]); const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI*(1-fo)); const A=new THREE.Vector3(...HX);
+    if(p.hinge){const fo=ease((t-START[11])/SEQ[11][0]); const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI*(1-fo)); const A=new THREE.Vector3(...HX);
       g.quaternion.copy(q); g.position.copy(A).sub(A.clone().applyQuaternion(q)).add(off);} else g.position.copy(off);
     g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*(1-f); if(s.userData.alt) s.visible=logoOn; else if(s.userData.main&&p.alt) s.visible=!logoOn;});
-    if(g.userData.d){const fl=(t-START[si])/SEQ[si][0]; g.userData.d.className='plab'+(fl>0&&fl<1?' new':''); g.userData.L.visible=g.visible;}});
-  if(!userCam) camAt(t);}
+    if(g.userData.d){const fl=(t-START[si])/SEQ[si][0]; g.userData.d.className='plab'+(fl>0&&fl<1?' new':''); g.userData.L.visible=g.visible&&namesOn;}});
+  if(centerOn||!userCam) camAt(t);}
   let k=0;for(let i=0;i<SEQ.length;i++)if(t>=START[i]-1e-6)k=i; if(k!==cur){cur=k;renderSteps();}
   document.getElementById('slider').value=Math.round(t/TOTAL*1000);document.getElementById('tm').textContent=t.toFixed(1)+' / '+TOTAL.toFixed(1)+' s';}
 function renderSteps(){const st=TX[lang].steps; document.getElementById('cap').innerHTML='<b>'+(cur+1)+'/'+SEQ.length+'</b> '+st[cur];
@@ -145,7 +150,7 @@ function renderSteps(){const st=TX[lang].steps; document.getElementById('cap').i
 function buildList(){const t=TX[lang], ol=document.getElementById('steps'); ol.innerHTML='';
   t.steps.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span>'+s+'</span>';li.onclick=()=>{playing=false;updBtn();T0=START[i]+SEQ[i][0]-0.001;setT(T0);};ol.appendChild(li);});
   document.getElementById('ttl').textContent=t.ttl;document.getElementById('tag').textContent=t.tag;document.getElementById('note').textContent=t.note;document.title=t.ttl;
-  document.getElementById('matBadge').innerHTML=t.badge; document.getElementById('logoTxt').textContent=t.logo; document.getElementById('logoCb').checked=logoOn; document.documentElement.lang=lang;
+  document.getElementById('matBadge').innerHTML=t.badge; document.getElementById('logoTxt').textContent=t.logo; document.getElementById('logoCb').checked=logoOn; document.getElementById('namesTxt').textContent=t.names; document.getElementById('namesCb').checked=namesOn; document.getElementById('centerTxt').textContent=t.center; document.getElementById('centerCb').checked=centerOn; document.documentElement.lang=lang;
   document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en'));document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
   updBtn();cur=-1;setT(T0);}
 let T0=0,playing=false,last=0,recorder=null;
@@ -161,6 +166,8 @@ document.getElementById('rec').onclick=()=>{if(recorder||!canvas.captureStream||
   recorder.onstop=()=>{const ext=(recorder.mimeType||'').includes('mp4')?'mp4':'webm';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks,{type:recorder.mimeType}));a.download='RA_assembly.'+ext;document.body.appendChild(a);a.click();a.remove();recorder=null;updBtn();};
   T0=0;userCam=false;setT(0);playing=true;last=performance.now();recorder.start();updBtn();};
 function setLang(l){lang=l;try{localStorage.setItem('fr4-lang',l);}catch(e){}buildList();}
+document.getElementById('namesCb').onchange=e=>{namesOn=e.target.checked; try{localStorage.setItem('ra-names',namesOn?'1':'0');}catch(x){} setT(T0);};
+document.getElementById('centerCb').onchange=e=>{centerOn=e.target.checked; if(centerOn) userCam=false; try{localStorage.setItem('ra-center',centerOn?'1':'0');}catch(x){} setT(T0);};
 document.getElementById('logoCb').onchange=e=>{logoOn=e.target.checked; try{localStorage.setItem('ra3logo',logoOn?'1':'0');}catch(x){} setT(T0);};
 document.getElementById('langEn').onclick=()=>setLang('en');document.getElementById('langRu').onclick=()=>setLang('ru');
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);labelRenderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();controls.handleResize&&controls.handleResize();}

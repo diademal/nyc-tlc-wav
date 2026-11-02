@@ -57,6 +57,7 @@ ol li.on .n{color:var(--accent);font-weight:600}
         <input type="range" id="slider" min="0" max="1000" value="0" aria-label="Timeline">
         <span class="t" id="tm"></span>
         <button type="button" id="rec"></button>
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--accent);border-radius:4px;padding:6px 10px;min-height:36px"><input type="checkbox" id="logoCb"><span id="logoTxt"></span></label>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px"><ol id="steps"></ol><div class="note" id="note"></div></div>
@@ -70,30 +71,34 @@ const PARTS=[
  {k:'RA4',ids:['RA4'],c:0xd98a4e,fl:[0,0,-12],lab:'RA-4',la:[0.5,0.0,0.3]},
  {k:'B4',gen:'b4',c:0x2f3a44,fl:[0,0,6],lab:''},
  {k:'RA5',ids:['RA5'],c:0x7cc48a,fl:[0,0,-12],lab:'RA-5',la:[0.8,0.7,0.1]},
- {k:'RA3',ids:['RA3'],c:0x8fb4d6,fl:[0,0,-14],lab:'RA-3',la:[-0.02,0.4,0.1]},
+ {k:'RA3',ids:['RA3'],alt:['RA3L'],c:0x8fb4d6,fl:[0,0,-14],lab:'RA-3',la:[-0.02,0.4,0.1]},
+ {k:'RA8',ids:['RA8a','RA8b'],c:0xc9b24a,fl:[0,0,-10],lab:'RA-8',la:[1.0,0.5,0.0],side:6},
+ {k:'B8',gen:'b8',c:0x2f3a44,fl:[0,0,-6],lab:''},
  {k:'RA2',ids:['T_RA2'],c:0xd2b27a,fl:[0,0,12],lab:'RA-2',la:[0.2,1.02,0.6]},
  {k:'RA1',ids:['T_RA1'],c:0x9aa3ab,fl:[0,0,12],lab:'RA-1',la:[0.7,0.6,1.0],hinge:true},
  {k:'HB',ids:['T_Bolt1','T_Spacer1','T_Bolt2','T_Spacer2'],c:0x3a3f45,fl:[0,0,0],side:5,lab:''}];
 const HX=[0,22.0,1.21875];                       // RA-1 / RA-2 hinge axis (along X), inches
 const B4=[[2.25,0.75],[3.75,0.75],[30.25,0.75],[31.75,0.75]];
+const B8=[[-0.375,13.5],[-0.375,17.125],[34.375,13.5],[34.375,17.125]];   // RA-8 flange bolts 8 mm through RA-3 (z -3.125 .. -3.25)
 // timeline: [duration, part index | 'fold']
-const SEQ=[[1.8,0],[2.2,1],[1.6,2],[2.2,3],[2.2,4],[2.2,5],[2.2,6],[1.6,7],[2.8,'fold']];
+const SEQ=[[1.8,0],[2.2,1],[1.6,2],[2.2,3],[2.2,4],[2.0,5],[1.6,6],[2.2,7],[2.2,8],[1.6,9],[2.8,'fold']];
 const START=[];let acc=0;for(const s of SEQ){START.push(acc);acc+=s[0];} const TOTAL=acc+1.2;
-const TX={en:{ttl:'Ramp — assembly video',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-2 → RA-1',play:'▶ Play',pause:'❚❚ Pause',rec:'● Record video',recing:'● Recording…',
+const TX={en:{ttl:'Ramp — assembly video',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-8 → RA-2 → RA-1',play:'▶ Play',logo:'RA-3 with logo',pause:'❚❚ Pause',rec:'● Record video',recing:'● Recording…',
   note:'Mouse: rotate, wheel: zoom. Click a step to jump to it. “Record video” saves an .mp4 clip.',
   steps:['RA-7 — the box: plate on top, side walls with lips, front wall.','RA-4 goes into RA-7 at the back edge: 2⅛ side with 6 squares against the plate on the back hole row, 2¼ side at the bottom pointing in.',
    'RA-4 is bolted to RA-7 — 4 × 8 mm bolts (2¼, 3¾, 30¼, 31¾).','RA-5 goes into RA-7: fork tab down, 2¾ side up against the plate, whiskers to the front wall.',
-   'RA-3 comes up under the RA-7 side lips, ears and flange up, ears at the back.','RA-2 lies on RA-7, its 6-hole edge on the back hole row.',
+   'RA-3 comes up under the RA-7 side lips, ears and flange up, ears at the back.','RA-8 brackets (2, the right one mirrored) on the RA-3 ends: flange on the two 8 mm holes of the flange side, plate against the end, arc away from the ears.','RA-8 bolted to RA-3 — 2 × 8 mm bolts each.','RA-2 lies on RA-7, its 6-hole edge on the back hole row.',
    'RA-1 joins RA-2 opened (180°) — the hinge ears line up.','Hinge bolts 3/8 + spacers go through the RA-1 and RA-2 ears.','RA-1 folds over onto RA-2 — the ramp is assembled.'],
   badge:'Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b>'},
- ru:{ttl:'Рампа — видео сборки',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-2 → RA-1',play:'▶ Пуск',pause:'❚❚ Пауза',rec:'● Записать видео',recing:'● Идёт запись…',
+ ru:{ttl:'Рампа — видео сборки',tag:'Sienna WAV · RA-7 → RA-4 → RA-5 → RA-3 → RA-8 → RA-2 → RA-1',play:'▶ Пуск',logo:'RA-3 с надписью',pause:'❚❚ Пауза',rec:'● Записать видео',recing:'● Идёт запись…',
   note:'Мышь: вращать, колесо: приблизить. Нажмите на шаг, чтобы перейти к нему. «Записать видео» сохраняет ролик .mp4.',
   steps:['RA-7 — короб: дно сверху, боковины с бортиками, передняя стенка.','RA-4 заходит внутрь RA-7 у заднего края: сторона 2⅛ с 6 квадратами к дну на задний ряд дырок, сторона 2¼ внизу смотрит внутрь.',
    'RA-4 крепится к RA-7 — 4 болта 8 мм (2¼, 3¾, 30¼, 31¾).','RA-5 заходит внутрь RA-7: рогатка внизу, сторона 2¾ вверх к дну, усы к передней стенке.',
-   'RA-3 подходит снизу к бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-2 ложится на RA-7, край с 6 дырками на задний ряд дырок.',
+   'RA-3 подходит снизу к бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-8 (2 шт, правый зеркальный) на торцы RA-3: фланец на две дырки 8 мм со стороны бортика, пластина прижата к торцу, полукруг от ушей.','RA-8 крепится к RA-3 — по 2 болта 8 мм.','RA-2 ложится на RA-7, край с 6 дырками на задний ряд дырок.',
    'RA-1 подходит к RA-2 в открытом виде (180°) — уши шарнира совпадают.','Болты шарнира 3/8 + втулки через уши RA-1 и RA-2.','RA-1 складывается на RA-2 — рампа собрана.'],
   badge:'Металл: <b>алюминий 5052-H32</b> · <b>t = 0.125″ (3.18 мм)</b>'}};
 let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
+let logoOn=false; try{logoOn=localStorage.getItem('ra3logo')==='1';}catch(e){}
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
 const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(34,1,0.05,2000); camera.up.set(0,0,1);
@@ -106,26 +111,31 @@ const G=[]; let box=new THREE.Box3(), ready=false;
 const ease=f=>{f=Math.min(1,Math.max(0,f));return f*f*(3-2*f);};
 function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
   PARTS.forEach(p=>{const g=new THREE.Group(); const mat=new THREE.MeshStandardMaterial({color:p.c,metalness:0.35,roughness:0.5,side:THREE.DoubleSide});
+    if(p.gen==='b8'){B8.forEach(([x,y])=>{const a=new THREE.Mesh(new THREE.CylinderGeometry(0.155,0.155,0.9,20),mat);a.rotation.x=Math.PI/2;a.position.set(x,y,-3.2);g.add(a);
+      const h=new THREE.Mesh(new THREE.CylinderGeometry(0.32,0.32,0.17,24),mat);h.rotation.x=Math.PI/2;h.position.set(x,y,-3.04);g.add(h);
+      const n=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.27,6),mat);n.rotation.x=Math.PI/2;n.position.set(x,y,-3.39);g.add(n);});}
+    (p.alt||[]).forEach(id=>{const r=byId[id]; if(!r) return; const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals();
+      const sub=new THREE.Group(); sub.add(new THREE.Mesh(geo,mat)); r.E.forEach(e=>sub.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))),edgeMat))); sub.userData.alt=true; g.add(sub);});
     if(p.gen==='b4'){B4.forEach(([x,y])=>{const a=new THREE.Mesh(new THREE.CylinderGeometry(0.155,0.155,1.0,20),mat);a.rotation.x=Math.PI/2;a.position.set(x,y,-0.05);g.add(a);
       const h=new THREE.Mesh(new THREE.CylinderGeometry(0.32,0.32,0.17,24),mat);h.rotation.x=Math.PI/2;h.position.set(x,y,0.215);g.add(h);
       const n=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,0.27,6),mat);n.rotation.x=Math.PI/2;n.position.set(x,y,-0.39);g.add(n);});}
     (p.ids||[]).forEach(id=>{const r=byId[id]; if(!r) return; const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals();
       const sub=new THREE.Group(); sub.add(new THREE.Mesh(geo,mat)); r.E.forEach(e=>sub.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))),edgeMat)));
-      if(p.side){const cx=r.V.reduce((s,v)=>s+v[0],0)/r.V.length; sub.userData.side=cx>17?p.side:-p.side;} g.add(sub);});
+      if(p.side){const cx=r.V.reduce((s,v)=>s+v[0],0)/r.V.length; sub.userData.side=cx>17?p.side:-p.side;} sub.userData.main=true; g.add(sub);});
     if(p.lab){const b=new THREE.Box3().setFromObject(g),la=p.la; const d=document.createElement('div'); d.className='plab'; d.textContent=p.lab; const L=new THREE.CSS2DObject(d);
       L.position.set(b.min.x+(b.max.x-b.min.x)*la[0],b.min.y+(b.max.y-b.min.y)*la[1],b.min.z+(b.max.z-b.min.z)*la[2]); g.add(L); g.userData.d=d; g.userData.L=L;}
     scene.add(g); G.push(g); box.expandByObject(g);});
   ready=true; setT(T0);}
 let userCam=false; controls.addEventListener('start',()=>{userCam=true;});
 function camAt(t){const bb=box.clone(); bb.max.y+=20; const c=bb.getCenter(new THREE.Vector3()), sz=bb.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
-  const u=ease((t-START[5])/SEQ[5][0]), z=-0.75+1.65*u; camera.position.set(c.x-r*1.0,c.y-r*1.55,c.z+r*z*1.1); controls.target.copy(c);}
+  const u=ease((t-START[7])/SEQ[7][0]), z=-0.75+1.65*u; camera.position.set(c.x-r*1.0,c.y-r*1.55,c.z+r*z*1.1); controls.target.copy(c);}
 let cur=-1;
 function setT(t){ if(ready){
   PARTS.forEach((p,i)=>{const g=G[i]; const si=SEQ.findIndex(s=>s[1]===i); const f=ease((t-START[si])/(SEQ[si][0]*0.85)); g.visible=t>START[si]+1e-6||si===0;
     const off=new THREE.Vector3(p.fl[0]*(1-f),p.fl[1]*(1-f),p.fl[2]*(1-f));
-    if(p.hinge){const fo=ease((t-START[8])/SEQ[8][0]); const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI*(1-fo)); const A=new THREE.Vector3(...HX);
+    if(p.hinge){const fo=ease((t-START[10])/SEQ[10][0]); const q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),-Math.PI*(1-fo)); const A=new THREE.Vector3(...HX);
       g.quaternion.copy(q); g.position.copy(A).sub(A.clone().applyQuaternion(q)).add(off);} else g.position.copy(off);
-    g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*(1-f);});
+    g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*(1-f); if(s.userData.alt) s.visible=logoOn; else if(s.userData.main&&p.alt) s.visible=!logoOn;});
     if(g.userData.d){const fl=(t-START[si])/SEQ[si][0]; g.userData.d.className='plab'+(fl>0&&fl<1?' new':''); g.userData.L.visible=g.visible;}});
   if(!userCam) camAt(t);}
   let k=0;for(let i=0;i<SEQ.length;i++)if(t>=START[i]-1e-6)k=i; if(k!==cur){cur=k;renderSteps();}
@@ -135,7 +145,7 @@ function renderSteps(){const st=TX[lang].steps; document.getElementById('cap').i
 function buildList(){const t=TX[lang], ol=document.getElementById('steps'); ol.innerHTML='';
   t.steps.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML='<span class="n">'+(i+1)+'</span><span>'+s+'</span>';li.onclick=()=>{playing=false;updBtn();T0=START[i]+SEQ[i][0]-0.001;setT(T0);};ol.appendChild(li);});
   document.getElementById('ttl').textContent=t.ttl;document.getElementById('tag').textContent=t.tag;document.getElementById('note').textContent=t.note;document.title=t.ttl;
-  document.getElementById('matBadge').innerHTML=t.badge; document.documentElement.lang=lang;
+  document.getElementById('matBadge').innerHTML=t.badge; document.getElementById('logoTxt').textContent=t.logo; document.getElementById('logoCb').checked=logoOn; document.documentElement.lang=lang;
   document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en'));document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
   updBtn();cur=-1;setT(T0);}
 let T0=0,playing=false,last=0,recorder=null;
@@ -151,6 +161,7 @@ document.getElementById('rec').onclick=()=>{if(recorder||!canvas.captureStream||
   recorder.onstop=()=>{const ext=(recorder.mimeType||'').includes('mp4')?'mp4':'webm';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks,{type:recorder.mimeType}));a.download='RA_assembly.'+ext;document.body.appendChild(a);a.click();a.remove();recorder=null;updBtn();};
   T0=0;userCam=false;setT(0);playing=true;last=performance.now();recorder.start();updBtn();};
 function setLang(l){lang=l;try{localStorage.setItem('fr4-lang',l);}catch(e){}buildList();}
+document.getElementById('logoCb').onchange=e=>{logoOn=e.target.checked; try{localStorage.setItem('ra3logo',logoOn?'1':'0');}catch(x){} setT(T0);};
 document.getElementById('langEn').onclick=()=>setLang('en');document.getElementById('langRu').onclick=()=>setLang('ru');
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);labelRenderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();controls.handleResize&&controls.handleResize();}
 new ResizeObserver(resize).observe(viewer);resize();

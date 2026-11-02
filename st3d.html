@@ -103,7 +103,7 @@ const TX={ru:{tag:'Страт Sienna WAV · размеры в дюймах · г
  en:{tag:'Sienna WAV strut · inches · finished part (outside dimensions)',mat:'Material: hot-rolled steel 11 ga · thickness t = 0.1196″ (3.04 mm) · tube ST-3: 3/16″ wall',
   hint:'Drag to rotate, wheel / pinch to zoom',m3d:'3D finished',mfl:'Flat pattern',reset:'Reset view',dimsOn:'Hide dimensions',dimsOff:'Show dimensions',
   spec:'Part',files:'Files',qty:'Qty per vehicle',flat:'Flat',bends:'Bends',material:'Material',all:'All strut parts',nofiles:'Drawing and DXF — later'}};
-let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 const P=((new URLSearchParams(location.search).get('p'))||'ALL').toUpperCase(); const ALL=P==='ALL'||P==='ST';
 let D=null, mode='3d', dimsOn=true; const DS={};
 const BL={'ST-1':['① 90°','② 90°'],'RA-1':['① 90°','② 90°'],'RA-2':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-3':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-4':['① 90° ↓','② 90° ↓'],'RA-5':['① 90° ↑'],'RA-6':['① 90°','② 90°'],'RA-8':['① 90°','② 90°']};
@@ -187,5 +187,6 @@ if(ALL){Promise.all(Object.keys(INFO).map(k=>fetch('drawings/MFG/'+k+'_3d.json')
 else fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j;  texts(); build();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Steel 11 ga</b> · <b>t = 0.1196″ (3.04 mm)</b></div>
+<script src="video-card.js"></script>
 </body>
 </html>

@@ -53,7 +53,6 @@ iframe{flex:1;width:100%;border:0;display:block;background:var(--bg)}
   <button class="pick" id="pick" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu"><span class="cur" id="cur">FR-1</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <button class="step" id="next" type="button" aria-label="Next part"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
   <div class="mode" id="modeBox" role="group" aria-label="View"><button type="button" id="m3d" aria-pressed="true">3D</button><button type="button" id="mflat" aria-pressed="false">Flat</button></div>
-  <div class="mode" id="subBox" role="group" aria-label="3D view" hidden><button type="button" id="sModel" aria-pressed="true">Модель</button><button type="button" id="sVideo" aria-pressed="false">▶ Видео</button></div>
   <div class="menu" id="menu" hidden></div>
 </div>
 <iframe id="view" title="Part 3D view"></iframe>
@@ -98,13 +97,7 @@ const PARTS = [
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20261102-4';
-// video (how the part is made / assembled) shown inside the 3D tab
-const VIDEO = {};
-['1','2','3','4','5','7','8','10'].forEach(n => VIDEO['FR-'+n] = 'fr'+n+'-bend.html?embed=1&autoplay=1');
-['FR-6','FR-9','FF-4','RA-1','RA-2','RA-3','RA-4','RA-5','RA-6','RA-7','RA-8','ST-1','ST-2','ST-3'].forEach(k => VIDEO[k] = 'bend.html?p='+k+'&embed=1&autoplay=1');
-VIDEO['FF-1'] = 'ff1-bend.html?embed=1&autoplay=1'; ['FF-3','FF3-1','FF3-2'].forEach(k => VIDEO[k] = 'ff3-bend.html?embed=1&autoplay=1');
-VIDEO['RA'] = VIDEO['RA Assembly'] = 'ra-asm.html?embed=1&autoplay=1';
+const VER = '20261102-5';
 const NOFLAT = f => /^(cost|ra)\.html/.test(f);   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
@@ -117,15 +110,15 @@ groups.forEach(g => {
 });
 function openMenu(on){ menu.hidden = !on; pick.setAttribute('aria-expanded', String(on)); if (on) (menu.querySelector('[aria-current]') || menu.querySelector('a')).focus(); }
 pick.addEventListener('click', () => openMenu(menu.hidden));
-menu.addEventListener('click', e => { const a=e.target.closest('a'); if (!a) return; openMenu(false); const nm=a.textContent; const it=PARTS.find(x=>x[1]===nm); if (mode()==='flat' && it && !NOFLAT(it[2])) { e.preventDefault(); location.hash = nm + '/flat'; } else if (mode()==='video' && VIDEO[nm]) { e.preventDefault(); location.hash = nm + '/video'; } });
+menu.addEventListener('click', e => { const a=e.target.closest('a'); if (!a) return; openMenu(false); const nm=a.textContent; const it=PARTS.find(x=>x[1]===nm); if (mode()==='flat' && it && !NOFLAT(it[2])) { e.preventDefault(); location.hash = nm + '/flat'; } });
 document.addEventListener('click', e => { if (!menu.hidden && !e.target.closest('.menu') && !e.target.closest('#pick')) openMenu(false); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { openMenu(false); pick.focus(); } });
-function mode(){ const h=decodeURIComponent(location.hash); return /\/flat$/i.test(h) ? 'flat' : /\/video$/i.test(h) ? 'video' : '3d'; }
+function mode(){ return /\/flat$/i.test(decodeURIComponent(location.hash)) ? 'flat' : '3d'; }
 function current(){
-  const want = decodeURIComponent(location.hash.slice(1)).replace(/\/(flat|video)$/i,'').toUpperCase();
+  const want = decodeURIComponent(location.hash.slice(1)).replace(/\/flat$/i,'').toUpperCase();
   return PARTS.findIndex(p => p[1].toUpperCase() === want);
 }
-function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1] + (mode()==='flat' && !NOFLAT(PARTS[i][2]) ? '/flat' : (mode()==='video' && VIDEO[PARTS[i][1]] ? '/video' : '')); }
+function go(d){ let i = current(); if (i < 0) i = PARTS.findIndex(p => p[1] === DEFAULT); i = (i + d + PARTS.length) % PARTS.length; location.hash = PARTS[i][1] + (mode()==='flat' && !NOFLAT(PARTS[i][2]) ? '/flat' : ''); }
 document.getElementById('prev').addEventListener('click', () => go(-1));
 document.getElementById('next').addEventListener('click', () => go(1));
 function show(){
@@ -133,17 +126,15 @@ function show(){
   const part = PARTS[i];
   cur.textContent = part[1];
   menu.querySelectorAll('a').forEach(a => { if (a.textContent === part[1]) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  let md = NOFLAT(part[2]) ? '3d' : mode(); if (md==='video' && !VIDEO[part[1]]) md = '3d';
+  const md = NOFLAT(part[2]) ? '3d' : mode();
   document.getElementById('modeBox').hidden = NOFLAT(part[2]);
-  document.getElementById('m3d').setAttribute('aria-pressed', String(md!=='flat')); document.getElementById('mflat').setAttribute('aria-pressed', String(md==='flat'));
-  const sb = document.getElementById('subBox'); sb.hidden = !(VIDEO[part[1]] && md!=='flat');
-  document.getElementById('sModel').setAttribute('aria-pressed', String(md==='3d')); document.getElementById('sVideo').setAttribute('aria-pressed', String(md==='video'));
-  const src = md==='flat' ? 'flat.html?p=' + encodeURIComponent(part[1]) : md==='video' ? VIDEO[part[1]] : part[2];
+  document.getElementById('m3d').setAttribute('aria-pressed', String(md==='3d')); document.getElementById('mflat').setAttribute('aria-pressed', String(md==='flat'));
+  const src = md==='flat' ? 'flat.html?p=' + encodeURIComponent(part[1]) : part[2];
   if (view.dataset.src !== src) { view.dataset.src = src; view.src = src + (src.includes('?') ? '&' : '?') + 'v=' + VER; }
   document.title = part[1] + ' · Sienna WAV Frame Parts';
 }
-function setMode(m){ let i=current(); if(i<0) i=PARTS.findIndex(x=>x[1]===DEFAULT); location.hash = PARTS[i][1] + (m==='flat'?'/flat':m==='video'?'/video':''); }
-document.getElementById('m3d').addEventListener('click',()=>setMode('3d')); document.getElementById('sModel').addEventListener('click',()=>setMode('3d')); document.getElementById('sVideo').addEventListener('click',()=>setMode('video')); document.getElementById('mflat').addEventListener('click',()=>setMode('flat'));
+function setMode(m){ let i=current(); if(i<0) i=PARTS.findIndex(x=>x[1]===DEFAULT); location.hash = PARTS[i][1] + (m==='flat'?'/flat':''); }
+document.getElementById('m3d').addEventListener('click',()=>setMode('3d')); document.getElementById('mflat').addEventListener('click',()=>setMode('flat'));
 window.addEventListener('hashchange', show);
 show();
 </script>

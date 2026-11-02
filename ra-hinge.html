@@ -146,7 +146,7 @@ const TX={ru:{ttl:'Блок RA-1 + RA-2 — шарнир (плеер откры�
   I:['Closed (0°): RA-2 lies on the RA-1 ears, RA-2 ears outside the RA-1 ears.','Hinge axis: 2 bolts 3/8 through the RA-1 ears (half circle R 1 3/32) and the RA-2 ears, spacers between the ears.',
      'Open (180°): plates flush, the ears continue each other.','Checked in FreeCAD over 0…180°: no clash.'],
   asm:'Ramp assembly 3D',parts:'All ramp parts'}};
-let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 let labOn=true, ang=0, playing=false, dir=1, speed=1; const on={}; PARTS.forEach(p=>on[p.k]=true);
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));

@@ -817,7 +817,7 @@ const TX={ru:{ttl:'FR-10 · план гибки и сварки',tag:'гнуты
 // timeline: [duration s, what]
 const SEQ=[[1.6,'hold'],[1.8,'b1',0],[1.8,'b1',1],[1.8,'b1',2],[1.8,'b2',0],[1.8,'b2',2],[1.8,'b2',1],[2.6,'ins'],[2.0,'ring'],[2.2,'weld']];
 const START=[];let acc=0;for(const s of SEQ){START.push(acc);acc+=s[0];} const TOTAL=acc+1.0;
-let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 (function(){
 const viewer=document.getElementById('viewer');
 if(!window.THREE||!THREE.TrackballControls){viewer.innerHTML='<div class="err">3D view failed to load.</div>';return;}

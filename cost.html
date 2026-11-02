@@ -109,7 +109,7 @@ for(const d of PROD){ if(d.kind==='tube') continue; const u=g(d.grp,d.mat); cons
 const tubeSet=PROD.filter(d=>d.mat==='tube3').reduce((s,d)=>s+d.cut+KERF,0);           // one side
 const rectPcs=PROD.filter(d=>d.mat==='rect21').reduce((s,d)=>s+d.qty,0), rectLen=(PROD.find(d=>d.mat==='rect21')||{cut:0}).cut+KERF;
 const domSide=PROD.filter(d=>d.mat==='dom').reduce((s,d)=>s+d.cut*d.qty+KERF,0);   // FR-4 tube + FR-10 tube, one side
-let lang='ru', lvl='bulk'; try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en', lvl='bulk'; try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 const price={}; M.forEach(m=>price[m.k]={bulk:m.bulk,retail:m.retail});
 const $=v=>'$'+v.toLocaleString('en-US',{maximumFractionDigits:0}), $2=v=>'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}), n1=v=>v.toLocaleString('en-US',{maximumFractionDigits:1});
 function calc(){

@@ -135,7 +135,7 @@ const TX={ru:{ttl:'Рампа — блок RA-1 + RA-2: как раскрыва�
   H:['RA-2 sits on the RA-7 box lid (ears up). Folded, RA-1 lies on top of RA-2.','3/8 bolts + spacers through the RA-1 and RA-2 ears form the hinge — axis along X.',
      'Opening: RA-1 rotates 180° about the bolt axis and lands as a continuation of RA-2 (slider or ▶).','The RA-7 box is shown for reference and can be hidden.'],
   D:{len2:'RA-2 — length (Y)',len1:'RA-1 — length (Y)',w:'Width (X)',axis:'Hinge axis: Y / Z',reach:'RA-1 reach at 180° (from RA-2 back edge)',tip:'RA-1 edge now: Y / Z'}}};
-let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 let labOn=true, boxOn=true, axisOn=true, playing=false, dir=1, ang=0, speed=1;
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));

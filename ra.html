@@ -58,7 +58,7 @@ const TX={ru:{ttl:'Рампа RA · Sienna WAV',mat:'Металл: алюмин�
  en:{ttl:'Ramp RA · Sienna WAV',mat:'Material: aluminum 5052-H32 sheet <b>t = 0.125″ (1/8″, 3.18 mm)</b> — all ramp parts',sub:'Bends: inside radius R = t, K = 0.44; drawing dimensions are outside dimensions of the bent part; the flat pattern is calculated.',
   qty:'per vehicle',flat:'flat',bends:'bends',pdf:'Drawing (PDF)',v3d:'3D part',cut:'DXF for laser',ref:'Reference DXF (bends + material)',zip:'Drawing + DXF (ZIP)',
   foot:'Inches. Drawings and DXF: RA-1, RA-2, RA-4, RA-7 — 2026-11-02, others — 2026-10-31. Some ramp details are still open (see the project list).'}};
-let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 const want=(new URLSearchParams(location.search).get('p')||'').toUpperCase();
 function render(){
   const t=TX[lang]; document.getElementById('ttl').textContent=t.ttl; document.documentElement.lang=lang;

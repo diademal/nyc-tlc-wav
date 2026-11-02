@@ -2,11 +2,11 @@
 (function(){
   const lang = () => { try { return localStorage.getItem('fr4-lang') || 'en'; } catch(e) { return 'en'; } };
   function badge(){ const b = document.getElementById('matBadge'); if (!b) return;
-    if (!b.dataset.src) b.dataset.src = b.innerHTML;
+    if (!b.dataset.src || (b.dataset.out && b.innerHTML !== b.dataset.out)) b.dataset.src = b.innerHTML;
     let h = b.dataset.src; const ru = lang() === 'ru';
     h = h.replace(/Металл\s*\/\s*Material:/, ru ? 'Металл:' : 'Material:').replace(/;\s*трубы\s*\/\s*tubes:/, ru ? '; трубы:' : '; tubes:');
-    if (ru) h = h.replace(/Aluminum/g,'Алюминий').replace(/HR steel/g,'Сталь г/к').replace(/steel tube/g,'стальная труба').replace(/square tube/g,'квадратная труба').replace(/\bwall\b/g,'стенка').replace(/(\d) mm\)/g,'$1 мм)');
-    if (b.innerHTML !== h) b.innerHTML = h; }
+    if (ru) h = h.replace(/Aluminum/g,'Алюминий').replace(/HR steel/g,'Сталь г/к').replace(/Stainless 304, brushed/g,'Нержавейка 304, шлифованная').replace(/steel tube/g,'стальная труба').replace(/square tube/g,'квадратная труба').replace(/\bwall\b/g,'стенка').replace(/(\d) mm\)/g,'$1 мм)');
+    if (b.innerHTML !== h) b.innerHTML = h; b.dataset.out = h; }
   // declutter: leaf label elements inside #labels (CSS2D); shift overlapping ones down in screen space
   function leafs(){ const root = document.getElementById('labels'); if (!root) return [];
     return [...root.querySelectorAll('*')].filter(e => !e.children.length && e.textContent.trim() && e.offsetParent !== null); }

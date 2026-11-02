@@ -11,7 +11,7 @@
   const V = {};
   ['1','2','3','4','5','7','8','10'].forEach(n => V['FR-'+n] = 'fr'+n+'-bend.html');
   ['FR-6','FR-9','FF-4','RA-1','RA-2','RA-3','RA-4','RA-5','RA-6','RA-7','RA-8','ST-1','ST-2','ST-3'].forEach(k => V[k] = 'bend.html?p='+k);
-  V['FF-1'] = 'ff1-bend.html'; V['RA-3L'] = 'bend.html?p=RA-3L'; V['RA-9'] = 'bend.html?p=RA-9'; ['FF-3','FF3-1','FF3-2'].forEach(k => V[k] = 'ff3-bend.html'); V['RA'] = 'ra-video.html';
+  V['FF-1'] = 'ff1-bend.html'; V['RA-3L'] = 'bend.html?p=RA-3L'; V['RA-3A'] = 'bend.html?p=RA-3A'; V['RA-3B'] = 'bend.html?p=RA-3B'; V['RA-9'] = 'bend.html?p=RA-9'; ['FF-3','FF3-1','FF3-2'].forEach(k => V[k] = 'ff3-bend.html'); V['RA'] = 'ra-video.html';
   const src = V[part]; if (!src) return;
   const T = {en: part === 'RA' ? 'Assembly video — how the ramp goes together' : 'Video — how the part is made', ru: part === 'RA' ? 'Видео сборки — как собирается рампа' : 'Видео — как делается деталь'};
   const lang = () => { try { return localStorage.getItem('fr4-lang') || 'en'; } catch(e) { return 'en'; } };

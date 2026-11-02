@@ -76,7 +76,7 @@ function select(){
   if(P==='FRAME'){add('FF',false);add('FR',false);add('FR',true);}
   else if(P==='RA'){add('RA',false);}
   else if(P==='ST'){add('ST',false);}
-  else if(P==='RA ASSEMBLY'){['RA-1','RA-2','RA-3','RA-3L','RA-3A','RA-3B','RA-9','RA-4','RA-5','RA-7','RA-8'].forEach(n=>DATA.filter(d=>d.part===n).forEach(d=>out.push({d,m:false,part:n})));}
+  else if(P==='RA ASSEMBLY'){['RA-1','RA-2','RA-3','RA-3A','RA-3B','RA-9','RA-4','RA-5','RA-7','RA-8'].forEach(n=>DATA.filter(d=>d.part===n).forEach(d=>out.push({d,m:false,part:n})));}
   else if(P==='RA-1+2 PLAYER'||P==='RA-1+2 HINGE'){['RA-1','RA-2'].forEach(n=>DATA.filter(d=>d.part===n).forEach(d=>out.push({d,m:false,part:n})));}
   else if(P==='FR'||P==='FL'||P==='FF'){ if(P==='FL')add('FR',true); else add(P,false);}
   else if(P.startsWith('FL-')){const n='FR-'+P.slice(3); DATA.filter(d=>d.part===n).forEach(d=>out.push({d,m:true,part:P}));}

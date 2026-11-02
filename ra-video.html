@@ -58,7 +58,7 @@ ol li.on .n{color:var(--accent);font-weight:600}
         <input type="range" id="slider" min="0" max="1000" value="0" aria-label="Timeline">
         <span class="t" id="tm"></span>
         <button type="button" id="rec"></button>
-        <label class="chk"><span id="logoTxt"></span> <select id="logoSel"><option value="RA3">RA-3</option><option value="RA3L">RA-3L</option><option value="RA3A">RA-3A</option><option value="RA3B">RA-3B</option></select></label>
+        <label class="chk"><span id="logoTxt"></span> <select id="logoSel"><option value="RA3A">RA-3A</option><option value="RA3B">RA-3B</option></select></label>
         <label class="chk"><input type="checkbox" id="namesCb"><span id="namesTxt"></span></label>
         <label class="chk"><input type="checkbox" id="centerCb" checked><span id="centerTxt"></span></label>
       </div>
@@ -74,7 +74,7 @@ const PARTS=[
  {k:'RA4',ids:['RA4'],c:0xd98a4e,fl:[0,0,-12],lab:'RA-4',la:[0.5,0.0,0.3]},
  {k:'B4',gen:'b4',c:0x2f3a44,fl:[0,0,6],lab:''},
  {k:'RA5',ids:['RA5'],c:0x7cc48a,fl:[0,0,-12],lab:'RA-5',la:[0.8,0.7,0.1]},
- {k:'RA3',ids:['RA3'],alt:['RA3L','RA3A','RA3B'],c:0x8fb4d6,fl:[0,0,0],lab:'RA-3',la:[-0.02,0.4,0.1],sub3:true},
+ {k:'RA3',ids:['RA3'],alt:['RA3A','RA3B'],c:0x8fb4d6,fl:[0,0,0],lab:'RA-3',la:[-0.02,0.4,0.1],sub3:true},
  {k:'RA9',ids:['RA9'],c:0xe3e7ea,fl:[0,0,6],lab:'RA-9',la:[0.5,0.5,0.0],sub3:true},
  {k:'B9',gen:'b9',c:0x2f3a44,fl:[0,0,-8],lab:'',sub3:true},
  {k:'RA8',ids:['RA8a','RA8b'],c:0xc9b24a,fl:[0,0,-10],lab:'RA-8',la:[1.0,0.5,0.0],side:6},
@@ -106,7 +106,7 @@ const TX={en:{ttl:'Ramp — assembly video',tag:'Sienna WAV · RA-7 → RA-4 →
    'RA-1 подходит к RA-2 в открытом виде (180°) — уши шарнира совпадают.','Болты шарнира 3/8 + втулки через уши RA-1 и RA-2.','RA-1 складывается на RA-2 — рампа собрана.'],
   badge:'Металл: <b>алюминий 5052-H32</b> · <b>t = 0.125″ (3.18 мм)</b>'}};
 let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
-let ra3v='RA3'; try{ra3v=localStorage.getItem('ra3var')||(localStorage.getItem('ra3logo')==='1'?'RA3L':'RA3');}catch(e){} if(!['RA3','RA3L','RA3A','RA3B'].includes(ra3v)) ra3v='RA3';
+let ra3v='RA3A'; try{ra3v=localStorage.getItem('ra3var')||'RA3A';}catch(e){} if(!['RA3A','RA3B'].includes(ra3v)) ra3v='RA3A';
 let namesOn=false, centerOn=true; try{namesOn=localStorage.getItem('ra-names')==='1'; centerOn=localStorage.getItem('ra-center')!=='0';}catch(e){}
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));

@@ -161,5 +161,6 @@ buildList();
 const q=new URLSearchParams(location.search);if(q.get('embed'))document.querySelector('header').style.display='none';
 fetch('drawings/MFG/RA_asm.json?v='+(q.get('v')||'')).then(r=>r.json()).then(D=>{build(D); if(q.get('autoplay')){playing=true;last=performance.now();updBtn();}}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="err">3D data failed to load</div>');});
 </script>
+<script src="site-fix.js"></script>
 </body>
 </html>

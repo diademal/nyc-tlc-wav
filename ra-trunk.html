@@ -247,5 +247,6 @@ document.getElementById('btnLab').onclick=()=>{labOn=!labOn; apply(); texts();};
 texts();
 fetch('drawings/MFG/RA_asm.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
 </script>
+<script src="site-fix.js"></script>
 </body>
 </html>

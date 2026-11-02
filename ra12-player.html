@@ -218,5 +218,6 @@ texts();
 fetch('drawings/MFG/RA_asm.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
+<script src="site-fix.js"></script>
 </body>
 </html>

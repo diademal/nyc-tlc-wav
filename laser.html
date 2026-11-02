@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laser cut sheets</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#e9edf0;--panel:#f6f8f9;--ink:#1b2126;--muted:#5b6670;--line:#c9d1d7;--metal:#dfe5ea;--edge:#26313a;--bend:#0b6bcb;--dim:#c2410c;--dim-bg:#fff4ec;
+  --font:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12171b;--panel:#1a2126;--ink:#e3e8ec;--muted:#95a1ab;--line:#2c353c;--metal:#2a343c;--edge:#cfd8df;--bend:#6cb4ff;--dim:#ff8a4c;--dim-bg:#2a1a10;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171b;--panel:#1a2126;--ink:#e3e8ec;--muted:#95a1ab;--line:#2c353c;--metal:#2a343c;--edge:#cfd8df;--bend:#6cb4ff;--dim:#ff8a4c;--dim-bg:#2a1a10;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;padding:12px 16px 28px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h1{font-size:26px;font-weight:700;margin:0;text-wrap:balance}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.lang{margin-left:auto;display:flex}
+.lang button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:4px 10px;cursor:pointer}
+.lang button:first-child{border-radius:4px 0 0 4px}.lang button:last-child{border-radius:0 4px 4px 0;border-left:0}
+.lang button[aria-pressed="true"]{background:var(--dim);border-color:var(--dim);color:#fff}
+.sum{display:flex;flex-wrap:wrap;gap:8px}
+.sum div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+.sum b{display:block;font-family:var(--mono);font-size:18px;font-variant-numeric:tabular-nums}
+.sum span{font-size:12px;color:var(--muted)}
+.legend{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center}
+.legend i{display:inline-block;width:26px;height:0;border-top:2px dashed var(--bend);vertical-align:middle;margin-right:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card.wide{grid-column:1/-1}
+.card h3{margin:0;font-size:16px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.card h3 .p{font-family:var(--mono);font-size:13px;color:var(--dim)}
+.card h3 .q{margin-left:auto;font-family:var(--mono);font-size:13px;background:var(--dim-bg);color:var(--dim);border:1px solid var(--dim);border-radius:3px;padding:0 6px}
+svg{width:100%;height:auto;display:block}
+svg .m{fill:var(--metal);stroke:var(--edge);stroke-width:1.2;vector-effect:non-scaling-stroke;fill-rule:evenodd}
+svg .b{stroke:var(--bend);stroke-width:1.4;stroke-dasharray:6 4;vector-effect:non-scaling-stroke;fill:none}
+svg .d{stroke:var(--dim);stroke-width:1;vector-effect:non-scaling-stroke;fill:none}
+svg text{fill:var(--dim);font-family:var(--mono);font-size:12px}
+.meta{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:2px 12px}
+.note{font-size:13px;color:var(--ink)}
+.sec{grid-column:1/-1;margin:10px 0 0;font-size:19px;font-weight:700;border-top:2px solid var(--dim);padding-top:8px}
+.planf{width:100%;height:700px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+svg .bl{fill:var(--bend);font-weight:600}
+svg .lt{fill:none;stroke:#e02424;stroke-width:1.6;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+svg .ltx{fill:#e02424;font-weight:600}
+.legend .lt{display:inline-block;width:14px;height:14px;border:2px dashed #e02424;border-radius:50%;vertical-align:middle;margin-right:4px}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.dl a{font:600 12.5px/1 system-ui,sans-serif;padding:7px 10px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);background:var(--panel)}.dl a:hover{border-color:var(--bend)}
+</style>
+<style>
+.sheet img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px;background:#fff}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left}th{color:var(--muted);font-weight:600}
+td.n{font-family:var(--mono);text-align:right}
+.chips{display:flex;flex-wrap:wrap;gap:4px}.chips span{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:3px;padding:1px 6px;background:var(--bg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1 id="ttl"></h1><span class="tag" id="tag"></span>
+    <div class="lang" role="group" aria-label="Language"><button type="button" id="langEn">EN</button><button type="button" id="langRu">RU</button></div></header>
+  <div class="card wide"><div id="intro" class="note"></div><div class="dl"><a id="zip" href="drawings/LASER/Laser_cut_files_1_vehicle.zip" download></a></div></div>
+  <div id="sets" style="display:flex;flex-direction:column;gap:14px"></div>
+  <div class="card wide"><h3 id="tubeH"></h3><table id="tubes"></table><div class="dl"><a href="drawings/LASER/tubes.csv" download>tubes.csv</a></div></div>
+</div>
+<script>
+const TX={en:{ttl:'Laser cut sheets',tag:'Sienna WAV · inches · 1 vehicle set · sheet 48 × 96 in',
+  intro:'Ready-to-cut files: all flat parts of one vehicle placed on standard 48 × 96 in sheets — one steel sheet and one aluminum sheet. Edge margin ½″, gap between parts 0.3″. Give the <b>CUT</b> DXF to the laser shop. The <b>MARKED</b> DXF has extra layers that are not cut: SHEET (sheet outline), MARK (bend-line ticks, etch only), LABEL (part names). Bend allowance is already in every flat (inside radius = t, K = 0.44). For more vehicles repeat the sheets.',
+  zip:'All laser files (ZIP)',sheet:'Sheet',of:'of',parts:'parts',use:'parts area',cut:'DXF to cut',marked:'DXF with marks + labels',pdf:'Layout (PDF)',csv:'Parts list (CSV)',
+  part:'Part',qty:'Qty / vehicle',mat:'Material',len:'Cut length',tubeH:'Tubes — cut list (not on the sheets)',grp:'Parts',steel:'Steel — 11 ga',alu:'Aluminum — 0.125″'},
+ ru:{ttl:'Листы для лазерной резки',tag:'Sienna WAV · дюймы · комплект на 1 машину · лист 48 × 96″',
+  intro:'Готовые файлы для резки: все плоские детали одной машины разложены на стандартные листы 48 × 96″ — один лист стали и один лист алюминия. Отступ от края ½″, зазор между деталями 0.3″. Лазерной компании отдавать <b>CUT</b> DXF. В <b>MARKED</b> DXF есть слои, которые не режутся: SHEET (контур листа), MARK (риски линий гиба — только гравировка), LABEL (названия деталей). Припуск на гиб уже в развертках (внутренний радиус = t, K = 0.44). Для нескольких машин повторить листы.',
+  zip:'Все файлы для лазера (ZIP)',sheet:'Лист',of:'из',parts:'деталей',use:'площадь деталей',cut:'DXF для резки',marked:'DXF с рисками и подписями',pdf:'Раскладка (PDF)',csv:'Список деталей (CSV)',
+  part:'Деталь',qty:'Шт / машина',mat:'Материал',len:'Длина реза',tubeH:'Трубы — резка в размер (не на листах)',grp:'Детали',steel:'Сталь — 11 ga',alu:'Алюминий — 0.125″'}};
+let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
+let L=null;
+function f(v){const w=Math.floor(v+1e-6),r=v-w,e=[[0,''],[.125,'⅛'],[.25,'¼'],[.375,'⅜'],[.5,'½'],[.625,'⅝'],[.75,'¾'],[.875,'⅞']];for(const [x,s] of e){if(Math.abs(r-x)<0.01)return w+(s?' '+s:'')+'″';}return v.toFixed(3)+'″';}
+function render(){const t=TX[lang]; document.documentElement.lang=lang; document.title=t.ttl;
+  ['ttl','tag','tubeH'].forEach(k=>document.getElementById(k).textContent=t[k]); document.getElementById('intro').innerHTML=t.intro; document.getElementById('zip').textContent=t.zip;
+  document.getElementById('langEn').setAttribute('aria-pressed',String(lang==='en')); document.getElementById('langRu').setAttribute('aria-pressed',String(lang==='ru'));
+  if(!L) return; const box=document.getElementById('sets'); box.innerHTML='';
+  for(const [k,v] of Object.entries(L.report)){ const isAl=k.startsWith('AL');
+    for(const sh of v.sheets){const c=document.createElement('div'); c.className='card wide sheet'; const b='drawings/LASER/'+sh.base;
+      c.innerHTML=`<h3><span class="p">${isAl?t.alu:t.steel}</span>${t.sheet} ${sh.sheet} ${t.of} ${sh.of} · 48 × 96″<span class="q">${sh.n} ${t.parts}</span></h3>
+      <div class="meta"><span>${t.mat}: ${lang==='ru'?v.ru:v.mat}</span><span>${t.use} ≈ ${sh.bbox_use}%</span></div>
+      <a href="${b}.pdf" target="_blank" rel="noopener"><img src="${b}.webp" alt="${k} sheet ${sh.sheet}" loading="lazy"></a>
+      <div class="dl"><a href="${b}_CUT.dxf" download>${t.cut}</a><a href="${b}_MARKED.dxf" download>${t.marked}</a><a href="${b}.pdf" target="_blank" rel="noopener">${t.pdf}</a><a href="drawings/LASER/${k}_parts.csv" download>${t.csv}</a></div>
+      <div class="meta">${t.grp}:</div><div class="chips">${Object.entries(v.count).map(([n,q])=>`<span>${n}${q>1?' × '+q:''}</span>`).join('')}</div>`;
+      box.appendChild(c);}}
+  document.getElementById('tubes').innerHTML=`<tr><th>${t.part}</th><th>${t.mat}</th><th>${t.len}</th><th>${t.qty}</th></tr>`+L.tubes.map(r=>`<tr><td>${r[0]}</td><td>${lang==='ru'?r[2]:r[1]}</td><td class="n">${f(r[3])}</td><td class="n">${r[4]}</td></tr>`).join('');}
+function setLang(l){lang=l;try{localStorage.setItem('fr4-lang',l);}catch(e){}render();}
+document.getElementById('langEn').onclick=()=>setLang('en');document.getElementById('langRu').onclick=()=>setLang('ru');
+render(); fetch('drawings/LASER/laser.json?v='+(new URLSearchParams(location.search).get('v')||'')).then(r=>r.json()).then(d=>{L=d;render();});
+</script>
+</body>
+</html>

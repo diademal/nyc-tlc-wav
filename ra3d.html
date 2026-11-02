@@ -108,7 +108,7 @@ const TX={ru:{tag:'Рампа Sienna WAV · размеры в дюймах · г
 let lang='en';try{lang=localStorage.getItem('fr4-lang')||'en';}catch(e){}
 const P=((new URLSearchParams(location.search).get('p'))||'ALL').toUpperCase(); const ALL=P==='ALL'||P==='RA';
 let D=null, mode='3d', dimsOn=true; const DS={};
-const BL={'RA-1':['① 90°','② 90°'],'RA-2':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-3':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-4':['① 90° ↓','② 90° ↑'],'RA-7':['① бортик','② 90° ↓','③ бортик','④ 90° ↓','⑤ 90° ↓'],'RA-5':['① 90° ↑'],'RA-6':['① 90°','② 90°'],'RA-8':['① 90°','② 90°']};
+const BL={'RA-1':['① 90°','② 90°'],'RA-2':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-3':['① 90° ↓','② 90° ↓','③ 90° ↓'],'RA-4':['① 90° ↓','② 90° ↑'],'RA-7':['① 90° ↑','② 90° ↓','③ 90° ↑','④ 90° ↓','⑤ 90° ↓'],'RA-5':['① 90° ↑'],'RA-6':['① 90°','② 90°'],'RA-8':['① 90°','② 90°']};
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
@@ -120,6 +120,10 @@ const labelRenderer=new THREE.CSS2DRenderer(); labelRenderer.domElement.style.po
 const grp=new THREE.Group(), dimG=new THREE.Group(); scene.add(grp, dimG);
 const matAl=new THREE.MeshStandardMaterial({color:0xb9c2ca,metalness:0.35,roughness:0.45,side:THREE.DoubleSide});
 const edgeMat=new THREE.LineBasicMaterial({color:0x2a3138}), dimMat=new THREE.LineBasicMaterial({color:0xc2410c}), bendMat=new THREE.LineDashedMaterial({color:0xd32f2f,dashSize:0.25,gapSize:0.15});
+const FR={'1/8':'⅛','1/4':'¼','3/8':'⅜','1/2':'½','5/8':'⅝','3/4':'¾','7/8':'⅞'};
+function dimTxt(t){ t=t.replace(/(\d+) (\d+\/\d+)/g,(m,w,f)=>FR[f]?w+' '+FR[f]:m).replace(/(^|[^\d ])(\d+\/\d+)/g,(m,p,f)=>p+(FR[f]||f));
+  if(lang==='ru') t=t.replace(' bend to bend',' гиб–гиб').replace(' to bend',' до гиба').replace(' outside',' снаружи').replace(' from X ',' от X ').replace('+ flange','+ борт').replace(/^ear$/,'ухо').replace('slots centred','пазы по центру');
+  return t;}
 function label(txt,cls,pos,parent){const d=document.createElement('div'); d.className=cls; d.textContent=txt; const o=new THREE.CSS2DObject(d); o.position.copy(pos); parent.add(o); return o;}
 function clear(g){while(g.children.length){const c=g.children.pop(); if(c.element&&c.element.remove) c.element.remove(); if(c.geometry) c.geometry.dispose();}}
 function meshFrom(V,F){const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(V.flat(),3)); g.setIndex(F.flat()); g.computeVertexNormals(); return new THREE.Mesh(g,matAl);}
@@ -147,7 +151,7 @@ function build(){
       const off=m.clone().sub(s); off.sub(u.clone().multiplyScalar(off.dot(u)));
       const a=s.clone().add(off), b=e.clone().add(off);
       dimG.add(lineFrom([s.toArray(),a.toArray()],dimMat)); dimG.add(lineFrom([e.toArray(),b.toArray()],dimMat)); dimG.add(lineFrom([a.toArray(),b.toArray()],dimMat));
-      label(d[3],'dim',a.clone().add(b).multiplyScalar(0.5),dimG);});
+      const o=label(dimTxt(d[3]),'dim',a.clone().add(b).multiplyScalar(0.5),dimG); o.element.dataset.en=d[3];});
   } else {
     grp.add(meshFrom(D.fV,D.fF)); D.fE.forEach(e=>grp.add(lineFrom(e,edgeMat)));
     const zt=Math.max(...D.fV.map(v=>v[2]))+0.01;
@@ -167,7 +171,7 @@ function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.set
 new ResizeObserver(resize).observe(viewer); resize();
 (function loop(){requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
 function texts(){const t=TX[lang], i=INFO[P]||{q:1,ru:'',en:''}; document.documentElement.lang=lang;
-  document.getElementById('ttl').textContent=ALL?(lang==='ru'?'Рампа — все детали (раскладка, не сборка)':'Ramp — all parts (layout, not assembled)'):P+' · '+i[lang]; document.getElementById('tag').textContent=t.tag; document.getElementById('mat').textContent=t.mat;
+  document.querySelectorAll('.dim').forEach(e=>{if(e.dataset.en) e.textContent=dimTxt(e.dataset.en);}); document.getElementById('ttl').textContent=ALL?(lang==='ru'?'Рампа — все детали (раскладка, не сборка)':'Ramp — all parts (layout, not assembled)'):P+' · '+i[lang]; document.getElementById('tag').textContent=t.tag; document.getElementById('mat').textContent=t.mat;
   document.getElementById('hint').textContent=t.hint; document.getElementById('m3d').textContent=t.m3d; document.getElementById('mfl').textContent=t.mfl;
   document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnDims').textContent=dimsOn?t.dimsOn:t.dimsOff;
   document.getElementById('hSpec').textContent=t.spec; document.getElementById('hFiles').textContent=t.files;
@@ -189,5 +193,6 @@ else fetch('drawings/MFG/'+P+'_3d.json').then(r=>r.json()).then(j=>{D=j; texts()
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
 <script src="video-card.js"></script>
+<script src="site-fix.js"></script>
 </body>
 </html>

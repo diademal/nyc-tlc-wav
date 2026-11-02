@@ -90,11 +90,15 @@ const PARTS = [
   ['Ramp (RA)', 'RA-6', 'ra3d.html?p=RA-6'],
   ['Ramp (RA)', 'RA-7', 'ra3d.html?p=RA-7'],
   ['Ramp (RA)', 'RA-8', 'ra3d.html?p=RA-8'],
+  ['Strut (ST)', 'ST', 'st3d.html?p=ALL'],
+  ['Strut (ST)', 'ST-1', 'st3d.html?p=ST-1'],
+  ['Strut (ST)', 'ST-2', 'st3d.html?p=ST-2'],
+  ['Strut (ST)', 'ST-3', 'st3d.html?p=ST-3'],
   ['Cost', 'Cost', 'cost.html'],
 ];
 const DEFAULT = 'FR-1';
-const VER = '20261101-3';
-const NOFLAT = f => /^(cost|ra|ra-asm|ra12-player|ra-hinge)\.html/.test(f);   // bump on every upload so browsers load the new pages
+const VER = '20261102-1';
+const NOFLAT = f => /^(cost|ra|ra-asm|ra12-player|ra-hinge|st3d)\.html/.test(f);   // bump on every upload so browsers load the new pages
 const menu = document.getElementById('menu'), pick = document.getElementById('pick'), cur = document.getElementById('cur'), view = document.getElementById('view');
 const groups = [...new Set(PARTS.map(p => p[0]))];
 groups.forEach(g => {

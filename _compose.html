@@ -1,0 +1,28 @@
+<!doctype html><html><body style="margin:0;background:transparent">
+<canvas id="c" width="1100" height="688" style="width:1100px;height:688px"></canvas>
+<script src="vendor/three-bundle.js"></script>
+<script>
+(async()=>{
+const cam=await fetch('_cam.json').then(r=>r.json()); const D=await fetch('drawings/MFG/RA_asm.json').then(r=>r.json());
+const DROP=(new URLSearchParams(location.search).get('drop')||2)*1; const H=cam.H-DROP, TIP=90+Math.asin(H/44.6)*180/Math.PI;
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(1); renderer.setSize(1100,688,false); renderer.setClearColor(0x000000,0);
+const scene=new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xffffff,0x667788,0.9)); const sun=new THREE.DirectionalLight(0xffffff,0.75); sun.position.set(-40,-120,120); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xffffff,0.3); fill.position.set(60,-40,30); scene.add(fill);
+const camera=new THREE.PerspectiveCamera(2*Math.atan(344/cam.f)*180/Math.PI,1100/688,1,5000);
+const m=new THREE.Matrix4(); const R=cam.R; m.set(R[0][0],R[0][1],R[0][2],cam.C[0], R[1][0],R[1][1],R[1][2],cam.C[1], R[2][0],R[2][1],R[2][2],cam.C[2], 0,0,0,1);
+camera.matrixAutoUpdate=false; camera.matrix.copy(m); camera.matrixWorld.copy(m); camera.matrixWorldInverse.copy(m).invert(); camera.updateProjectionMatrix();
+const M=new THREE.Matrix4().set(-1,0,0,17, 0,0,1,4.125, 0,1,0,H+0.375, 0,0,0,1);
+const tipPiv=new THREE.Group(); tipPiv.position.set(0,1,H); scene.add(tipPiv);
+const blk=new THREE.Group(); blk.matrixAutoUpdate=false; blk.matrix.copy(new THREE.Matrix4().makeTranslation(0,-1,-H).multiply(M)); tipPiv.add(blk);
+const hinge=new THREE.Group(); hinge.position.set(0,22.0,1.21875); blk.add(hinge);
+const COL={RA7:0xb9c2ca,RA3:0xa9b4bf,RA5:0x9aa3ab,T_RA2:0xc4ccd3,T_RA1:0xc4ccd3};
+const edge=new THREE.LineBasicMaterial({color:0x3a4148,transparent:true,opacity:0.55});
+D.forEach(r=>{const mat=new THREE.MeshStandardMaterial({color:COL[r.id]||0x3a3f45,metalness:0.55,roughness:0.42,side:THREE.DoubleSide});
+  const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(r.V.flat(),3)); geo.setIndex(r.F.flat()); geo.computeVertexNormals();
+  const g=new THREE.Group(); g.add(new THREE.Mesh(geo,mat)); r.E.forEach(e=>g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(e.map(q=>new THREE.Vector3(q[0],q[1],q[2]))),edge)));
+  if(r.id==='T_RA1'){g.position.set(0,-22.0,-1.21875); hinge.add(g);} else blk.add(g);});
+window.setState=(b,c)=>{tipPiv.rotation.x=b*TIP*Math.PI/180; hinge.rotation.x=-c*Math.PI; scene.updateMatrixWorld(true); renderer.render(scene,camera); return true;};
+window.ready=true;
+})();
+</script></body></html>

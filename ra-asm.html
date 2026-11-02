@@ -105,6 +105,7 @@ header{position:relative}
     <button id="btnExpl" type="button" aria-pressed="false"></button>
     <button id="btnLab" type="button" aria-pressed="true"></button>
     <button id="btnAll" type="button"></button>
+    <button id="btnPlay" type="button" style="border-color:#c2410c;color:#c2410c;font-weight:600"></button>
   </div>
   <div class="parts" id="parts" role="group" aria-label="Parts"></div>
   <div class="spec">
@@ -120,28 +121,30 @@ const PARTS=[
  {k:'RA-7',ids:['RA7'],la:[1.02,0.35,0.5],c:0xb9c2ca,ex:[0,0,0],ru:'Короб (крышка сверху)',en:'Box (lid on top)'},
  {k:'RA-5',ids:['RA5'],la:[0.8,0.7,0.1],c:0x7cc48a,ex:[0,0,-9],ru:'Уголок с усами — внутри RA-7',en:'Angle with whiskers — inside RA-7'},
  {k:'RA-3',ids:['RA3'],la:[-0.02,0.4,0.1],c:0x8fb4d6,ex:[0,0,-16],ru:'Плита под бортиками RA-7',en:'Plate under the RA-7 lips'},
+ {k:'RA-4',ids:['RA4'],la:[0.5,0.0,0.3],c:0xd98a4e,ex:[0,-9,0],ru:'Z-профиль по заднему краю: 2⅛ на крышке, 2¼ внизу наружу',en:'Z-section along the back edge: 2⅛ on the lid, 2¼ at the bottom outward'},
  {k:'RA-2',ids:['T_RA2'],la:[0.2,1.02,0.6],c:0xd2b27a,ex:[0,0,7],ru:'Плита рампы на крышке RA-7',en:'Ramp plate on the RA-7 lid'},
  {k:'RA-1',ids:['T_RA1'],la:[0.7,0.6,1.0],c:0x9aa3ab,ex:[0,0,14],ru:'Плита рампы на RA-2 (шарнир)',en:'Ramp plate on RA-2 (hinge)'},
  {k:'BOLTS',ids:['T_Bolt1','T_Spacer1','T_Bolt2','T_Spacer2'],c:0x3a3f45,ex:[0,0,14],side:5,ru:'Болты шарнира 3/8 + втулки',en:'Hinge bolts 3/8 + spacers'}];
-const TX={ru:{ttl:'Рампа — сборка (короб RA-7 + RA-5 + RA-3 + RA-2 + RA-1)',tag:'Sienna WAV · дюймы · сборка по шагам, детали можно выключать',
+const TX={ru:{ttl:'Рампа — сборка (RA-7 + RA-5 + RA-3 + RA-4 + RA-2 + RA-1)',tag:'Sienna WAV · дюймы · сборка по шагам, детали можно выключать',
   mat:'Металл: алюминий 5052-H32 · толщина t = 0.125″ (1/8″, 3.18 мм)',hint:'Мышь/палец: вращать, колесо/два пальца: приблизить',
-  reset:'Сбросить вид',explOn:'Собрать',explOff:'Разобрать',labOn:'Скрыть названия',labOff:'Показать названия',all:'Показать все',
+  reset:'Сбросить вид',play:'▶ Видео сборки',stop:'❚❚ Стоп',explOn:'Собрать',explOff:'Разобрать',labOn:'Скрыть названия',labOff:'Показать названия',all:'Показать все',
   steps:'Как собирается',allSteps:'Все шаги',notes:'Открытые вопросы',bolts:'Болты',parts:'Все детали рампы',
   S:['RA-7 — короб, крышка сверху, вырез в передней стенке слева.','RA-5 внутри RA-7: ребро упирается в крышку, усы — в переднюю стенку.',
-     'RA-3 снизу, прижата к боковым бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-2 на крышке RA-7: край с 6 дырками на ряд дырок у задней стороны, уши вверх.',
+     'RA-3 снизу, прижата к боковым бортикам RA-7, уши и отгиб вверх, уши сзади.','RA-4 по заднему краю: сторона 2⅛ с квадратами на крышке (4 болта 8 мм с RA-7), середина 2¾ вниз, сторона 2¼ с болтами внизу наружу.','RA-2 на крышке RA-7: край с 6 дырками на ряд дырок у задней стороны, уши вверх.',
      'RA-1 на RA-2 (сложенный шарнир).','Болты 3/8 + втулки через уши RA-1 и RA-2 — шарнир.'],
   N:['Передняя стенка RA-7 (3½–4) ниже бортиков (3) — проходит сквозь плиту RA-3 на ¼.','RA-2 / RA-7: средняя пара дырок не совпадает (16¼ / 17¾ против 11 / 15½).',
-     'RA-3 / RA-7: дырки крепления пока не совпадают.','RA-1 и RA-2 выступают вперёд за RA-7 на 3¾–5.']},
- en:{ttl:'Ramp — assembly (box RA-7 + RA-5 + RA-3 + RA-2 + RA-1)',tag:'Sienna WAV · inches · step-by-step assembly, parts can be hidden',
+     'RA-3 / RA-7: дырки крепления пока не совпадают.','RA-1 и RA-2 выступают вперёд за RA-7 на 3¾–5.','RA-4 и RA-2 обе лежат на крышке — заходят друг в друга на ⅛ (поднять RA-2 + RA-1 на ⅛?).','RA-4: 2 квадрата (16¼ / 17¾) и 2 болта 5.5 мм стороны 2¼ — нет пары на RA-7.','RA-5: дырка 5.5 мм (X 17) — нет пары на RA-7.']},
+ en:{ttl:'Ramp — assembly (RA-7 + RA-5 + RA-3 + RA-4 + RA-2 + RA-1)',tag:'Sienna WAV · inches · step-by-step assembly, parts can be hidden',
   mat:'Material: aluminum 5052-H32 · thickness t = 0.125″ (1/8″, 3.18 mm)',hint:'Drag to rotate, wheel / pinch to zoom',
-  reset:'Reset view',explOn:'Assemble',explOff:'Take apart',labOn:'Hide names',labOff:'Show names',all:'Show all',
+  reset:'Reset view',play:'▶ Assembly video',stop:'❚❚ Stop',explOn:'Assemble',explOff:'Take apart',labOn:'Hide names',labOff:'Show names',all:'Show all',
   steps:'How it goes together',allSteps:'All steps',notes:'Open questions',bolts:'Bolts',parts:'All ramp parts',
   S:['RA-7 — box, lid on top, straight cutout in the front wall on the left.','RA-5 inside RA-7: rib against the lid, whiskers against the front wall.',
-     'RA-3 underneath, against the RA-7 side lips, ears and flange up, ears at the back.','RA-2 on the RA-7 lid: 6-hole edge on the back hole row, ears up.',
+     'RA-3 underneath, against the RA-7 side lips, ears and flange up, ears at the back.','RA-4 along the back edge: 2⅛ side with squares on the lid (4 × 8 mm bolts with RA-7), 2¾ middle down, 2¼ side with bolts at the bottom outward.','RA-2 on the RA-7 lid: 6-hole edge on the back hole row, ears up.',
      'RA-1 on RA-2 (folded hinge).','3/8 bolts + spacers through the RA-1 and RA-2 ears — the hinge.'],
   N:['RA-7 front wall (3½–4) is lower than the lips (3) — goes ¼ into the RA-3 plate.','RA-2 / RA-7: middle hole pair does not match (16¼ / 17¾ vs 11 / 15½).',
-     'RA-3 / RA-7: fastening holes do not match yet.','RA-1 and RA-2 stick out past the RA-7 front by 3¾–5.']}};
+     'RA-3 / RA-7: fastening holes do not match yet.','RA-1 and RA-2 stick out past the RA-7 front by 3¾–5.','RA-4 and RA-2 both lie on the lid — ⅛ overlap (raise RA-2 + RA-1 by ⅛?).','RA-4: 2 squares (16¼ / 17¾) and the 2 × 5.5 mm holes of the 2¼ side have no mate on RA-7.','RA-5: 5.5 mm hole (X 17) has no mate on RA-7.']}};
 let lang='ru';try{lang=localStorage.getItem('fr4-lang')||'ru';}catch(e){}
+let animT=null, animLast=0; const DUR=2.0;
 let labOn=true, expl=0, explT=0, step=PARTS.length; const on={}; PARTS.forEach(p=>on[p.k]=true);
 const viewer=document.getElementById('viewer'), canvas=document.getElementById('c3d'), labelsEl=document.getElementById('labels');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
@@ -163,18 +166,22 @@ function build(D){const byId={}; D.forEach(r=>byId[r.id]=r);
     const d=document.createElement('div'); d.className='plab'; d.textContent=p.k==='BOLTS'?'':p.k; const L=new THREE.CSS2DObject(d); L.position.copy(c); g.add(L); g.userData.lab=d; g.userData.L=L;
     scene.add(g); G[p.k]=g;});
   box=new THREE.Box3(); PARTS.forEach(p=>box.expandByObject(G[p.k])); resetView(); apply();}
-function apply(){PARTS.forEach((p,i)=>{const g=G[p.k]; if(!g) return; g.visible=on[p.k]&&i<step; g.position.set(p.ex[0]*explT,p.ex[1]*explT,p.ex[2]*explT);
+function fly(p){return (p.ex[0]||p.ex[1]||p.ex[2])?p.ex:[0,0,8];}
+function apply(){if(animT!==null){PARTS.forEach((p,i)=>{const g=G[p.k]; if(!g) return; const f=Math.min(1,Math.max(0,(animT-i*DUR)/(DUR*0.8))), e=f*f*(3-2*f), v=fly(p);
+      g.visible=on[p.k]&&animT>i*DUR; g.position.set(v[0]*1.6*(1-e),v[1]*1.6*(1-e),v[2]*1.6*(1-e)); g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*(1-e);});
+      g.userData.lab.className='plab'+(f>0&&f<1?' new':''); g.userData.L.visible=labOn&&g.visible;}); return;}
+  PARTS.forEach((p,i)=>{const g=G[p.k]; if(!g) return; g.visible=on[p.k]&&i<step; g.position.set(p.ex[0]*explT,p.ex[1]*explT,p.ex[2]*explT);
     g.children.forEach(s=>{if(s.userData.side!==undefined) s.position.x=s.userData.side*explT;});
     g.userData.lab.className='plab'+(i===step-1&&step<PARTS.length?' new':''); g.userData.L.visible=labOn&&g.visible;});}
 function resetView(){const bb=box.clone(); if(expl){bb.min.z-=16; bb.max.z+=14;} const c=bb.getCenter(new THREE.Vector3()), sz=bb.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
   camera.position.set(c.x-r*0.9,c.y-r*1.4,c.z+r*0.9); controls.target.copy(c); controls.update();}
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight; renderer.setSize(w,h,false); labelRenderer.setSize(w,h); camera.aspect=w/h; camera.fov=w<520?50:35; camera.updateProjectionMatrix();}
 new ResizeObserver(resize).observe(viewer); resize();
-(function loop(){requestAnimationFrame(loop); if(Math.abs(explT-expl)>0.002){explT+=(expl-explT)*0.12; apply();} controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
+(function loop(now){requestAnimationFrame(loop); if(animT!==null){animT+=(now-animLast)/1000; animLast=now; const k=Math.min(PARTS.length,Math.floor(animT/DUR)+1); if(k!==step){step=k; texts();} if(animT>PARTS.length*DUR+1.0){animT=null; step=PARTS.length; texts();} apply();} if(Math.abs(explT-expl)>0.002){explT+=(expl-explT)*0.12; apply();} controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera);})();
 function hex(c){return '#'+c.toString(16).padStart(6,'0');}
 function texts(){const t=TX[lang]; document.documentElement.lang=lang;
   ['ttl','tag','mat','hint'].forEach(k=>document.getElementById(k).textContent=t[k]);
-  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnExpl').textContent=expl?t.explOn:t.explOff;
+  document.getElementById('btnReset').textContent=t.reset; document.getElementById('btnPlay').textContent=animT===null?t.play:t.stop; document.getElementById('btnExpl').textContent=expl?t.explOn:t.explOff;
   document.getElementById('btnLab').textContent=labOn?t.labOn:t.labOff; document.getElementById('btnAll').textContent=t.all;
   document.getElementById('hSteps').textContent=t.steps; document.getElementById('hNotes').textContent=t.notes; document.getElementById('sAll').textContent=t.allSteps;
   document.getElementById('parts').innerHTML=PARTS.map(p=>`<label class="${on[p.k]?'':'off'}"><input type="checkbox" data-k="${p.k}" ${on[p.k]?'checked':''}><span class="sw" style="background:${hex(p.c)}"></span>${p.k==='BOLTS'?t.bolts:p.k} · ${p[lang]}</label>`).join('');
@@ -192,9 +199,11 @@ document.getElementById('btnLab').onclick=()=>{labOn=!labOn; apply(); texts();};
 document.getElementById('btnAll').onclick=()=>{PARTS.forEach(p=>on[p.k]=true); step=PARTS.length; apply(); texts();};
 document.getElementById('sPrev').onclick=()=>{if(step>1){step--; apply(); texts();}};
 document.getElementById('sNext').onclick=()=>{if(step<PARTS.length){step++; apply(); texts();}};
+document.getElementById('btnPlay').onclick=()=>{if(animT===null){expl=0;explT=0;resetView();animT=0;animLast=performance.now();step=1;}else{animT=null;step=PARTS.length;} apply(); texts();};
 document.getElementById('sAll').onclick=()=>{step=PARTS.length; apply(); texts();};
 texts();
-fetch('drawings/MFG/RA_asm.json').then(r=>r.json()).then(build).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
+const _q=new URLSearchParams(location.search); if(_q.get('embed')) document.querySelector('header').style.display='none';
+fetch('drawings/MFG/RA_asm.json?v='+(_q.get('v')||'')).then(r=>r.json()).then(D=>{build(D); if(_q.get('autoplay')) document.getElementById('btnPlay').click();}).catch(e=>{viewer.insertAdjacentHTML('beforeend','<div class="hint" style="top:10px">3D data failed to load</div>');});
 </script>
 <div id="matBadge" style="position:fixed;right:10px;bottom:10px;z-index:50;max-width:calc(100vw - 20px);font:600 12px/1.35 'IBM Plex Sans Condensed',Arial,sans-serif;color:#c2410c;background:#fff4ec;border:1.5px solid #c2410c;border-radius:6px;padding:5px 9px;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none">Металл / Material: <b>Aluminum 5052-H32</b> · <b>t = 0.125″ (3.18 mm)</b></div>
 </body>

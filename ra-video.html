@@ -142,7 +142,7 @@ let userCam=false; controls.addEventListener('start',()=>{userCam=true; if(cente
 function camAt(t){const bb=box.clone(); bb.max.y+=20; const c=bb.getCenter(new THREE.Vector3()), sz=bb.getSize(new THREE.Vector3()), r=Math.max(sz.x,sz.y,sz.z);
   const u=ease((t-START[10])/SEQ[10][0]), z=-0.75+1.65*u; camera.position.set(c.x-r*1.0,c.y-r*1.55,c.z+r*z*1.1); controls.target.copy(c);}
 let cur=-1;
-function setT(t){ if(ready){
+function setT(t){G.forEach((g,i)=>{if(PARTS[i].k==='RA3'&&g.userData.d) g.userData.d.textContent=ra3v==='RA3B'?'RA-3B':'RA-3A';}); if(ready){
   PARTS.forEach((p,i)=>{const g=G[i]; const si=SEQ.findIndex(s=>s[1]===i); const f=ease((t-START[si])/(SEQ[si][0]*0.85)); g.visible=t>START[si]+1e-6||si===0;
     const off=new THREE.Vector3(p.fl[0]*(1-f),p.fl[1]*(1-f),p.fl[2]*(1-f));
     if(p.sub3){const lf=ease((t-START[LIFT_I])/SEQ[LIFT_I][0]); off.z-=LIFT*(1-lf);}
@@ -177,6 +177,7 @@ function setLang(l){lang=l;try{localStorage.setItem('fr4-lang',l);}catch(e){}bui
 document.getElementById('namesCb').onchange=e=>{namesOn=e.target.checked; try{localStorage.setItem('ra-names',namesOn?'1':'0');}catch(x){} setT(T0);};
 document.getElementById('centerCb').onchange=e=>{centerOn=e.target.checked; if(centerOn) userCam=false; try{localStorage.setItem('ra-center',centerOn?'1':'0');}catch(x){} setT(T0);};
 document.getElementById('logoSel').onchange=e=>{ra3v=e.target.value; try{localStorage.setItem('ra3var',ra3v);}catch(x){} setT(T0);};
+window.addEventListener('storage',e=>{if(e.key==='ra3var'&&['RA3A','RA3B'].includes(e.newValue)){ra3v=e.newValue; document.getElementById('logoSel').value=ra3v; setT(T0);}});
 document.getElementById('langEn').onclick=()=>setLang('en');document.getElementById('langRu').onclick=()=>setLang('ru');
 function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);labelRenderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();controls.handleResize&&controls.handleResize();}
 new ResizeObserver(resize).observe(viewer);resize();
